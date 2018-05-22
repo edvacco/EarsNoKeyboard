@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="candidate_normal">#FFFFFFFF</color>
+    <color name="candidate_recommended">#FFE35900</color>
+    <color name="candidate_other">#ff808080</color>
+    <color name="light_candidate_normal">#FF000000</color>
+    <color name="light_candidate_recommended">#FFE35900</color>
+    <color name="light_candidate_other">#ff808080</color>
+
+    <color name="blacktheme_color_background">#FF000000</color>
+    <color name="blacktheme_color_topborder">#FF333333</color>
+    <color name="blacktheme_color_suggestion_background">#FF000000</color>
+    <color name="blacktheme_color_suggestion_recommended">#FF00A020</color>
+    <color name="blacktheme_color_suggestion_others">#FFBBBBBB</color>
+    <color name="blacktheme_color_suggestion_normal">#FFFFFFFF</color>
+    <color name="blacktheme_color_previewtext">#FFFFFFFF</color>
+    <color name="blacktheme_color_popup_background">#FF333333</color>
+    <color name="blacktheme_color_popup_stroke">#FF999999</color>
+    <color name="blacktheme_color_action">#FF005010</color>
+    <color name="blacktheme_color_action_pressed">#FF00A020</color>
+    <color name="blacktheme_color_action_stroke">#FF00A020</color>
+    <color name="blacktheme_color_action_pressed_stroke">#FF00FF33</color>
+    <color name="blacktheme_color_action_keytext">#FFEEEEEE</color>
+    <color name="blacktheme_color_action_pressed_keytext">#FFFFFFFF</color>
+    <color name="blacktheme_color_action_hint">#FF11FF99</color>
+    <color name="blacktheme_color_action_pressed_hint">#FF22FFCC</color>
+    <color name="blacktheme_color_function">#FF001750</color>
+    <color name="blacktheme_color_function_pressed">#FF003CD0</color>
+    <color name="blacktheme_color_function_checked">#FF002990</color>
+    <color name="blacktheme_color_function_stroke">#FF003CD0</color>
+    <color name="blacktheme_color_function_pressed_stroke">#FF0049FF</color>
+    <color name="blacktheme_color_function_checked_stroke">#FF0032B1</color>
+    <color name="blacktheme_color_function_keytext">#FFEEEEEE</color>
+    <color name="blacktheme_color_function_pressed_keytext">#FFFFFFFF</color>
+    <color name="blacktheme_color_function_hint">#FFDDDDDD</color>
+    <color name="blacktheme_color_function_pressed_hint">#FFEEEEEE</color>
+    <color name="blacktheme_color_normal">#FF000000</color>
+    <color name="blacktheme_color_normal_pressed">#FF333333</color>
+    <color name="blacktheme_color_normal_stroke">#FF666666</color>
+    <color name="blacktheme_color_normal_pressed_stroke">#FFFFFFFF</color>
+    <color name="blacktheme_color_normal_keytext">#FFEEEEEE</color>
+    <color name="blacktheme_color_normal_pressed_keytext">#FFFFFFFF</color>
+    <color name="blacktheme_color_normal_hint">#FF0088FF</color>
+    <color name="blacktheme_color_normal_pressed_hint">#FF00BBFF</color>
+
+    <color name="menu_background_normal">#FFF</color>
+    <color name="menu_background_disabled">#FFF</color>
+    <color name="menu_background_pressed">#BBB</color>
+
+    <color name="menu_divider">#663399</color>
+    <color name="menu_item_divider">#77663399</color>
+    <color name="generic_disabled_background_color">#A777</color>
+    <color name="generic_clicked_background_color">#2000</color>
+
+    <color name="app_accent">#663399</color>
+
+    <color name="notification_background_error">#F33</color>
+    <color name="notification_background_debug_version">#FF3399</color>
+
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="seekBar">#07DDDD</color>
+    <color name="seekBarProgress">#07DDDD</color>
+    <color name="seekBarBackground">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="light_grey">#fafafa</color>
+</resources>
