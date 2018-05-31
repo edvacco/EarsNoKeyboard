@@ -48,6 +48,7 @@ import gwicks.com.earsnokeyboard.AnyApplication;
 import gwicks.com.earsnokeyboard.EMAAlarmReceiver;
 import gwicks.com.earsnokeyboard.EMAUploadReceiver;
 import gwicks.com.earsnokeyboard.GarminUploadReceiver;
+import gwicks.com.earsnokeyboard.KeyloggerUploadAlarm;
 import gwicks.com.earsnokeyboard.MicRecordUploadAlarm;
 import gwicks.com.earsnokeyboard.MusicUploadReceiver;
 import gwicks.com.earsnokeyboard.PhotoUploadReceiver;
@@ -88,6 +89,7 @@ public class FinishInstallScreen extends AppCompatActivity {
     private PendingIntent EMAIntent;
     private PendingIntent sensorIntent;
     private PendingIntent garminIntent;
+    private PendingIntent keyloggerIntent;
     public static boolean alarmIsSet = false;
     public static boolean statsAlarmIsSet = false;
     public static final String secureID = Settings.Secure.getString(
@@ -278,6 +280,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         startPhotoUploadAlarm();
         startSensorUploadAlarm();
         //startGarminUploadAlarm();
+        startKeyloggerUploadAlarm();
         Log.d(TAG, "onCreate: alarmstarted = " + alarmStarted);
 
         // Comment this out to remove the EMA component
@@ -453,6 +456,33 @@ public class FinishInstallScreen extends AppCompatActivity {
 
     }
 
+    public void startKeyloggerUploadAlarm(){
+
+        Log.d(TAG, "startStatsAlarm: in start alarm");
+
+        Calendar cal = Calendar.getInstance();
+        long when = cal.getTimeInMillis();
+        String timey = Long.toString(when);
+
+        //System.out.println("The time changed into nice format is: " + theTime);
+
+        Log.d("the time is: ", when + " ");
+
+        cal.setTimeInMillis(System.currentTimeMillis());
+        cal.set(Calendar.HOUR_OF_DAY, 11);
+        cal.set(Calendar.MINUTE, 56);
+
+        AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, KeyloggerUploadAlarm.class);
+        //statsIntent = PendingIntent.getBroadcast(this, 2, intent, 0);
+        keyloggerIntent = PendingIntent.getBroadcast(this, 2, intent, 0);
+
+
+
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, keyloggerIntent);
+
+    }
+
     public void startGPSUploadAlarm() {
         Log.d(TAG, "startGPSAlarm: in start alarm");
 
@@ -605,16 +635,16 @@ public class FinishInstallScreen extends AppCompatActivity {
         long when = cal.getTimeInMillis();
 
         cal.setTimeInMillis(System.currentTimeMillis());
-        //cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
-        cal.set(Calendar.HOUR_OF_DAY, 8);
-        cal.set(Calendar.MINUTE, 35);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+        cal.set(Calendar.HOUR_OF_DAY, 9);
+        cal.set(Calendar.MINUTE, 15);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, EMAAlarmReceiver.class);
         intent.putExtra("EMA", "EMA1");
         startEMAIntent = PendingIntent.getBroadcast(this, 9, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        //alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),alarmMgr.INTERVAL_DAY * 7 , startEMAIntent);
-        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000 * 60 * 120, startEMAIntent);
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),alarmMgr.INTERVAL_DAY * 7 , startEMAIntent);
+        //alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000 * 60 * 120, startEMAIntent);
         Log.d(TAG, "startEMAAlarm: alarm shjould be set");
         alarmStarted = true;
 

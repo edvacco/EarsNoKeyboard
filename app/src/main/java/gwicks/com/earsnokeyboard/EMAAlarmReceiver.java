@@ -127,8 +127,8 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
 //                PendingIntent.getBroadcast(context, 0, snoozeIntent, 0);
 
 
-        Intent resultIntent = new Intent(context, EMA.class);
-        //Intent resultIntent = new Intent(context, SecondEMA.class);
+        //Intent resultIntent = new Intent(context, EMA.class);
+        Intent resultIntent = new Intent(context, SecondEMA.class);
 
         //resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, resultIntent, 0);

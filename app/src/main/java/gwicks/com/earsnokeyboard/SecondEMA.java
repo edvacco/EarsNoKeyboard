@@ -1,6 +1,7 @@
 package gwicks.com.earsnokeyboard;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -143,15 +144,21 @@ public class SecondEMA extends Activity {
                     //TODO: send special upload to AWS
                     beginUpload2(timeStampString, encryptedUri, true);
                     sendSMS("9179814866", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
-                    //sendSMS("5415134524", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
+
+                    //Testing new Dialog Frag, commented out the above to avoid spamming randy
+                    launchPhoneNumberDialog();
+
                 }else{
                     beginUpload2(timeStampString, encryptedUri, false);
+                    Intent returnToFinish = new Intent(SecondEMA.this, FinishInstallScreen.class);
+
+                    startActivity(returnToFinish);
                 }
 
                 Toast.makeText(getBaseContext(), "Thank you for completing the questionnaire, they will appear once a week on Wednesday", Toast.LENGTH_LONG).show();
-                Intent returnToFinish = new Intent(SecondEMA.this, FinishInstallScreen.class);
-
-                startActivity(returnToFinish);
+//                Intent returnToFinish = new Intent(SecondEMA.this, FinishInstallScreen.class);
+//
+//                startActivity(returnToFinish);
             }
         });
     }
@@ -258,6 +265,11 @@ public class SecondEMA extends Activity {
                     Toast.LENGTH_LONG).show();
             ex.printStackTrace();
         }
+    }
+
+    public void launchPhoneNumberDialog(){
+        DialogFragment phoneFragment = new HealthCheckDialog();
+        phoneFragment.show(getFragmentManager(), "phone");
     }
 
 
