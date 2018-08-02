@@ -34,6 +34,7 @@ import gwicks.com.earsnokeyboard.Setup.FinishInstallScreen;
 public class Util {
 
     private static final String TAG = "Util";
+    private static String AWSPoolId = BuildConfig.MyAWSPoolId;
 
     public interface FileTransferCallback {
         void onStart(final int id, final TransferState state);
@@ -64,7 +65,8 @@ public class Util {
         if (sCredProvider == null) {
             sCredProvider = new CognitoCachingCredentialsProvider(
                     context.getApplicationContext(),
-                    Constants.COGNITO_POOL_ID,
+                    AWSPoolId,
+                    //Constants.COGNITO_POOL_ID,
                     Regions.US_WEST_2);
         }
         return sCredProvider;
