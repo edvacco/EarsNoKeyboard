@@ -86,7 +86,8 @@ public class EmailSecureDeviceID extends DialogFragment {
         String[] recipient = new String[]{"klmills@uoregon.edu"};
 
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                "mailto","randy.auerbach@nyspi.columbia.edu", null));
+                "mailto","lubbertcl@upmc.edu", null));
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"zelaznyjh@upmc.edu"});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, secureDeviceID);
         emailIntent.putExtra(Intent.EXTRA_TEXT, "No Need to put anything here, just press send :)");
         startActivity(Intent.createChooser(emailIntent, "Select your most used email provider"));

@@ -104,9 +104,9 @@ public class SecondEMA extends Activity {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 if(i == R.id.Yes){
-                    secondQuestion = 1;
+                    secondQuestion = 2;
                 }else if(i == R.id.No){
-                    secondQuestion = 0;
+                    secondQuestion = 1;
                 }
             }
         });
@@ -116,9 +116,9 @@ public class SecondEMA extends Activity {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 if(i == R.id.Yes2){
-                    thirdQuestion = 1;
+                    thirdQuestion = 2;
                 }else if(i == R.id.No2){
-                    thirdQuestion = 0;
+                    thirdQuestion = 1;
                 }
             }
         });
@@ -143,7 +143,15 @@ public class SecondEMA extends Activity {
                 if(healthCheck()){
                     //TODO: send special upload to AWS
                     beginUpload2(timeStampString, encryptedUri, true);
-                    sendSMS("9179814866", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
+                    // Randy SMS below
+                    //sendSMS("9179814866", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
+
+                    // University of Pittsburgh Medical Center below
+
+                    sendSMS("4125232034", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
+                    sendSMS("7245136376", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
+
+
 
                     //Testing new Dialog Frag, commented out the above to avoid spamming randy
                     launchPhoneNumberDialog();
@@ -184,7 +192,7 @@ public class SecondEMA extends Activity {
     }
 
     public boolean healthCheck(){
-        if(firstQuestion == 3 || firstQuestion == 4 || firstQuestion == 5 || secondQuestion == 1 || thirdQuestion == 1 ){
+        if(firstQuestion == 3 || firstQuestion == 4 || firstQuestion == 5 || secondQuestion == 2 || thirdQuestion == 2 ){
             return true;
         }
         return false;

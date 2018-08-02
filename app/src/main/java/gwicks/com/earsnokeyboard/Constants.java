@@ -24,7 +24,8 @@ public class Constants {
     //public static final String BUCKET_NAME = "earsnorman";
     //public static final String BUCKET_NAME = "sevencups";
     //public static final String BUCKET_NAME = "katemills";
-    public static final String BUCKET_NAME = "earsrandy";
+    //public static final String BUCKET_NAME = "earsrandy";
+    public static final String BUCKET_NAME = "earspitts";
 
 
 

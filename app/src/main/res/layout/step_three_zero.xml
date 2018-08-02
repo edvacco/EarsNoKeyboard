@@ -12,16 +12,16 @@
     <TextView
         android:id="@+id/textView6"
         android:layout_width="221dp"
-        android:layout_height="58dp"
+        android:layout_height="90dp"
         android:layout_marginEnd="100dp"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:textColor="#0a1c4a"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="First, let’s install the EARS keyboard."/>
+        android:text="First, let’s allow EARS to capture keyboard input."/>
 
     <ImageView
         android:id="@+id/imageView14"
@@ -73,25 +73,61 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            android:text="Automated computer software will analyze your text input (except passwords and credit card information).\n\nTap Install Keyboard below to go to the Android settings page and select the EARS Keyboard."
+            android:text="Automated computer software will analyze your text input (except passwords and credit card information).\n\nTap Allow Keyboard Access below to go to the Android settings page and turn the EARS keyboard setting to ON."
             android:textSize="17sp"
             />
 
     </ScrollView>
 
     <ImageView
-        android:id="@+id/imageView18"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:contextClickable="true"
-        android:onClick="installKeyboard"
+        android:id="@+id/startButton"
+        android:layout_width="match_parent"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/install_keyboard"
+        android:contextClickable="true"
+        android:layout_height="wrap_content"
+        android:onClick="installKeyboard"
+
+        android:layout_alignParentBottom="true"
+        app:srcCompat="@drawable/rectangle_copy"
         />
+
+    <TextView
+        android:id="@+id/textViewButton"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_alignBottom="@id/startButton"
+        android:layout_alignLeft="@id/startButton"
+
+        android:layout_alignRight="@id/startButton"
+        android:layout_alignTop="@id/startButton"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:gravity="bottom"
+        android:text="Allow Keyboard Access"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!--<ImageView-->
+        <!--android:id="@+id/imageView18"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:contextClickable="true"-->
+        <!--android:onClick="installKeyboard"-->
+        <!--android:scaleType="fitXY"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintHorizontal_bias="0.0"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:srcCompat="@drawable/install_keyboard"-->
+        <!--/>-->
 
 
     <ProgressBar

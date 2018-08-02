@@ -17,19 +17,13 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -47,7 +41,6 @@ import gwicks.com.earsnokeyboard.AccGryLgt;
 import gwicks.com.earsnokeyboard.AnyApplication;
 import gwicks.com.earsnokeyboard.EMAAlarmReceiver;
 import gwicks.com.earsnokeyboard.EMAUploadReceiver;
-import gwicks.com.earsnokeyboard.GarminUploadReceiver;
 import gwicks.com.earsnokeyboard.KeyloggerUploadAlarm;
 import gwicks.com.earsnokeyboard.MicRecordUploadAlarm;
 import gwicks.com.earsnokeyboard.MusicUploadReceiver;
@@ -123,6 +116,8 @@ public class FinishInstallScreen extends AppCompatActivity {
 
         //needToTalkOpen = (ImageView)findViewById(R.id.gr)
 
+
+        // https://www.okcupid.com/profile/3266230839404444105?cf=quickmatch
         //Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
 
         if(isAlreadySet(this) == false){
@@ -132,42 +127,44 @@ public class FinishInstallScreen extends AppCompatActivity {
 
         numberOfInstances++;
 
-        moodCheck = (ImageView) findViewById(R.id.imageView41);
-        needToTalkClosed = (ImageView) findViewById(R.id.imageView6);
-        talkText = (TextView) findViewById(R.id.textViewTalk);
-        talkText.setVisibility(View.GONE);
+        // All the extra 7 cups buttons at bottom being removed
 
-        preferences = findViewById(R.id.imageView42);
-        //preferences.setTag(1);
-        prefText = findViewById(R.id.textView2);
-        prefText.setVisibility(View.GONE);
-        prefText.setTag(1);
+//        moodCheck = (ImageView) findViewById(R.id.imageView41);
+//        needToTalkClosed = (ImageView) findViewById(R.id.imageView6);
+//        talkText = (TextView) findViewById(R.id.textViewTalk);
+//        talkText.setVisibility(View.GONE);
+//
+//        preferences = findViewById(R.id.imageView42);
+//        //preferences.setTag(1);
+//        prefText = findViewById(R.id.textView2);
+//        prefText.setVisibility(View.GONE);
+//        prefText.setTag(1);
+//
+//
+//        needToTalkClosed.setTag(1);
+//        mood = (TextView) findViewById(R.id.textView1);
+//        mood.setTag(1);
+//        mood.setVisibility(View.GONE);
+//
+//        //textViewEmail = (TextView)findViewById(R.id.textViewEmail);
+//
+//        garminConnect = (TextView)findViewById(R.id.textViewEmail);
 
 
-        needToTalkClosed.setTag(1);
-        mood = (TextView) findViewById(R.id.textView1);
-        mood.setTag(1);
-        mood.setVisibility(View.GONE);
-
-        //textViewEmail = (TextView)findViewById(R.id.textViewEmail);
-
-        garminConnect = (TextView)findViewById(R.id.textViewEmail);
 
 
-
-
-        SpannableString ss = new SpannableString("Get free, anonymous and confidential support at 7 Cups. Listeners available 24/7 to help you feel better\n\nGet the App");
-        ClickableSpan clickableSpan = new ClickableSpan() {
-            @Override
-            public void onClick(View textView) {
-                launch7cups();
-            }
-
-        };
-        //ss.setSpan(clickableSpan, 48, 55, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ss.setSpan(clickableSpan, 106, 117, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        talkText.setText(ss);
-        talkText.setMovementMethod(LinkMovementMethod.getInstance());
+//        SpannableString ss = new SpannableString("Get free, anonymous and confidential support at 7 Cups. Listeners available 24/7 to help you feel better\n\nGet the App");
+//        ClickableSpan clickableSpan = new ClickableSpan() {
+//            @Override
+//            public void onClick(View textView) {
+//                launch7cups();
+//            }
+//
+//        };
+//        //ss.setSpan(clickableSpan, 48, 55, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        ss.setSpan(clickableSpan, 106, 117, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        talkText.setText(ss);
+//        talkText.setMovementMethod(LinkMovementMethod.getInstance());
 
 //        garminConnect.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -182,60 +179,60 @@ public class FinishInstallScreen extends AppCompatActivity {
 //        });
 
 //
-        needToTalkClosed.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: Clicked");
-
-                if (needToTalkClosed.getTag().equals(1)) {
-                    talkText.setVisibility(View.VISIBLE);
-                    needToTalkClosed.setTag(2);
-
-                } else {
-                    talkText.setVisibility(View.GONE);
-                    needToTalkClosed.setTag(1);
-                }
-            }
-        });
-
-        preferences.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: Clicked moodcheck");
-
-                if (prefText.getTag().equals(1)) {
-                    prefText.setVisibility(View.VISIBLE);
-                    Log.d(TAG, "onClick: visable");
-                    prefText.setTag(2);
-
-                } else {
-                    prefText.setVisibility(View.GONE);
-                    Log.d(TAG, "onClick: invisible");
-                    prefText.setTag(1);
-                }
-            }
-        });
-
-        moodCheck.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: Clicked moodcheck");
-
-                if (mood.getTag().equals(1)) {
-                    mood.setVisibility(View.VISIBLE);
-                    Log.d(TAG, "onClick: visable");
-                    mood.setTag(2);
-
-                } else {
-                    mood.setVisibility(View.GONE);
-                    Log.d(TAG, "onClick: invisible");
-                    mood.setTag(1);
-                }
-            }
-        });
+//        needToTalkClosed.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View view) {
+//                Log.d(TAG, "onClick: Clicked");
+//
+//                if (needToTalkClosed.getTag().equals(1)) {
+//                    talkText.setVisibility(View.VISIBLE);
+//                    needToTalkClosed.setTag(2);
+//
+//                } else {
+//                    talkText.setVisibility(View.GONE);
+//                    needToTalkClosed.setTag(1);
+//                }
+//            }
+//        });
+//
+//        preferences.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View view) {
+//                Log.d(TAG, "onClick: Clicked moodcheck");
+//
+//                if (prefText.getTag().equals(1)) {
+//                    prefText.setVisibility(View.VISIBLE);
+//                    Log.d(TAG, "onClick: visable");
+//                    prefText.setTag(2);
+//
+//                } else {
+//                    prefText.setVisibility(View.GONE);
+//                    Log.d(TAG, "onClick: invisible");
+//                    prefText.setTag(1);
+//                }
+//            }
+//        });
+//
+//        moodCheck.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View view) {
+//                Log.d(TAG, "onClick: Clicked moodcheck");
+//
+//                if (mood.getTag().equals(1)) {
+//                    mood.setVisibility(View.VISIBLE);
+//                    Log.d(TAG, "onClick: visable");
+//                    mood.setTag(2);
+//
+//                } else {
+//                    mood.setVisibility(View.GONE);
+//                    Log.d(TAG, "onClick: invisible");
+//                    mood.setTag(1);
+//                }
+//            }
+//        });
 
         //Toast.makeText(this, "THE SECURE DEVICE ID IS: " + secureID, Toast.LENGTH_LONG).show();
         if (!isAccessGranted()) {
@@ -361,6 +358,9 @@ public class FinishInstallScreen extends AppCompatActivity {
 //        String rate = audioManager.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE);
 //        String size = audioManager.getProperty(AudioManager.PROPERTY_OUTPUT_FRAMES_PER_BUFFER);
 //        Log.d("Buffer Size and  rate", "Size :" + size + " & Rate: " + rate);
+        // pretending to work, pretending to work, pretending to work, mothafuckka
+        // yess yes, still pretending to work!
+        //
 //
 //
 //        final JobInfo job = new JobInfo.Builder(1, new ComponentName(this, StatsJobService.class))
@@ -391,14 +391,14 @@ public class FinishInstallScreen extends AppCompatActivity {
         }
     }
 
-    public void launch7cups() {
-        Log.d(TAG, "launch7cups: clicked");
-
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("market://details?id=com.sevencupsoftea.app"));
-        startActivity(intent);
-        //https://play.google.com/store/apps/details?id=com.sevencupsoftea.app
-    }
+//    public void launch7cups() {
+//        Log.d(TAG, "launch7cups: clicked");
+//
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        intent.setData(Uri.parse("market://details?id=com.sevencupsoftea.app"));
+//        startActivity(intent);
+//        //https://play.google.com/store/apps/details?id=com.sevencupsoftea.app
+//    }
 
 
     // 8th Feb 2018, this is first attempt to move the MainActivity and VideoActivity Classes into this final install Activity.
@@ -577,29 +577,29 @@ public class FinishInstallScreen extends AppCompatActivity {
 
     }
 
-    public void startGarminUploadAlarm() {
-        Log.d(TAG, "EMA upload in start alarm");
-
-        Calendar cal = Calendar.getInstance();
-        long when = cal.getTimeInMillis();
-        String timey = Long.toString(when);
-
-        //System.out.println("The time changed into nice format is: " + theTime);
-
-        Log.d("the time is: ", when + " ");
-
-        cal.setTimeInMillis(System.currentTimeMillis());
-        cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 15);
-
-        AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, GarminUploadReceiver.class);
-        //statsIntent = PendingIntent.getBroadcast(this, 3, intent, 0);
-        garminIntent = PendingIntent.getBroadcast(this, 11, intent, 0);
-        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, garminIntent);
-
-
-    }
+//    public void startGarminUploadAlarm() {
+//        Log.d(TAG, "EMA upload in start alarm");
+//
+//        Calendar cal = Calendar.getInstance();
+//        long when = cal.getTimeInMillis();
+//        String timey = Long.toString(when);
+//
+//        //System.out.println("The time changed into nice format is: " + theTime);
+//
+//        Log.d("the time is: ", when + " ");
+//
+//        cal.setTimeInMillis(System.currentTimeMillis());
+//        cal.set(Calendar.HOUR_OF_DAY, 23);
+//        cal.set(Calendar.MINUTE, 15);
+//
+//        AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//        Intent intent = new Intent(this, GarminUploadReceiver.class);
+//        //statsIntent = PendingIntent.getBroadcast(this, 3, intent, 0);
+//        garminIntent = PendingIntent.getBroadcast(this, 11, intent, 0);
+//        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, garminIntent);
+//
+//
+//    }
 
     // @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void startPhotoUploadAlarm() {
