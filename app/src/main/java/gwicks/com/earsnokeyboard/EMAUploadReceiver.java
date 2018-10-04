@@ -22,7 +22,9 @@ import java.util.Calendar;
 import javax.crypto.NoSuchPaddingException;
 
 /**
- * Created by gwicks on 11/05/2018.
+ * Created by gwicks on 2/04/2018.
+ * Once a day, Encrypt and upload the user's EMA questionnaires
+ *
  */
 
 public class EMAUploadReceiver extends BroadcastReceiver {
@@ -43,52 +45,17 @@ public class EMAUploadReceiver extends BroadcastReceiver {
         Log.d(TAG, "onReceive: we have received the broadcast recveiver for EMA Upload");
 
         EMAUpload();
-
-
-//        Calendar c = Calendar.getInstance();
-//
-//        SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy_HHmmssSSS");
-//        String formattedDate = df.format(c.getTime());
-//
-//        String path = mContext.getExternalFilesDir(null) + "/Sensors/";
-//
-//        File directory = new File(path);
-//
-//        if(!directory.exists()){
-//            directory.mkdirs();
-//        }
-//
-//        ArrayList<File> files = new ArrayList<>(Arrays.asList(directory.listFiles()));
-//        int i = 1;
-//        for(File each : files){
-//
-//            Log.d(TAG, "onReceive: path = " + each.getAbsolutePath());
-//            Encrypt(formattedDate + "_" + i, each.getAbsolutePath());
-//            i = i + 1;
-//            Log.d(TAG, "onReceive: i is: " + i);
-//            try{
-//                each.delete();
-//            }catch (Exception e){
-//                Log.d(TAG, "onReceive: error deleting: " + e);
-//            }
-//        }
-//        ArrayList<File> encryptedFiles = new ArrayList<>(Arrays.asList(directory.listFiles()));
-//        Util.uploadFilesToBucket(encryptedFiles, true,logUploadCallback, mContext, folder);
-
     }
 
     public void EMAUpload(){
 
         String finalPath = folder;
-
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy_HHmmssSSS");
         String formattedDate = df.format(c.getTime());
 
         String path = mContext.getExternalFilesDir(null) + finalPath;
-
         File directory = new File(path);
-
         if(!directory.exists()){
             directory.mkdirs();
         }
@@ -109,8 +76,6 @@ public class EMAUploadReceiver extends BroadcastReceiver {
         }
         ArrayList<File> encryptedFiles = new ArrayList<>(Arrays.asList(directory.listFiles()));
         Util.uploadFilesToBucket(encryptedFiles, true,logUploadCallback, mContext, finalPath);
-
-
     }
 
     public String Encrypt(String name, String path){

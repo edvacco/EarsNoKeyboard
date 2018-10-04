@@ -15,6 +15,7 @@ import gwicks.com.earsnokeyboard.R;
 
 /**
  * Created by gwicks on 11/05/2018.
+ * No longer used
  */
 
 public class SetupStepThreeOne extends AppCompatActivity {

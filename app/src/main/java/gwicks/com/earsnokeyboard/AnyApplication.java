@@ -4,8 +4,11 @@ import android.app.Application;
 import android.util.Log;
 
 /**
- * Created by gwicks on 11/05/2018.
- */
+        * Created by gwicks on 6/10/2017.
+        * This class provides a static context if need anywhere in the Application. Currently this Class is NOT used
+        * anywhere
+        */
+
 
 public class AnyApplication extends Application {
 
@@ -22,9 +25,6 @@ public class AnyApplication extends Application {
         Log.d(TAG, "onCreate: instance = " + instance);
     }
 
-//    //public static Context getAppContext(){
-//        return context;
-//    }
     public static AnyApplication getInstance() {
         Log.d(TAG, "getInstance: getting instance");
         Log.d(TAG, "getInstance: instance = " + instance);

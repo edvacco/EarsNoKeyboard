@@ -8,6 +8,7 @@ import gwicks.com.earsnokeyboard.Setup.FinishInstallScreen;
 
 /**
  * Created by gwicks on 11/05/2018.
+ * Reloads the app on phone restart
  */
 
 public class RebootBroadCastReceiver extends BroadcastReceiver {

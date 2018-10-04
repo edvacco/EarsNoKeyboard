@@ -30,6 +30,7 @@ import gwicks.com.earsnokeyboard.Setup.FinishInstallScreen;
 
 /**
  * Created by gwicks on 14/05/2018.
+ * Different EMA for Columbia and Pitts. Sends alert SMS and email (through AWS), if a participant triggers threshold
  */
 
 public class SecondEMA extends Activity {
@@ -54,10 +55,6 @@ public class SecondEMA extends Activity {
     File mFile;
 
 
-
-
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,9 +62,7 @@ public class SecondEMA extends Activity {
 
         secureDeviceID = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         Calendar c = Calendar.getInstance();
-
         String path = getExternalFilesDir(null) + "/EMA/";
-
         File directory = new File(path);
 
         if(!directory.exists()){
@@ -140,16 +135,21 @@ public class SecondEMA extends Activity {
 
                 encryptedUri = Encrypt(timeStampString, Uri);
 
+                // Check if any of the participants answers had trigger threshold
+
                 if(healthCheck()){
                     //TODO: send special upload to AWS
                     beginUpload2(timeStampString, encryptedUri, true);
+
+
                     // Randy SMS below
-                    //sendSMS("9179814866", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
+//                    sendSMS("9179814866", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
+//                    sendSMS("3868820636", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
 
                     // University of Pittsburgh Medical Center below
 
-                    sendSMS("4125232034", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
-                    sendSMS("7245136376", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
+                    //sendSMS("4125232034", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
+                    //sendSMS("7245136376", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
 
 
 

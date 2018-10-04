@@ -20,13 +20,13 @@ import android.widget.ImageView;
 import gwicks.com.earsnokeyboard.R;
 
 /**
- * Created by gwicks on 11/05/2018.
+ * Created by gwicks on 20/01/2018.
+ * This is to get permission to access the apps used
  */
 
 public class SetupStepFive extends AppCompatActivity {
 
     private static final String TAG = "SetupStepFive";
-
     ImageView button;
 
     @Override
@@ -35,30 +35,19 @@ public class SetupStepFive extends AppCompatActivity {
         setContentView(R.layout.step_five);
         updateStatusBarColor("#1281e8");
 
-
-
         button = (ImageView)findViewById(R.id.imageView35);
 
         button.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view){
-                Log.d(TAG, "onClick: Clicked");
 
                 appUsage();
-
-
             }
         });
-
-
-
-
     }
 
     public void appUsage(){
-
-
         final Handler handler = new Handler();
 
         Runnable checkOverlaySetting = new Runnable() {

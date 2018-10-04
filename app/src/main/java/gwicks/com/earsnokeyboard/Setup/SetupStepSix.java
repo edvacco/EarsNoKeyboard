@@ -24,6 +24,7 @@ import gwicks.com.earsnokeyboard.R;
 
 /**
  * Created by gwicks on 11/05/2018.
+ * No longer used
  */
 
 public class SetupStepSix extends AppCompatActivity {
@@ -45,21 +46,6 @@ public class SetupStepSix extends AppCompatActivity {
         setContentView(R.layout.setup_six);
         updateStatusBarColor("#1281e8");
 
-
-//
-//        button = (ImageView)findViewById(R.id.imageView40);
-//
-//        button.setOnClickListener(new View.OnClickListener(){
-//
-//            @Override
-//            public void onClick(View view){
-//                Log.d(TAG, "onClick: Clicked");
-//
-//                //appUsage();
-//
-//
-//            }
-//        });
 
     }
 

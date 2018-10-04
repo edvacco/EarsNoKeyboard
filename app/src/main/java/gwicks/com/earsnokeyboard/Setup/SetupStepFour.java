@@ -16,15 +16,15 @@ import android.widget.ImageView;
 import gwicks.com.earsnokeyboard.R;
 
 /**
- * Created by gwicks on 11/05/2018.
+ * Created by gwicks on 20/01/2018.
+ * This class is to enable the notification listener, which is how we get the music info
+ * needs a secure settings page.
  */
 
 public class SetupStepFour extends AppCompatActivity {
 
     private static final String TAG = "SetupStepFour";
-
     ImageView button;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,24 +32,14 @@ public class SetupStepFour extends AppCompatActivity {
         setContentView(R.layout.step_four_one);
         updateStatusBarColor("#1281e8");
 
-
-
-
         button = (ImageView)findViewById(R.id.imageView30);
-
         button.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view){
-                Log.d(TAG, "onClick: Clicked");
-
                 showDialog3(view);
-
-
             }
         });
-
-
     }
 
     public void updateStatusBarColor(String color){// Color must be in hexadecimal fromat
@@ -62,10 +52,6 @@ public class SetupStepFour extends AppCompatActivity {
     }
 
     public void showDialog3(View v) {
-
-
-        Log.d("History", "In show Dialog3");
-
 
         final Handler handler2 = new Handler();
 

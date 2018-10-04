@@ -16,6 +16,8 @@ import java.util.Calendar;
 
 /**
  * Created by gwicks on 11/05/2018.
+ * Listen to all notifications, and if it is a music, record. Will not get a complete list of all music apps, but seems to work with the
+ * major ones like spotify, pandora etc
  */
 
 public class MusicNotificationListener extends NotificationListenerService {
@@ -51,7 +53,7 @@ public class MusicNotificationListener extends NotificationListenerService {
             e.printStackTrace();
         }
 
-        String text = "";
+        String text = ""; // Needed to avoid null errors
 
 
         Calendar c = Calendar.getInstance();
@@ -64,7 +66,6 @@ public class MusicNotificationListener extends NotificationListenerService {
         String currentDate = df2.format(c.getTime());
         Log.d(TAG, "onNotificationPosted: current date is: " + currentDate);
 
-        //String path = Environment.getExternalStorageDirectory() + "/videoDIARY/Music/";
         String path = mContext.getExternalFilesDir(null) + "/videoDIARY/Music/";
 
 
@@ -112,26 +113,6 @@ public class MusicNotificationListener extends NotificationListenerService {
             writeToFile(location, "Time: " + formattedTime + "\nPackage: " + pack + "\nTitle: " + title + "\nText: " + text + "\n\n");
             prevTitle = currentTitle;
         }
-
-
-//        Log.i("Package",pack);
-//        Log.i("Ticker",ticker);
-//        Log.i("Title",title);
-//        Log.i("Text",text);
-
-//        Intent msgrcv = new Intent("Msg");
-//        msgrcv.putExtra("package", pack);
-//        msgrcv.putExtra("ticker", ticker);
-//        msgrcv.putExtra("title", title);
-//        msgrcv.putExtra("text", text);
-//        if(id != null) {
-//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//            id.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//            byte[] byteArray = stream.toByteArray();
-//            msgrcv.putExtra("icon",byteArray);
-//        }
-//        LocalBroadcastManager.getInstance(mContext).sendBroadcast(msgrcv);
-
     }
 
     @Override
@@ -161,17 +142,11 @@ public class MusicNotificationListener extends NotificationListenerService {
             e.printStackTrace();
 
         }
-
-
         try {
 
             stream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
-
-
 }

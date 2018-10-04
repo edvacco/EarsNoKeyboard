@@ -16,8 +16,10 @@ import android.util.Log;
 import static android.app.Notification.EXTRA_NOTIFICATION_ID;
 
 /**
- * Created by gwicks on 11/05/2018.
+ * Created by gwicks on 31/03/2018.
+ * The EMA notification if the user snoozed the previous one ( EMAAlarmReceiver)
  */
+
 
 public class EMASleepReceiver extends BroadcastReceiver {
 
@@ -32,15 +34,10 @@ public class EMASleepReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         mContext = context;
-        Log.d(TAG, "onReceive: in second one FUCKER");
-
-
-
+        Log.d(TAG, "onReceive: in second one");
         //mNotificationManager.cancel(1);
         Log.d(TAG, "onReceive: in sleep 1 intent");
         Log.d(TAG, "onReceive: mnotif: " + mNotificationManager);
-
-
 
         if(mNotificationManager == null){
             Log.d(TAG, "onReceive: in notification manager = null");

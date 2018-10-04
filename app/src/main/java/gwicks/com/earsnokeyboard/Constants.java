@@ -1,7 +1,8 @@
 package gwicks.com.earsnokeyboard;
 
 /**
- * Created by gwicks on 11/05/2018.
+ * Created by gwicks on 7/08/2016.
+ * Class exists to provide AWS details accross the program
  */
 
 public class Constants {
@@ -25,7 +26,8 @@ public class Constants {
     //public static final String BUCKET_NAME = "sevencups";
     //public static final String BUCKET_NAME = "katemills";
     //public static final String BUCKET_NAME = "earsrandy";
-    public static final String BUCKET_NAME = "earspitts";
+    //public static final String BUCKET_NAME = "earspitts";
+    public static final String BUCKET_NAME = "adaptvideostest";
 
 
 

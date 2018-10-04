@@ -11,20 +11,16 @@ import gwicks.com.earsnokeyboard.Setup.FinishInstallScreen;
 
 /**
  * Created by gwicks on 30/05/2018.
+ * Simple dialog to pop up if detects any risk states
  */
 
 public class HealthCheckDialog extends DialogFragment {
-
-
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        //AlertDialog OptionDialog = new AlertDialog.Builder(this).create();
-
-        //builder.setTitle("This is title")
 
         builder.setMessage("Based on your response, you indicated that you may feel unsafe.\n" +
                 "We encourage you to talk with your parent or guardian as soon as possible.\n" +

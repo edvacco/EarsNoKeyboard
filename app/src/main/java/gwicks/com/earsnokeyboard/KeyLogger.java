@@ -15,6 +15,7 @@ import static gwicks.com.earsnokeyboard.Setup.SetupStepThree.isAccessibilityEnab
 
 /**
  * Created by gwicks on 11/05/2018.
+ * The Keylogger that logs the keyboard input using the accessibility service.
  */
 
 public class KeyLogger extends AccessibilityService {

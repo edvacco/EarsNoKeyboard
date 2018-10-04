@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
@@ -21,73 +20,22 @@ import java.util.Map;
 
 /**
  * Created by gwicks on 11/05/2018.
+ * Get the phone usage stats of the user. Requires permission
  */
 
 public class UStats {
 
-    //private static final String TAG = "UStats";
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("M-d-yyyy HH:mm:ss");
     public static final String TAG = UStats.class.getSimpleName();
-
-
-    private DateFormat mDateFormat = new SimpleDateFormat();
 
     static String directoryName = "/videoDIARY/";
     static String time;
-
-    //Context mContext = MainActivity.getIntance();
-
-
-
-//    @SuppressWarnings("ResourceType")
-//    public static void getStats(Context context){
-//        UsageStatsManager usm = (UsageStatsManager) context.getSystemService("usagestats");
-//        int interval = UsageStatsManager.INTERVAL_YEARLY;
-//        Calendar calendar = Calendar.getInstance();
-//        long endTime = calendar.getTimeInMillis();
-//        calendar.add(Calendar.DAY_OF_YEAR, -1);
-//        long startTime = calendar.getTimeInMillis();
-//
-//        Log.d(TAG, " getStats Range start:" + dateFormat.format(startTime) );
-//        Log.d(TAG, "get Stats Range end:" + dateFormat.format(endTime));
-//
-//        UsageEvents uEvents = usm.queryEvents(startTime,endTime);
-//        while (uEvents.hasNextEvent()){
-//            UsageEvents.Event e = new UsageEvents.Event();
-//            uEvents.getNextEvent(e);
-//
-//            if (e != null){
-//                Log.d(TAG, "Event: " + e.getPackageName() + "\t" +  e.getTimeStamp());
-//            }
-//        }
-//    }
 
     public static List<UsageStats> getUsageStatsList(Context context){
         UsageStatsManager usm = getUsageStatsManager(context);
         Calendar calendar = Calendar.getInstance();
 
-        //
-//        calendar.add(Calendar.DAY_OF_YEAR, -1);
-//        long endtime = calendar.get(Calendar.DAY_OF_YEAR);
-//        calendar.add(Calendar.DAY_OF_YEAR, -1);
-//        long starttime = calendar.get(Calendar.DAY_OF_YEAR);
-//
-//        Log.d(TAG, "getUsageStatsList: NEW DAYS: endtime: " + endtime + " startime: " + starttime);
-
-        //
-
-
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
         Log.d(TAG, "getUsageStatsList: SDF =  " + sdf);
-
-        //calendar.setTime(sdf.p);
-        // long endTime = calendar.setTime();
-
-
-
-
-
-        //
 
         long endTime = calendar.getTimeInMillis();
         //calendar.add(Calendar.DAY_OF_YEAR, -1);
@@ -101,15 +49,7 @@ public class UStats {
         Log.d(TAG, "getUsageStatsList: date endtime:  " + two);
         time = two.toString();
 
-
-
-        // long endTime1 = calendar.
-
-        //  Log.d(TAG, "Range start1 :" + dateFormat.format(calendar.getTimeInMillis()));
-        // Log.d(TAG, "Range end1 :" + dateFormat.format(System.currentTimeMillis()));
-
         List<UsageStats> usageStatsList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY,  startTime,endTime);     // calendar.getTimeInMillis(), System.currentTimeMillis()); //(UsageStatsManager.INTERVAL_DAILY,startTime,endTime);
-        //List<UsageStats> usageStatsList = getUsageStatistics(statsUsageInterval.mInterval);
 
         Map<String, UsageStats> stats = usm.queryAndAggregateUsageStats(startTime, endTime);
 
@@ -127,14 +67,11 @@ public class UStats {
         return usageStatsList;
     }
 
-    //public static void printUsageStats(List<UsageStats> usageStatsList){
     public static String printUsageStats(List<UsageStats> usageStatsList, Context context){
 
         Log.d(TAG, "printUsageStats: in print");
 
         String uri = (context.getExternalFilesDir(null) + directoryName + "AppUsage_" + time + ".txt");
-        //StatsJobService.setFielName(uri);
-        //StatsJobService.fileName = uri;
 
         Log.d(TAG, "printUsageStats: The string URI for file is: " + uri);
 
@@ -162,23 +99,9 @@ public class UStats {
                 writeToFile(file, "Time last used: " +data +"\n");
                 Log.d(TAG, "printUsageStats: ______________________________________________________");
                 writeToFile(file, " ______________________________________________________\n\n");
-
-
-
             }
-
-//            int minutes = (int)u.getTotalTimeInForeground()/60000;
-//            int seconds = (int)(u.getTotalTimeInForeground() % 60000) / 1000;
-//            Log.d(TAG, "printUsageStats: minutes: " + minutes + " seconds: " + seconds);
-//            Log.d(TAG, "Pkg: " + u.getPackageName() +  "\t" + "ForegroundTime: "
-//                    + u.getTotalTimeInForeground()/1000 + " seconds " );// mDateFormat.format(u.getLastTimeUsed()) + " time last used") ;
         }
-
         return uri;
-
-
-
-
     }
 
     public static String printCurrentUsageStatus(Context context){
@@ -226,6 +149,5 @@ public class UStats {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }

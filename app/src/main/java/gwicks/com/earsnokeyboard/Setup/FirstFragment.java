@@ -11,6 +11,7 @@ import gwicks.com.earsnokeyboard.R;
 
 /**
  * Created by gwicks on 11/05/2018.
+ * Not used anymore
  */
 
 public class FirstFragment extends Fragment {

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.os.Handler;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -14,7 +13,9 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by gwicks on 11/05/2018.
+ * Created by gwicks on 2/04/2018.
+ * Listener for phone calls. Not sure if this still works in Android Oreo
+ * UPDATE: still working in O and P, although not entirely sure why, it's not supposed to
  */
 
 public class OutgoingCallListener extends BroadcastReceiver {
@@ -30,7 +31,6 @@ public class OutgoingCallListener extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         mContext = context;
-
         if(intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)){
             Log.d(TAG, "onReceive: this is after checking ACTION");
         }
@@ -56,16 +56,9 @@ public class OutgoingCallListener extends BroadcastReceiver {
     public class CustomPhoneStateListener extends PhoneStateListener
     {
         private static final String TAG = "CustomPhoneListener2";
-        Handler handler=new Handler();
-
-
-
 
         File dir;
         File f1;
-
-
-
 
         @Override
         public void onCallStateChanged(int state, String incomingNumber)
@@ -165,11 +158,7 @@ public class OutgoingCallListener extends BroadcastReceiver {
                             mediaRecorder = null;
                             onCall = false;
                         }
-
-
                     }
-
-
                     break;
 
                 default:
@@ -179,11 +168,6 @@ public class OutgoingCallListener extends BroadcastReceiver {
             super.onCallStateChanged(state, incomingNumber);
             telephony.listen(customPhoneListener, PhoneStateListener.LISTEN_NONE);
         }
-
-
     }
-
-
-
 }
 

@@ -26,46 +26,40 @@ import javax.crypto.NoSuchPaddingException;
 import static java.lang.System.exit;
 
 /**
- * Created by gwicks on 11/05/2018.
+ * Created by gwicks on 15/06/2017.
+ * Each day upload all the photos taken on device, and upload to AWS
+ * Achieve this by checking the default photo folder, and checking the data modified file info
+ * If modified in the last 24 hours, upload the sucker
  */
 
 public class PhotoUploadReceiver extends BroadcastReceiver {
-
 
     private static final String TAG = "PhotoUploadReceiver";
 
     TransferUtility mTransferUtility;
     Encryption mEncryption;
     Context mContext;
-    String encryptedPath;
     static String folder = "/Photos/";
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        //mContext = MainActivity.instance; - changed 1st June 2017
         mContext = context;
         mEncryption = new Encryption();
         mTransferUtility = Util.getTransferUtility(mContext);
 
         Calendar c = Calendar.getInstance();
-        //System.out.println("Current time => " + c.getTime());
 
         SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy_HHmmssSSS");
-        String formattedDate = df.format(c.getTime());
 
-        String CameraFolder="Camera";
         String CameraD = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/";
         File CameraDirectory = new File(CameraD);
         Long currentTime = System.currentTimeMillis();
         int dayTime = 24*60*60*1000;
         Long finalTime = currentTime - dayTime;
         Log.d(TAG, "getPhotos: the current time is: " + currentTime);
-        //File CameraDirectory = (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM));
 
         ArrayList<File> photos = new ArrayList<>();
-
-
 
         Log.d(TAG, "getPhotos: the cameraDirectory is: " + CameraDirectory.toString());
         File[] files = CameraDirectory.listFiles();
@@ -76,7 +70,6 @@ public class PhotoUploadReceiver extends BroadcastReceiver {
 
         if(CameraDirectory.isDirectory()){
             Log.d(TAG, "getPhotos: directory!! ");
-
         }
 
         if(files == null){
@@ -103,67 +96,24 @@ public class PhotoUploadReceiver extends BroadcastReceiver {
         }
 
 
-
-//        String path = Environment.getExternalStorageDirectory() + "/videoDIARY/Photos/";
-//
-        //File directory = new File(CameraD);
-
-        //String encryptedPath = Encrypt("MicRecord_" +formattedDate, path );
-        //beginUpload2("MicRecord_" +formattedDate, encryptedPath);
-
-
         int i = 1;
         for(File each : photos){
 
             String filename=each.getName();
 
             Log.d(TAG, "onReceive: path = " + each.getAbsolutePath());
-            //String finalPath = Encrypt(filename, each.getAbsolutePath());
             Encrypt(filename, each.getAbsolutePath());
-            //File encryptedFile = new File(finalPath);
-//            encryptedPhotos.add(encryptedFile);
-//            i = i + 1;
-//            Log.d(TAG, "onReceive: i is: " + i);
-//            try{
-//                each.delete();
-//            }catch (Exception e){
-//                Log.d(TAG, "onReceive: error deleting: " + e);
-//            }
-
         }
 
         String path = mContext.getExternalFilesDir(null) + "/videoDIARY/Photos/";
-
         File directory = new File(path);
-
-
         if(!directory.exists()){
             directory.mkdirs();
         }
 
 
-
-        //File[] files = directory.listFiles();
         ArrayList<File> encryptedPhotos = new ArrayList<>(Arrays.asList(directory.listFiles()));
-
-        //ArrayList<File> encryptedFiles = new ArrayList<>(Arrays.asList(directory.listFiles()));
-
-
         Util.uploadFilesToBucket(encryptedPhotos, true,logUploadCallback, mContext, folder);
-
-        //DELETING FILE BEFORE UPLOAD COMPLETE!!!!
-
-//        for(File each : encryptedFiles){
-//            Log.d(TAG, "onReceive: encrypted file to be uploaded: " + each.getAbsolutePath());
-//            beginUpload2("MicRecord_" +formattedDate, each.getAbsolutePath());
-//            try{
-//                each.delete();
-//            }catch (Exception e){
-//                Log.d(TAG, "onReceive: error deleting: " + e);
-//            }
-//        }
-
-
     }
 
 
@@ -195,31 +145,7 @@ public class PhotoUploadReceiver extends BroadcastReceiver {
         Log.d(TAG, "Encrypt: path2 is: " + path2);
         //beginUpload2("STATS", path2);
         return path2;
-
-
-
     }
-
-//    private void beginUpload2(String name, String filePath) {
-//        Log.d(TAG, "beginUpload2: start of beginupload2");
-//        Log.d(TAG, "beginUpload2: the filepath is: " + filePath);
-//        if (filePath == null) {
-//            //Toast.makeText(this, "Could not find the filepath of the selected file", Toast.LENGTH_LONG).show();
-//            Log.d(TAG, "beginUpload2: no file path found");
-//            return;
-//        }
-//
-//
-//        Log.d(TAG, "beginUpload2: middle");
-//
-//        File file = new File(filePath);
-//        Log.d(TAG, "beginUpload2: after new file");
-//        //TransferObserver observer = transferUtility.upload(Constants.BUCKET_NAME, name,
-//        mTransferUtility.upload(Constants.BUCKET_NAME, name,
-//                file);
-//        Log.d(TAG, "beginUpload2: end");
-//
-//    }
 
     final Util.FileTransferCallback logUploadCallback = new Util.FileTransferCallback() {
         @SuppressLint("DefaultLocale")

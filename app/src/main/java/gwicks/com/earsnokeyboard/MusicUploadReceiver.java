@@ -20,10 +20,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 
 import javax.crypto.NoSuchPaddingException;
-
 /**
- * Created by gwicks on 11/05/2018.
+ * Created by gwicks on 14/06/2017.
+ * Uploads the text file of music listening to AWS
  */
+
 
 public class MusicUploadReceiver extends BroadcastReceiver {
 
@@ -39,34 +40,23 @@ public class MusicUploadReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        //mContext = MainActivity.instance; - changed 1st June 2017
         mContext = context;
         mEncryption = new Encryption();
         mTransferUtility = Util.getTransferUtility(mContext);
 
         Calendar c = Calendar.getInstance();
-        //System.out.println("Current time => " + c.getTime());
 
         SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy_HHmmssSSS");
         String formattedDate = df.format(c.getTime());
-
-
 
         String path = mContext.getExternalFilesDir(null) + "/videoDIARY/Music/";
 
         File directory = new File(path);
 
-
         if(!directory.exists()){
             directory.mkdirs();
         }
 
-
-        //String encryptedPath = Encrypt("MicRecord_" +formattedDate, path );
-        //beginUpload2("MicRecord_" +formattedDate, encryptedPath);
-
-
-        //File[] files = directory.listFiles();
         ArrayList<File> files = new ArrayList<>(Arrays.asList(directory.listFiles()));
         int i = 1;
         for(File each : files){
@@ -80,27 +70,10 @@ public class MusicUploadReceiver extends BroadcastReceiver {
             }catch (Exception e){
                 Log.d(TAG, "onReceive: error deleting: " + e);
             }
-
         }
 
         ArrayList<File> encryptedFiles = new ArrayList<>(Arrays.asList(directory.listFiles()));
-
-
         Util.uploadFilesToBucket(encryptedFiles, true,logUploadCallback, mContext, folder);
-
-        //DELETING FILE BEFORE UPLOAD COMPLETE!!!!
-
-//        for(File each : encryptedFiles){
-//            Log.d(TAG, "onReceive: encrypted file to be uploaded: " + each.getAbsolutePath());
-//            beginUpload2("MicRecord_" +formattedDate, each.getAbsolutePath());
-//            try{
-//                each.delete();
-//            }catch (Exception e){
-//                Log.d(TAG, "onReceive: error deleting: " + e);
-//            }
-//        }
-
-
     }
 
 
@@ -132,31 +105,8 @@ public class MusicUploadReceiver extends BroadcastReceiver {
         Log.d(TAG, "Encrypt: path2 is: " + path2);
         //beginUpload2("STATS", path2);
         return path2;
-
-
-
     }
 
-//    private void beginUpload2(String name, String filePath) {
-//        Log.d(TAG, "beginUpload2: start of beginupload2");
-//        Log.d(TAG, "beginUpload2: the filepath is: " + filePath);
-//        if (filePath == null) {
-//            //Toast.makeText(this, "Could not find the filepath of the selected file", Toast.LENGTH_LONG).show();
-//            Log.d(TAG, "beginUpload2: no file path found");
-//            return;
-//        }
-//
-//
-//        Log.d(TAG, "beginUpload2: middle");
-//
-//        File file = new File(filePath);
-//        Log.d(TAG, "beginUpload2: after new file");
-//        //TransferObserver observer = transferUtility.upload(Constants.BUCKET_NAME, name,
-//        mTransferUtility.upload(Constants.BUCKET_NAME, name,
-//                file);
-//        Log.d(TAG, "beginUpload2: end");
-//
-//    }
 
     final Util.FileTransferCallback logUploadCallback = new Util.FileTransferCallback() {
         @SuppressLint("DefaultLocale")

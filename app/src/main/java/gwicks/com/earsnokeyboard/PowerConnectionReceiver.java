@@ -35,9 +35,6 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
         SimpleDateFormat dateOnly = new SimpleDateFormat("ddMMyyyy");
         String theTime = df.format(cal.getTime());
         String theDate = dateOnly.format(cal.getTime());
-//        long when = cal.getTimeInMillis();
-//        String timey = Long.toString(when);
-//        String theTime = convertDate(timey, "dd/MM/yyyy hh:mm:ss");
 
         String path = context.getExternalFilesDir(null) + "/Sensors/CHARGING/";
         File directory = new File(path);
@@ -47,20 +44,13 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
         }
 
         File location = new File(directory, theDate +".txt");
-
-
-        //Toast.makeText(context, "The time is nice format is: " + theTime, Toast.LENGTH_LONG ).show();
-
         if(action.equals(Intent.ACTION_POWER_CONNECTED)) {
             // Do something when power connected
-            //Toast.makeText(context, "CONNECTED", Toast.LENGTH_LONG).show();
             writeToFile(location, "TIME," + theTime + ",CHARGING STATUS, Charging\n");
         }
         else if(action.equals(Intent.ACTION_POWER_DISCONNECTED)) {
             // Do something when power disconnected
-            //Toast.makeText(context, "Diconnected", Toast.LENGTH_LONG).show();
             writeToFile(location, "TIME," + theTime + ",CHARGING STATUS, Disconnected\n");
-
         }
     }
 
@@ -96,6 +86,5 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
         }catch(NullPointerException e){
             e.printStackTrace();
         }
-
     }
 }

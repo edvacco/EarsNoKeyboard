@@ -54,7 +54,7 @@ public class RealTimeDataHandler implements RealTimeDataListener {
         File directory = new File(path);
         if(!directory.exists()){
             Log.d(TAG, "onCreate: making directory");
-            directory.mkdir();
+            directory.mkdirs();
         }
 
 

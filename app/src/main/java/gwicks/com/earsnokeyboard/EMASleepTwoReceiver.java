@@ -14,7 +14,8 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 /**
- * Created by gwicks on 11/05/2018.
+ * Created by gwicks on 31/03/2018.
+ * If user has snoozed two previous EMA notifications
  */
 
 public class EMASleepTwoReceiver extends BroadcastReceiver {

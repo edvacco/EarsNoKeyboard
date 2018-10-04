@@ -44,7 +44,13 @@ import gwicks.com.earsnokeyboard.Util;
 //import okhttp3.internal.Util;
 
 /**
- * Created by gwicks on 11/05/2018.
+ * Created by gwicks on 20/01/2018.
+ * This is to take a selfie for reference purposes. This class has changed a lot
+ * Previous versions used the Face Detect Google API to ensure that a face was in the
+ * picture, and only ONE face.
+ * Some phones had problems with this, so I have temporarily taken out, but left a lot
+ * of commented code in order to be able to put back in at some point.
+ * Hopefully once phones move on to android => 6, we can fix this
  */
 
 public class FaceDetect extends AppCompatActivity {

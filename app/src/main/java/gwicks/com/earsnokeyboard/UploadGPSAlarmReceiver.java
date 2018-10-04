@@ -22,7 +22,8 @@ import java.util.Calendar;
 import javax.crypto.NoSuchPaddingException;
 
 /**
- * Created by gwicks on 11/05/2018.
+ * Created by gwicks on 26/05/2017.
+ * Upload the GPS files to AWS once a day
  */
 
 public class UploadGPSAlarmReceiver extends BroadcastReceiver {
@@ -32,61 +33,26 @@ public class UploadGPSAlarmReceiver extends BroadcastReceiver {
     TransferUtility mTransferUtility;
     Encryption mEncryption;
     Context mContext;
-    String encryptedPath;
     static String folder = "/GPS/";
-
-    Context newContext;
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        //mContext = MainActivity.instance; - Changed 1st June 2017
         Log.d(TAG, "onReceive: ");
-
         mContext = context;
-        //newContext = context.getApplicationContext();
         mEncryption = new Encryption();
         mTransferUtility = Util.getTransferUtility(mContext);
 
         Calendar c = Calendar.getInstance();
-        //System.out.println("Current time => " + c.getTime());
-
         SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy");
         String formattedDate = df.format(c.getTime());
 
-
-
-        //String path = mContext.getExternalFilesDir(null) + "/videoDIARY/Location/";
-
-        //String path = newContext.getExternalFilesDir(null) + "/videoDIARY/Location/";
-
-        // 9th October 2017, couple of phones had crashed, trying new:
-        // 11th Ocotober: keeps crashing
-
-        //String path = AnyApplication.getAppContext().getExternalFilesDir(null) + "/videoDIARY/Location/";
-
-        // 11th Oct, try try again!
-
         String path = mContext.getExternalFilesDir(null) + "/videoDIARY/Location/";
-
-
         File directory = new File(path);
-
 
         if(!directory.exists()){
             directory.mkdirs();
         }
-
-
-        //String encryptedPath = Encrypt("MicRecord_" +formattedDate, path );
-        //beginUpload2("MicRecord_" +formattedDate, encryptedPath);
-
-
-        //File[] files = directory.listFiles();
-
-        //Change 9th June 2017
-
-
 
         ArrayList<File> files = new ArrayList<>(Arrays.asList(directory.listFiles()));
         int i = 1;
@@ -101,29 +67,10 @@ public class UploadGPSAlarmReceiver extends BroadcastReceiver {
             }catch (Exception e){
                 Log.d(TAG, "onReceive: error deleting: " + e);
             }
-
         }
-
         ArrayList<File> encryptedFiles = new ArrayList<>(Arrays.asList(directory.listFiles()));
 
-        // END 9th JUne change
-
-
         Util.uploadFilesToBucket(encryptedFiles, true,logUploadCallback, mContext, folder);
-
-        //DELETING FILE BEFORE UPLOAD COMPLETE!!!!
-
-//        for(File each : encryptedFiles){
-//            Log.d(TAG, "onReceive: encrypted file to be uploaded: " + each.getAbsolutePath());
-//            beginUpload2("MicRecord_" +formattedDate, each.getAbsolutePath());
-//            try{
-//                each.delete();
-//            }catch (Exception e){
-//                Log.d(TAG, "onReceive: error deleting: " + e);
-//            }
-//        }
-
-
     }
 
 
@@ -155,9 +102,6 @@ public class UploadGPSAlarmReceiver extends BroadcastReceiver {
         Log.d(TAG, "Encrypt: path2 is: " + path2);
         //beginUpload2("STATS", path2);
         return path2;
-
-
-
     }
 
     private void beginUpload2(String name, String filePath) {
@@ -168,7 +112,6 @@ public class UploadGPSAlarmReceiver extends BroadcastReceiver {
             Log.d(TAG, "beginUpload2: no file path found");
             return;
         }
-
 
         Log.d(TAG, "beginUpload2: middle");
 

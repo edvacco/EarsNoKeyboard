@@ -14,7 +14,9 @@ import android.provider.Settings;
 import android.util.Log;
 
 /**
- * Created by gwicks on 11/05/2018.
+ * Created by gwicks on 13/04/2018.
+ * basic GPS tracking class, used in various places throughout the application
+ *
  */
 
 public class GPSTracker extends Service implements LocationListener {

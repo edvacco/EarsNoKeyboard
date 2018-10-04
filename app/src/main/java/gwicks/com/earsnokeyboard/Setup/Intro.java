@@ -18,9 +18,13 @@ import android.view.WindowManager;
 import gwicks.com.earsnokeyboard.R;
 
 /**
- * Created by gwicks on 11/05/2018.
+ * Created by gwicks on 21/01/2018.
+ * First step in installion of EARS tool
+ * It should check to see if tool is already installed and if so move to final step,
+ * it should also check if each step is completed, and automatically move to the proper
+ * place, that is not working however, due to a weirdness with LG phones
+ * TODO: fix the above
  */
-
 public class Intro extends AppCompatActivity {
 
     Context mContext;
@@ -49,15 +53,15 @@ public class Intro extends AppCompatActivity {
 
         Log.d(TAG, "onResume: deviceMan = " + deviceMan);
 
-        if(deviceMan.equals("LGE")){
-            Log.d(TAG, "onResume: LG Device, fucking shit");
+        if(deviceMan.equals("LGE")){ // LG bug, so cant step through to end
             moveToNextStep();
         }
+        // If we have access to usage stats, move to final step as app has previously been installed
         else if(isAccessGranted()) {
-            Log.d(TAG, "onResume: 1");
             moveToFinalStep();
-        }else {
-            Log.d(TAG, "onResume: 2");
+        }
+        // Otherwise, install from the beginning
+        else {
             moveToNextStep();
         }
     }

@@ -258,7 +258,7 @@ public class FinishInstallScreen extends AppCompatActivity {
 
         if(!directory2.exists()){
             Log.d(TAG, "onCreate: making directory");
-            directory2.mkdir();
+            directory2.mkdirs();
         }
 
         destroyEvents = new File(directory2,  "DestroyEvents.txt");
@@ -291,8 +291,8 @@ public class FinishInstallScreen extends AppCompatActivity {
             }, 1000*60*3);
 
         }
-
-        startEMAUploadAlarm();
+//
+//        startEMAUploadAlarm();
 
         //Finish Comment out
 
@@ -469,7 +469,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         Log.d("the time is: ", when + " ");
 
         cal.setTimeInMillis(System.currentTimeMillis());
-        cal.set(Calendar.HOUR_OF_DAY, 11);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
         cal.set(Calendar.MINUTE, 56);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -643,8 +643,8 @@ public class FinishInstallScreen extends AppCompatActivity {
         Intent intent = new Intent(this, EMAAlarmReceiver.class);
         intent.putExtra("EMA", "EMA1");
         startEMAIntent = PendingIntent.getBroadcast(this, 9, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),alarmMgr.INTERVAL_DAY * 7 , startEMAIntent);
-        //alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000 * 60 * 120, startEMAIntent);
+        //alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),alarmMgr.INTERVAL_DAY * 7 , startEMAIntent);
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000 * 60 * 60, startEMAIntent);
         Log.d(TAG, "startEMAAlarm: alarm shjould be set");
         alarmStarted = true;
 

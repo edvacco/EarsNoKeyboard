@@ -14,6 +14,7 @@ import gwicks.com.earsnokeyboard.R;
 
 /**
  * Created by gwicks on 11/05/2018.
+ * This class is basically just a handler to show a thank you screen for 4 seconds before moving to final page
  */
 
 public class SetupStepSeven extends AppCompatActivity {

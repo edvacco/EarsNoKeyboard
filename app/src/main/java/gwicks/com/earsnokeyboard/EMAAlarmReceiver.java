@@ -19,7 +19,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Created by gwicks on 11/05/2018.
+ * Created by gwicks on 31/03/2018.
+ * Notification for EMA. Checks time to make sure the EMA is received every two hours
+ * between 8am and 10pm. Sets up the snooze function ( EMASleepReceiver )
  */
 
 public class EMAAlarmReceiver extends BroadcastReceiver {
@@ -50,14 +52,8 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
             return;
         }
 
-
-
         stringExtra = intent.getStringExtra("EMA");
-
-
-
-
-        Log.d(TAG, "onReceive: IN FIRST 1 FUCKER");
+        Log.d(TAG, "onReceive: IN FIRST 1");
         String dateFormat = "HH:mm:ss";
         String endTime= "23:30:00";
         String startTime = "08:00:00";
@@ -79,17 +75,7 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
         } else {
             System.out.println("Date is out of range there fore skippingf: ");
             return;
-
         }
-
-        Calendar currentTime2 = Calendar.getInstance();
-
-
-
-
-
-
-
 
         Log.d(TAG, "onReceive: in receive ");
 
@@ -127,8 +113,15 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
 //                PendingIntent.getBroadcast(context, 0, snoozeIntent, 0);
 
 
-        //Intent resultIntent = new Intent(context, EMA.class);
-        Intent resultIntent = new Intent(context, SecondEMA.class);
+        Intent resultIntent = new Intent(context, EMA.class);
+        //Intent resultIntent = new Intent(context, SecondEMA.class);
+
+
+        // 3rd October thing to stop not firing properly lots of ideas below:
+
+        //int dummyInt = new Random().nextInt(3435);
+        //PendingIntent pendingIntent = PendingIntent.getActivity(context, dummyInt, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
 
         //resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, resultIntent, 0);

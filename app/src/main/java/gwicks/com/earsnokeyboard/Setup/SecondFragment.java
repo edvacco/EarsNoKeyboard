@@ -11,8 +11,8 @@ import gwicks.com.earsnokeyboard.R;
 
 /**
  * Created by gwicks on 11/05/2018.
+ * Part of the 3 page intro screen explaining what we are doing here
  */
-
 public class SecondFragment extends Fragment {
 
     private static final String TAG = "SecondFragment";

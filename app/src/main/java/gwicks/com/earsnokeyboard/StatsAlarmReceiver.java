@@ -18,13 +18,12 @@ import javax.crypto.NoSuchPaddingException;
 import gwicks.com.earsnokeyboard.Setup.FinishInstallScreen;
 
 /**
- * Created by gwicks on 11/05/2018.
+ * Created by gwicks on 18/05/2017.
+ * Gets the app usage stats for the last 24hrs and uploads to AWS
  */
 public class StatsAlarmReceiver extends BroadcastReceiver {
 
     private static final String TAG = "StatsAlarmReceiver";
-
-
     TransferUtility transferUtility;
     String Uri;
     String encryptedUri;
@@ -32,14 +31,11 @@ public class StatsAlarmReceiver extends BroadcastReceiver {
     Context mContext;
     String userID;
 
-    Context newContext;
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        //mContext  = MainActivity.instance;
         mContext = context;
-        //newContext = context.getApplicationContext();
         Log.d(TAG, "onReceive: we have started onrecieve");
         userID = FinishInstallScreen.secureID;
         mEncryption = new Encryption();
@@ -52,11 +48,7 @@ public class StatsAlarmReceiver extends BroadcastReceiver {
         Log.d(TAG, "onReceive: the name is: " + theName);
         encryptedUri = Encrypt(theName, Uri);
         beginUpload2(theName, encryptedUri);
-
-
     }
-
-
 
     public String Encrypt(String name, String path){
         Log.d(TAG, "Encrypt: 1");
@@ -86,9 +78,6 @@ public class StatsAlarmReceiver extends BroadcastReceiver {
         Log.d(TAG, "Encrypt: path2 is: " + path2);
         //beginUpload2("STATS", path2);
         return path2;
-
-
-
     }
 
     private void beginUpload2(String name, String filePath) {
@@ -100,7 +89,6 @@ public class StatsAlarmReceiver extends BroadcastReceiver {
             return;
         }
 
-
         Log.d(TAG, "beginUpload2: middle");
 
         File file = new File(filePath);
@@ -108,7 +96,5 @@ public class StatsAlarmReceiver extends BroadcastReceiver {
         transferUtility.upload(Constants.BUCKET_NAME,  userID + "/UsageStats/" + name,
                 file);
         Log.d(TAG, "beginUpload2: end");
-
     }
-
 }

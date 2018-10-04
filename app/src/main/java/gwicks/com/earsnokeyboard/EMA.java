@@ -24,7 +24,10 @@ import java.util.Collections;
 import gwicks.com.earsnokeyboard.Setup.FinishInstallScreen;
 
 /**
- * Created by gwicks on 11/05/2018.
+ * Created by gwicks on 31/03/2018.
+ * This is the EMA created for the Ears Mini Norman study at UO January 2018.
+ * Asks a bunch of questions about the participants last couple of hours,
+ * recorded using a seekbar.
  */
 
 public class EMA extends Activity implements SeekBar.OnSeekBarChangeListener, TimeSpentWith.NoticeDialogListener{
@@ -59,14 +62,7 @@ public class EMA extends Activity implements SeekBar.OnSeekBarChangeListener, Ti
     public Button timeSpentButton;
     public Button finishedButton;
 
-
-
-
-
     public ArrayList<String> questions;
-
-    //public static NotificationManager notificationManager;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,8 +70,6 @@ public class EMA extends Activity implements SeekBar.OnSeekBarChangeListener, Ti
         setContentView(R.layout.survey_layout);
 
         mSelectedTimeWith = new ArrayList();
-        Log.d(TAG, "onCreate: IN MAIN ACTIVITY FUCKER");
-
 
         String path = getExternalFilesDir(null) + "/EMA/";
 
@@ -85,24 +79,12 @@ public class EMA extends Activity implements SeekBar.OnSeekBarChangeListener, Ti
             directory.mkdirs();
         }
 
-
-
-
-
         Calendar c = Calendar.getInstance();
         //System.out.println("Current time => " + c.getTime());
 
         SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy_HHmm");
         final String formattedDate = df.format(c.getTime());
         Log.d(TAG, "onCreate: formated date  = " + formattedDate);
-
-//        if(notificationManager == null){
-//            Log.d(TAG, "onCreate: EMA loading the notificataion manager");
-//            notificationManager = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
-//            Log.d(TAG, "onCreate: noti manager should be loaded");
-//        }
-//        Log.d(TAG, "onCreate: just past noti manager");
-
 
         questions = new ArrayList<String>();
         questions.add("How confident do you feel right now?");
@@ -193,20 +175,10 @@ public class EMA extends Activity implements SeekBar.OnSeekBarChangeListener, Ti
 
                 Log.d(TAG, "onClick: 2");
 
-
-
-//                Intent startMain = new Intent(Intent.ACTION_MAIN);
-//                startMain.addCategory(Intent.CATEGORY_HOME);
-//                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(startMain);
-//                Log.d(TAG, "onClick: 3");
-
-
                 Toast.makeText(getBaseContext(), "Thank you for completing the questionnaire, they will appear roughly every two hours between 8am and midnight  :)", Toast.LENGTH_LONG).show();
                 Intent returnToFinish = new Intent(EMA.this, FinishInstallScreen.class);
 
                 startActivity(returnToFinish);
-
             }
         });
 
@@ -215,12 +187,6 @@ public class EMA extends Activity implements SeekBar.OnSeekBarChangeListener, Ti
 
     }
 
-//    public NotificationManager getNotificationManager(){
-//        if(notificationManager == null){
-//            notificationManager = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
-//        }
-//        return notificationManager;
-//    }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {

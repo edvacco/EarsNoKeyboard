@@ -19,7 +19,11 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * Created by gwicks on 11/05/2018.
+ * Created by gwicks on 25/08/2016.
+ *
+ * Standard Java Encryption Class, uses boiler plate Code found on Java Website.
+ *
+ * NOTE password is stored in BuildConfig, and you should change the IV to something else, obviously
  */
 
 public class Encryption {

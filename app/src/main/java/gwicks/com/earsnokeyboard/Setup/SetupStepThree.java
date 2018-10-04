@@ -27,6 +27,7 @@ import gwicks.com.earsnokeyboard.R;
 
 /**
  * Created by gwicks on 11/05/2018.
+ * This step installs the Accessibility Keyboard option, to enable key logging of all keyboard input. Lots of scary warnings on install
  */
 
 public class SetupStepThree extends AppCompatActivity {
@@ -60,6 +61,8 @@ public class SetupStepThree extends AppCompatActivity {
         }
     }
 
+
+    // Button click in XML fires this to install the keyboard
 
     public void installKeyboard(View v){
 

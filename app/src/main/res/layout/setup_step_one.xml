@@ -20,7 +20,7 @@
         android:lineSpacingExtra="5sp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:text="A project of The Center for Digital Mental Health at the University of Oregon and the University of Pittsburgh Medical Center"
+        android:text="A project of The Center for Digital Mental Health at the University of Oregon and UPMC"
         android:textColor="#ffffff"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -44,5 +44,9 @@
 
 
 </android.support.constraint.ConstraintLayout>
+
+
+    <!--android:text="A project of The Center for Digital Mental Health at the University of Oregon and the University of Pittsburgh Medical Center"-->
+
 
 

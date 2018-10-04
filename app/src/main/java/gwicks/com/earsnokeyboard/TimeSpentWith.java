@@ -14,16 +14,13 @@ import static android.content.ContentValues.TAG;
 
 /**
  * Created by gwicks on 11/05/2018.
+ * Just a drop down for the EMA, to let people say who they have spent the most time with
  */
 
 public class TimeSpentWith extends DialogFragment {
 
-
-
     ArrayList mSelectedItems;
     String[] options;
-    String[] selected;
-
     ArrayList<String> selectedNew;
 
     public interface NoticeDialogListener {
@@ -106,12 +103,6 @@ public class TimeSpentWith extends DialogFragment {
                 });
 
         return builder.create();
-
     }
-
-
-
-
-
 }
 
