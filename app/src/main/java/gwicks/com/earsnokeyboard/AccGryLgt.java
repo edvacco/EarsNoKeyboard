@@ -142,7 +142,7 @@ public class AccGryLgt extends Service implements SensorEventListener {
         if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 
             long TS = System.currentTimeMillis();
-            Log.d(TAG, "onSensorChanged: The time stamp check is:  " + TS +" + " + LAST_TS_ACC );
+            //Log.d(TAG, "onSensorChanged: The time stamp check is:  " + TS +" + " + LAST_TS_ACC );
 
             // Filter to remove readings that come too often
             if (TS < LAST_TS_ACC + 100) {
@@ -193,7 +193,7 @@ public class AccGryLgt extends Service implements SensorEventListener {
         }
 
         else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
-            Log.d(TAG, "onSensorChanged: gyro");
+           // Log.d(TAG, "onSensorChanged: gyro");
 
 
             long TS = System.currentTimeMillis();
@@ -250,7 +250,7 @@ public class AccGryLgt extends Service implements SensorEventListener {
 
         else if(event.sensor.getType() == Sensor.TYPE_LIGHT){
 
-            Log.d(TAG, "onSensorChanged: light");
+            //Log.d(TAG, "onSensorChanged: light");
             long lightTime = System.currentTimeMillis();
 
             lightReading = event.values[0];

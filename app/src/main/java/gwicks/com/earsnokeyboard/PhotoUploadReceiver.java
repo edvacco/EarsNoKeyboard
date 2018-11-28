@@ -79,20 +79,33 @@ public class PhotoUploadReceiver extends BroadcastReceiver {
         Log.d(TAG, "getPhotos: size of array is: " + files.length);
 
         for (File CurFile : files) {
+            String fileName = CurFile.toString();
+            Log.d(TAG, "onReceive: filename is: " + fileName);
+
+
             Log.d(TAG, "getPhotos: the current file is: " + CurFile);
+
+
+            if (CurFile.isDirectory()) {
+                Log.d(TAG, "getPhotos: is a directory");
+                //CameraDirectory=CurFile.getName();
+                continue;
+            }
+
+
             Log.d(TAG, "getPhotos: MODIFIED: " + CurFile.lastModified());
             Log.d(TAG, "getPhotos: HTE NAME IS: " + CurFile.getName());
             Date d = new Date(CurFile.lastModified());
             Log.d(TAG, "getPhotos: MODIFIED NUMBER 2: " + d);
-            if(CurFile.lastModified() > finalTime){
+            if((CurFile.lastModified() > finalTime) && fileName.contains("jpg")){
                 Log.d(TAG, "***************************getPhotos: The phtot: " + CurFile + " was taken in the last 24 hours");
                 photos.add(CurFile);
             }
-            if (CurFile.isDirectory()) {
-                Log.d(TAG, "getPhotos: is a directory");
-                //CameraDirectory=CurFile.getName();
-                break;
-            }
+//            if (CurFile.isDirectory()) {
+//                Log.d(TAG, "getPhotos: is a directory");
+//                //CameraDirectory=CurFile.getName();
+//                break;
+//            }
         }
 
 

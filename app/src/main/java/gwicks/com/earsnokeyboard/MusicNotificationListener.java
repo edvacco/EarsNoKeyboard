@@ -2,7 +2,6 @@ package gwicks.com.earsnokeyboard;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Environment;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
@@ -59,12 +58,14 @@ public class MusicNotificationListener extends NotificationListenerService {
         Calendar c = Calendar.getInstance();
         //System.out.println("Current time => " + c.getTime());
 
-        SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");
-        String formattedTime = df.format(c.getTime());
+        long time  = System.currentTimeMillis();
 
-        SimpleDateFormat df2 = new SimpleDateFormat("yyyy:MM:dd");
+//        SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");
+//        String formattedTime = df.format(c.getTime());
+
+        SimpleDateFormat df2 = new SimpleDateFormat("ddMMyyyy");
         String currentDate = df2.format(c.getTime());
-        Log.d(TAG, "onNotificationPosted: current date is: " + currentDate);
+        //Log.d(TAG, "onNotificationPosted: current date is: " + currentDate);
 
         String path = mContext.getExternalFilesDir(null) + "/videoDIARY/Music/";
 
@@ -93,14 +94,14 @@ public class MusicNotificationListener extends NotificationListenerService {
         //int id1 = extras.getInt(Notification.EXTRA_SMALL_ICON);
         //Bitmap id = sbn.getNotification().largeIcon;
 
-        Log.d(TAG, "onNotificationPosted: Package: " + pack);
+        //Log.d(TAG, "onNotificationPosted: Package: " + pack);
         //Log.d(TAG, "onNotificationPosted: Ticker" + ticker  );
         //Log.d(TAG, "onNotificationPosted: Title " + title);
         //Log.d(TAG, "onNotificationPosted: text: " + text);
 
         currentTitle = title;
 
-        Log.d(TAG, "onNotificationPosted: Previous = " + prevTitle + "current title = " + currentTitle);
+       // Log.d(TAG, "onNotificationPosted: Previous = " + prevTitle + "current title = " + currentTitle);
 
         if(pack.contains("music") && (!currentTitle.equals(prevTitle))){
 
@@ -110,8 +111,12 @@ public class MusicNotificationListener extends NotificationListenerService {
 
             //Log.d(TAG, "onNotificationPosted: " + pack + " is a music package!!!!!!!!");
             //File location = new File(directory, currentDate +".txt");
-            writeToFile(location, "Time: " + formattedTime + "\nPackage: " + pack + "\nTitle: " + title + "\nText: " + text + "\n\n");
+            writeToFile(location, " { Time: " + time + ",\nPackage: " + pack + ",\nTitle: " + title + ",\nText: " + text + "\n}\n");
             prevTitle = currentTitle;
+
+            Log.d(TAG, "onNotificationPosted: the name of the file toString is: " + location.toString());
+            Log.d(TAG, "onNotificationPosted: the name of the file getName is: " + location.getName());
+
         }
     }
 
@@ -124,8 +129,8 @@ public class MusicNotificationListener extends NotificationListenerService {
     private static void writeToFile(File file, String data) {
 
         FileOutputStream stream = null;
-        System.out.println("The state of the media is: " + Environment.getExternalStorageState());
-        Log.d(TAG, "writeToFile: file location is:" + file.getAbsolutePath());
+        //System.out.println("The state of the media is: " + Environment.getExternalStorageState());
+        //Log.d(TAG, "writeToFile: file location is:" + file.getAbsolutePath());
 
         //OutputStreamWriter stream = new OutputStreamWriter(openFileOutput(file), Context.MODE_APPEND);
         try {
@@ -137,7 +142,7 @@ public class MusicNotificationListener extends NotificationListenerService {
             //Log.d(TAG, "writeToFile: 3");
         } catch (FileNotFoundException e) {
             Log.e("History", "In catch");
-            e.printStackTrace();
+           // e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
 

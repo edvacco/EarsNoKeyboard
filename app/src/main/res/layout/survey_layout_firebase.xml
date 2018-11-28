@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_one_background">
+
+
+    <gwicks.com.earsnokeyboard.NonSwipeableViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"/>
+
+
+
+    <!--<android.support.v4.view.ViewPager-->
+    <!--android:id="@+id/viewPager"-->
+    <!--android:layout_width="match_parent"-->
+
+    <!--android:layout_height="match_parent">-->
+
+    <!--</android.support.v4.view.ViewPager>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:gravity="bottom">
+
+        <Button
+            android:id="@+id/buttonPrev"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="false"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:theme="@style/buttonColor"
+            android:layout_weight="0.5"
+            android:text="Previous"
+            android:textSize="30dp"
+            />
+
+        <Button
+            android:id="@+id/buttonNext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:theme="@style/buttonColor"
+            android:layout_weight="0.5"
+            android:text=""
+            android:textSize="30dp"
+            />
+    </LinearLayout>
+
+
+</RelativeLayout>

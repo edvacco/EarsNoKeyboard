@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+                  android:layout_marginTop="50dp"
+                  android:layout_marginBottom="50dp"
+                  android:orientation="vertical"
+                  app:layout_constraintBottom_toBottomOf="parent"
+                  app:layout_constraintTop_toTopOf="parent">
+
+
+        <RadioGroup
+            android:id="@+id/radioSex"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:theme="@android:style/Theme.Holo.Light">
+
+            <!--<RadioButton-->
+
+            <!--android:button="@drawable/custom_radio_button"-->
+            <!--android:id="@+id/radioMale"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:theme="@android:style/Theme.Holo.Light"-->
+            <!--android:textColor="@color/white"-->
+
+            <!--android:textSize="30sp"-->
+
+            <!--android:text="Family"/>-->
+
+            <!--<RadioButton-->
+            <!--android:button="@drawable/custom_radio_button"-->
+            <!--android:id="@+id/radio2"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="30sp"-->
+
+            <!--android:text="Friends" />-->
+
+        </RadioGroup>
+
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

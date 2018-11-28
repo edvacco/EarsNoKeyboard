@@ -27,10 +27,10 @@ public class StatsJobService extends JobService {
         myContext = this.getApplication().getApplicationContext();
         Calendar c = Calendar.getInstance();
 
-        SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
         String formattedDate = df.format(c.getTime());
 
-        SimpleDateFormat df2 = new SimpleDateFormat("yyyy:MM:dd");
+        SimpleDateFormat df2 = new SimpleDateFormat("ddMMyyyy");
         String currentDate = df2.format(c.getTime());
 
         String path = this.getExternalFilesDir(null) + "/videoDIARY/Location/";

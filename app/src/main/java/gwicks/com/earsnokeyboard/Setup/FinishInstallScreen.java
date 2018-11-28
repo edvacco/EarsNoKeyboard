@@ -29,6 +29,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -49,6 +51,7 @@ import gwicks.com.earsnokeyboard.R;
 import gwicks.com.earsnokeyboard.SensorUploadReceiver;
 import gwicks.com.earsnokeyboard.StatsAlarmReceiver;
 import gwicks.com.earsnokeyboard.StatsJobService;
+import gwicks.com.earsnokeyboard.SuicideAlarmReceiver;
 import gwicks.com.earsnokeyboard.UploadGPSAlarmReceiver;
 
 /**
@@ -83,6 +86,7 @@ public class FinishInstallScreen extends AppCompatActivity {
     private PendingIntent sensorIntent;
     private PendingIntent garminIntent;
     private PendingIntent keyloggerIntent;
+    private PendingIntent FirebaseEMAIntent;
     public static boolean alarmIsSet = false;
     public static boolean statsAlarmIsSet = false;
     public static final String secureID = Settings.Secure.getString(
@@ -97,6 +101,8 @@ public class FinishInstallScreen extends AppCompatActivity {
     public static boolean alarmStarted = false;
     int numberOfInstances = 0;
 
+    private SharedPreferences prefs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +114,25 @@ public class FinishInstallScreen extends AppCompatActivity {
         }
 
         updateStatusBarColor("#1281e8");
+
+        FirebaseMessaging.getInstance().subscribeToTopic("TEST");
+        FirebaseMessaging.getInstance().subscribeToTopic(secureID);
+
+
+
+        //THIS IS THE ENTRY FOR THE ABCD STUDY:
+
+//
+//        Calendar cal = Calendar.getInstance();
+//        int doy = cal.get(Calendar.DAY_OF_YEAR);
+//        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+//        SharedPreferences.Editor editor = prefs.edit();
+//        editor.putInt("doy", doy);
+//        editor.apply();
+
+        // END ABC STUDY - dont forget about prefs above!
+
+
 
         //Toast.makeText(this,"the secure id of this phone is: " + secureID, Toast.LENGTH_LONG).show();
 
@@ -286,13 +311,18 @@ public class FinishInstallScreen extends AppCompatActivity {
             handler.postDelayed(new Runnable() {
                 public void run() {
                     Log.d(TAG, "run: in handler, waiting for 10 min");
+                    //startSuicideEMAAlarm();
                     startEMAAlarm();
                 }
-            }, 1000*60*3);
+            }, 1000*60*2);
 
         }
-//
-//        startEMAUploadAlarm();
+        //startEMAAlarm();
+
+        startSuicideEMAAlarm();
+
+        startEMAUploadAlarm();
+        //sendNotification();
 
         //Finish Comment out
 
@@ -418,8 +448,8 @@ public class FinishInstallScreen extends AppCompatActivity {
         //cal.set(Calendar.HOUR_OF_DAY, 23);
         //cal.set(Calendar.MINUTE, 55);
 
-        cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 55);
+        cal.set(Calendar.HOUR_OF_DAY, 16);
+        cal.set(Calendar.MINUTE, 00);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, StatsAlarmReceiver.class);
@@ -475,7 +505,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, KeyloggerUploadAlarm.class);
         //statsIntent = PendingIntent.getBroadcast(this, 2, intent, 0);
-        keyloggerIntent = PendingIntent.getBroadcast(this, 2, intent, 0);
+        keyloggerIntent = PendingIntent.getBroadcast(this, 3, intent, 0);
 
 
 
@@ -502,7 +532,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, UploadGPSAlarmReceiver.class);
         //statsIntent = PendingIntent.getBroadcast(this, 3, intent, 0);
-        GPSIntent = PendingIntent.getBroadcast(this, 3, intent, 0);
+        GPSIntent = PendingIntent.getBroadcast(this, 4, intent, 0);
         alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, GPSIntent);
 
     }
@@ -525,7 +555,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, MusicUploadReceiver.class);
         //statsIntent = PendingIntent.getBroadcast(this, 3, intent, 0);
-        musicIntent = PendingIntent.getBroadcast(this, 4, intent, 0);
+        musicIntent = PendingIntent.getBroadcast(this, 5, intent, 0);
         alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, musicIntent);
 
     }
@@ -548,7 +578,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, SensorUploadReceiver.class);
         //statsIntent = PendingIntent.getBroadcast(this, 3, intent, 0);
-        sensorIntent = PendingIntent.getBroadcast(this, 7, intent, 0);
+        sensorIntent = PendingIntent.getBroadcast(this, 6, intent, 0);
         alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, sensorIntent);
 
     }
@@ -571,7 +601,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, EMAUploadReceiver.class);
         //statsIntent = PendingIntent.getBroadcast(this, 3, intent, 0);
-        EMAIntent = PendingIntent.getBroadcast(this, 8, intent, 0);
+        EMAIntent = PendingIntent.getBroadcast(this, 7, intent, 0);
         alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, EMAIntent);
 
 
@@ -603,7 +633,7 @@ public class FinishInstallScreen extends AppCompatActivity {
 
     // @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void startPhotoUploadAlarm() {
-        Log.d(TAG, "startGPSAlarm: in start alarm");
+        Log.d(TAG, "startPhotoUploadAlarm: in start alarm");
 
         Calendar cal = Calendar.getInstance();
         long when = cal.getTimeInMillis();
@@ -614,42 +644,94 @@ public class FinishInstallScreen extends AppCompatActivity {
         Log.d("the time is: ", when + " ");
 
         cal.setTimeInMillis(System.currentTimeMillis());
-        cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 54);
+        cal.set(Calendar.HOUR_OF_DAY, 12);
+        cal.set(Calendar.MINUTE, 30);
 //        cal.set(Calendar.HOUR_OF_DAY, 12);
 //        cal.set(Calendar.MINUTE, 56);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, PhotoUploadReceiver.class);
         //statsIntent = PendingIntent.getBroadcast(this, 3, intent, 0);
-        photoIntent = PendingIntent.getBroadcast(this, 4, intent, 0);
+        photoIntent = PendingIntent.getBroadcast(this, 8, intent, 0);
         //alarmMgr.setExact();
 
         alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, photoIntent);
     }
 
-    public void startEMAAlarm(){
+    // This the the once a week suicide check alarm!
+
+    public void startSuicideEMAAlarm(){
         Log.d(TAG, "startEMAAlarm: in start ema alarm");
+
+        boolean alarmUp = (PendingIntent.getBroadcast(this, 9,
+                new Intent(FinishInstallScreen.this, SuicideAlarmReceiver.class),
+                PendingIntent.FLAG_NO_CREATE) != null);
+
+        Log.d(TAG, "Suicide alarm is up : " + alarmUp);
+
+        if(alarmUp){
+            return;
+        }
 
         Calendar cal = Calendar.getInstance();
         long when = cal.getTimeInMillis();
 
         cal.setTimeInMillis(System.currentTimeMillis());
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
-        cal.set(Calendar.HOUR_OF_DAY, 9);
+       // cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+
+        cal.set(Calendar.HOUR_OF_DAY, 13);
+        cal.set(Calendar.MINUTE, 44);
+
+        AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, SuicideAlarmReceiver.class);
+        intent.putExtra("EMA", "EMA1");
+        startEMAIntent = PendingIntent.getBroadcast(this, 9, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),alarmMgr.INTERVAL_DAY * 7 , startEMAIntent);
+        //alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000 * 60 * 120, startEMAIntent);
+        Log.d(TAG, "startEMAAlarm: suicide alarm shjould be set");
+        alarmStarted = true;
+
+
+    }
+
+    // This is for the first 7 days of the EMA alarm
+
+    public void startEMAAlarm(){
+        Log.d(TAG, "startEMAAlarm: in start ema alarm");
+
+        boolean alarmUp = (PendingIntent.getBroadcast(this, 21,
+                new Intent(FinishInstallScreen.this, EMAAlarmReceiver.class),
+                PendingIntent.FLAG_NO_CREATE) != null);
+
+        Log.d(TAG, "Ema alarm boolean alarm up is: " + alarmUp);
+
+        if(alarmUp){
+            return;
+        }
+
+
+        Calendar cal = Calendar.getInstance();
+        long when = cal.getTimeInMillis();
+
+        cal.setTimeInMillis(System.currentTimeMillis());
+        //cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+        cal.set(Calendar.HOUR_OF_DAY, 8);
         cal.set(Calendar.MINUTE, 15);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, EMAAlarmReceiver.class);
         intent.putExtra("EMA", "EMA1");
-        startEMAIntent = PendingIntent.getBroadcast(this, 9, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        startEMAIntent = PendingIntent.getBroadcast(this, 21, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         //alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),alarmMgr.INTERVAL_DAY * 7 , startEMAIntent);
-        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000 * 60 * 60, startEMAIntent);
-        Log.d(TAG, "startEMAAlarm: alarm shjould be set");
-        alarmStarted = true;
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000 * 60 * 120, startEMAIntent);
+        Log.d(TAG, "startEMAAlarm first 7 days: alarm should be set");
+        //alarmStarted = true;
 
 
     }
+
+
 
 
     private boolean isAccessGranted() {
@@ -861,6 +943,11 @@ public class FinishInstallScreen extends AppCompatActivity {
     public void onBackPressed() {
         moveTaskToBack(true);
     }
+
+
+    // TEST FIREBASE NOT WORKING COPY METHOD TO TEST
+
+
 
 
 

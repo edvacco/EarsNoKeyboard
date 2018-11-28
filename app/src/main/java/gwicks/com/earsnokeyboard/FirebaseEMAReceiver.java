@@ -21,15 +21,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
-/**
- * Created by gwicks on 31/03/2018.
- * Notification for EMA. Checks time to make sure the EMA is received every two hours
- * between 8am and 10pm. Sets up the snooze function ( EMASleepReceiver )
- */
+public class FirebaseEMAReceiver extends BroadcastReceiver {
 
-public class EMAAlarmReceiver extends BroadcastReceiver {
-
-    private static final String TAG = "EMAAlarmReciever";
+    private static final String TAG = "FirebaseEMAReciever";
     private NotificationManager mNotificationManager;
 
     Uri uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -41,82 +35,56 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "onReceive: 1");
+        Log.d(TAG, "onReceive: 21");
 
         // This next part is to ensure the notification does not go off during sleep.
         // Note may still be firing at night, which is bad for battery life, and should be fixed
         //TODO: Change time checking method to no longer fire during sleep, and be discarded ( bad for battery)
         mContext = context;
 
-
-        // THIS IS FOR THE ABCD STUDY TO DO EMAS FOR ONE WEEK:
         SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        int doy = mSharedPreferences.getInt("doy",0);
-        Log.d(TAG, "onReceive: doy = " + doy);
-        Calendar cal = Calendar.getInstance();
-        int doy2 = cal.get(Calendar.DAY_OF_YEAR);
-        int finishDay = finishDay(doy);
-        if(doy2 > finishDay){
+
+        int installDay = mSharedPreferences.getInt("doyf", 0);
+        Log.d(TAG, "onReceive: install day: " + installDay);
+
+
+
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int dow = calendar.get(Calendar.DAY_OF_WEEK);
+        int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
+        Log.d(TAG, "onReceive: 1.1");
+
+        int finishDay = finishDay(installDay);
+        Log.d(TAG, "onReceive: 2");
+
+        //TODO this will keep the alarm firing every 2 hours for years....not ideal, how can i make better?
+
+        Log.d(TAG, "onReceive: day of year = " + dayOfYear + "finsish day: " + finishDay);
+
+        if(dayOfYear > finishDay){
+            Log.d(TAG, "onReceive: skip 1");
             return;
         }
-
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
-
-        // END ABCD STUDY TIME
-
-        Log.d(TAG, "onReceive: THe intent extra is: "+ intent.getStringExtra("EMA"));
-        Log.d(TAG, "onReceive: the intent action is : " + intent.getAction());
-
-        if(stringExtra != null){
-            Log.d(TAG, "onReceive: stringExtra is already set to EMA1");
-            return;
-        }
-
-        int dow = cal.get(Calendar.DAY_OF_WEEK);
-
-        if(isWeekday(dow)){
-
-            if((hour < 8) || (hour > 22)){
-                Log.d(TAG, "onReceive: wrong time weekday");
-                return;
-            }
-        }
-
-        if(!isWeekday(dow)){
-            //int hour = cal.get(Calendar.HOUR_OF_DAY);
-            if((hour < 10) || (hour > 22)){
-                Log.d(TAG, "onReceive: wrong time weekend");
-                return;
-            }
-        }
-
-        // OLD method of getting time for EMA's depreciated
-
-
-        stringExtra = intent.getStringExtra("EMA");
-//        Log.d(TAG, "onReceive: IN FIRST 1");
-//        String dateFormat = "HH:mm:ss";
-//        String endTime= "23:30:00";
-//        String startTime = "08:00:00";
-//        String currentTime = new SimpleDateFormat(dateFormat).format(new Date());
-//
-//        Calendar cStart = setTimeToCalendar(dateFormat, startTime, false);
-//        Calendar cEnd = setTimeToCalendar(dateFormat, endTime, false);
-//        Calendar cNow = setTimeToCalendar(dateFormat, currentTime, false );
-//        Date curDate = cNow.getTime();
-//
-//        Log.d(TAG, "onReceive: cStart: " + cStart.getTime() + " cEnd: " + cEnd.getTime());
-//        Log.d(TAG, "onReceive: curdate.after(cStart: " + curDate.after(cStart.getTime()));
-//        Log.d(TAG, "onReceive: curDate.before(Cend: " + curDate.before(cEnd.getTime()));
-//
-//        if (curDate.after(cStart.getTime()) && curDate.before(cEnd.getTime())) {
-//            System.out.println("Time is out of range time is: " + currentTime + " curDate: " + curDate);
-//            Log.d(TAG, "Date is in range, firing notification:");
-//
-//        } else {
-//            System.out.println("Date is out of range there fore skippingf: ");
+//        if(dayOfYear - installDay > 8){
 //            return;
 //        }
+
+
+        if(isWeekday(dow)){
+            if((hour < 16) || (hour > 23)){
+                Log.d(TAG, "onReceive: wrong hour skipping weekday");
+                return;
+            }
+
+        }else{
+            if((hour < 8) || (hour > 23)){
+                Log.d(TAG, "onReceive:  wrong hour skipping weekend");
+                return;
+            }
+        }
+
+
 
         Log.d(TAG, "onReceive: in receive ");
 
@@ -158,7 +126,7 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
         int nxt = random.nextInt(99);
 
 
-        Intent resultIntent = new Intent(context, FireBaseEMA.class);
+        Intent resultIntent = new Intent(context, FirebaseEMAStart.class);
 
         //5th October 2018, prevent not firing properly
 
@@ -176,7 +144,7 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
         //resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, nxt, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-       // NotificationCompat.Action action = new NotificationCompat.Action.Builder(0, "SNOOZE", snoozePendingIntent).build();
+        // NotificationCompat.Action action = new NotificationCompat.Action.Builder(0, "SNOOZE", snoozePendingIntent).build();
 
         Notification mBuilder =
                 new NotificationCompat.Builder(context, CHANNEL_DI)
@@ -232,6 +200,10 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
         }
     }
 
+    public boolean isWeekday(int dayOfWeek){
+        return ((dayOfWeek >= Calendar.MONDAY) && dayOfWeek <= Calendar.FRIDAY);
+    }
+
     public int finishDay(int doy){
 
         int i;
@@ -245,8 +217,5 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
         return i;
 
     }
-
-    public boolean isWeekday(int dayOfWeek){
-        return ((dayOfWeek >= Calendar.MONDAY) && dayOfWeek <= Calendar.FRIDAY);
-    }
 }
+

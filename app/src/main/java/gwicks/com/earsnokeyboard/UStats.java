@@ -3,7 +3,6 @@ package gwicks.com.earsnokeyboard;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
-import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -61,6 +60,12 @@ public class UStats {
             Log.d(TAG, "getUsageStatsList: " + entry.getKey() + " " + entry.getValue().getTotalTimeInForeground());
         }
 
+        String aggregateApps = (context.getExternalFilesDir(null) + directoryName + "AppUsageAggeagate" + time + ".txt");
+        File agFile = new File(aggregateApps);
+        for(Map.Entry<String, UsageStats> entry : stats.entrySet()){
+            writeToFile(agFile, entry.getKey() +"," + entry.getValue().getTotalTimeInForeground() + "\n");
+        }
+
 
 
         Collections.sort(usageStatsList, new TotalTimeUsed());
@@ -73,6 +78,8 @@ public class UStats {
 
         String uri = (context.getExternalFilesDir(null) + directoryName + "AppUsage_" + time + ".txt");
 
+
+
         Log.d(TAG, "printUsageStats: The string URI for file is: " + uri);
 
 
@@ -83,6 +90,8 @@ public class UStats {
 
                 int minutes = (int)u.getTotalTimeInForeground()/60000;
                 int seconds = (int)(u.getTotalTimeInForeground() % 60000) / 1000;
+               // u.
+
                 Log.d(TAG, "printUsageStats: minutes: " + minutes + " seconds: " + seconds);
                 //writeToFile(file, "UsageStats: minutes: " + minutes + " seconds: " + seconds +"\n");
                 Log.d(TAG, "Pkg: " + u.getPackageName()  + "\n\tForegroundTime: "
@@ -104,6 +113,10 @@ public class UStats {
         return uri;
     }
 
+//    public static String printAggregatedList(Map<String, UsageStats> entry){
+//        for()
+//    }
+
     public static String printCurrentUsageStatus(Context context){
         return printUsageStats(getUsageStatsList(context), context);
     }
@@ -124,16 +137,16 @@ public class UStats {
     private static void writeToFile(File file, String data) {
 
         FileOutputStream stream = null;
-        System.out.println("The state of the media is: " + Environment.getExternalStorageState());
+        //System.out.println("The state of the media is: " + Environment.getExternalStorageState());
 
         //OutputStreamWriter stream = new OutputStreamWriter(openFileOutput(file), Context.MODE_APPEND);
         try {
-            Log.e("History", "In try");
-            Log.d(TAG, "writeToFile: ");
+            //Log.e("History", "In try");
+            //Log.d(TAG, "writeToFile: ");
             stream = new FileOutputStream(file, true);
-            Log.d(TAG, "writeToFile: 2");
+            //Log.d(TAG, "writeToFile: 2");
             stream.write(data.getBytes());
-            Log.d(TAG, "writeToFile: 3");
+            //Log.d(TAG, "writeToFile: 3");
         } catch (FileNotFoundException e) {
             Log.e("History", "In catch");
             e.printStackTrace();

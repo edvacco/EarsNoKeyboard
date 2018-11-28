@@ -91,9 +91,18 @@
 
 
         <activity android:name=".EMA"
+                  android:launchMode="singleTask"
+                  android:taskAffinity=""
+                  android:excludeFromRecents="true"
                   android:screenOrientation="portrait"/>
 
         <activity android:name=".SecondEMA"
+                  android:screenOrientation="portrait"/>
+
+        <activity android:name="gwicks.com.earsnokeyboard.FireBaseEMA"
+                  android:launchMode="singleTask"
+                  android:taskAffinity=""
+                  android:excludeFromRecents="true"
                   android:screenOrientation="portrait"/>
 
 
@@ -145,6 +154,12 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".SuicideAlarmReceiver">
+            <intent-filter>
+                <action android:name="com.codepath.CUSTOM_INTENT"></action>
+            </intent-filter>
+        </receiver>
+
         <receiver android:name=".GarminUploadReceiver">
             <intent-filter>
                 <action android:name="com.codepath.CUSTOM_INTENT"></action>
@@ -163,6 +178,12 @@
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
             </intent-filter>
         </receiver>
+
+        <receiver android:name=".FirebaseEMAReceiver">
+
+        </receiver>
+        <activity android:name=".FirebaseEMAStart"/>
+
 
         <!--<receiver android:name="com.radicalninja.logger.IncomingCallListener">-->
         <!--<intent-filter>-->
@@ -244,6 +265,8 @@
             android:screenOrientation="portrait">
 
         </activity>
+
+
 
         <activity
             android:name=".Setup.SetupStepFive"
@@ -327,6 +350,22 @@
                 android:resource="@xml/accessibility_service_config" />
 
         </service>
+
+
+        <service android:name=".MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+
+        </service>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/noti_icon" />
+        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
 
 
     </application>
