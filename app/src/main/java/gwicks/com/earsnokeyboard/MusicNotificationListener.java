@@ -49,7 +49,7 @@ public class MusicNotificationListener extends NotificationListenerService {
 
         }
         catch(NullPointerException e){
-            e.printStackTrace();
+           // e.printStackTrace();
         }
 
         String text = ""; // Needed to avoid null errors
@@ -70,7 +70,7 @@ public class MusicNotificationListener extends NotificationListenerService {
         String path = mContext.getExternalFilesDir(null) + "/videoDIARY/Music/";
 
 
-        Log.d(TAG, "onStartJob: path is: " + path);
+        //Log.d(TAG, "onStartJob: path is: " + path);
 
         File directory = new File(path);
         if(!directory.exists()){
@@ -88,7 +88,7 @@ public class MusicNotificationListener extends NotificationListenerService {
             text = extras.getCharSequence("android.text").toString();
         }
         catch(NullPointerException e){
-            e.printStackTrace();
+           // e.printStackTrace();
         }
 
         //int id1 = extras.getInt(Notification.EXTRA_SMALL_ICON);
@@ -105,8 +105,8 @@ public class MusicNotificationListener extends NotificationListenerService {
 
         if(pack.contains("music") && (!currentTitle.equals(prevTitle))){
 
-            Log.d(TAG, "onNotificationPosted: PREV = " + prevTitle);
-            Log.d(TAG, "onNotificationPosted:  CURRENT = " + currentTitle);
+            //Log.d(TAG, "onNotificationPosted: PREV = " + prevTitle);
+            //Log.d(TAG, "onNotificationPosted:  CURRENT = " + currentTitle);
 
 
             //Log.d(TAG, "onNotificationPosted: " + pack + " is a music package!!!!!!!!");
@@ -114,8 +114,8 @@ public class MusicNotificationListener extends NotificationListenerService {
             writeToFile(location, " { Time: " + time + ",\nPackage: " + pack + ",\nTitle: " + title + ",\nText: " + text + "\n}\n");
             prevTitle = currentTitle;
 
-            Log.d(TAG, "onNotificationPosted: the name of the file toString is: " + location.toString());
-            Log.d(TAG, "onNotificationPosted: the name of the file getName is: " + location.getName());
+            //Log.d(TAG, "onNotificationPosted: the name of the file toString is: " + location.toString());
+            //Log.d(TAG, "onNotificationPosted: the name of the file getName is: " + location.getName());
 
         }
     }
@@ -141,17 +141,17 @@ public class MusicNotificationListener extends NotificationListenerService {
             stream.write(data.getBytes());
             //Log.d(TAG, "writeToFile: 3");
         } catch (FileNotFoundException e) {
-            Log.e("History", "In catch");
+            //Log.e("History", "In catch");
            // e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
 
         }
         try {
 
             stream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 }

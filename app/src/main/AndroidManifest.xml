@@ -106,6 +106,13 @@
                   android:screenOrientation="portrait"/>
 
 
+        <activity android:name=".DailyEMA"
+                  android:launchMode="singleTask"
+                  android:taskAffinity=""
+                  android:excludeFromRecents="true"
+                  android:screenOrientation="portrait"/>
+
+
         <!--android:icon="@drawable/video"-->
 
 
@@ -122,6 +129,12 @@
         <!--</receiver>-->
 
         <receiver android:name=".StatsAlarmReceiver">
+            <intent-filter>
+                <action android:name="com.codepath.CUSTOM_INTENT"></action>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".DailyEMAAlarmReceiver">
             <intent-filter>
                 <action android:name="com.codepath.CUSTOM_INTENT"></action>
             </intent-filter>

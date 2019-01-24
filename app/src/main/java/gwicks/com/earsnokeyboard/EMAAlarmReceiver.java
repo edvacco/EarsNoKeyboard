@@ -67,6 +67,9 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
         Log.d(TAG, "onReceive: THe intent extra is: "+ intent.getStringExtra("EMA"));
         Log.d(TAG, "onReceive: the intent action is : " + intent.getAction());
 
+
+        // What the fuck is this?
+
         if(stringExtra != null){
             Log.d(TAG, "onReceive: stringExtra is already set to EMA1");
             return;
@@ -76,7 +79,7 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
 
         if(isWeekday(dow)){
 
-            if((hour < 8) || (hour > 22)){
+            if((hour < 16) || (hour > 23)){
                 Log.d(TAG, "onReceive: wrong time weekday");
                 return;
             }

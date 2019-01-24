@@ -16,10 +16,22 @@ public class AnyApplication extends Application {
     private static final String TAG = "AnyApplication";
     private static AnyApplication instance;
 
+    //private String secureID;
+
     public void onCreate(){
         Log.d(TAG, "onCreate: anyapplication oncreate");
 
         super.onCreate();
+
+//        secureID = Settings.Secure.getString(
+//                AnyApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID);
+
+//        if (LeakCanary.isInAnalyzerProcess(this)) {
+//            // This process is dedicated to LeakCanary for heap analysis.
+//            // You should not init your app in this process.
+//            return;
+//        }
+//        LeakCanary.install(this);
         //context = this ;
         instance = this;
         Log.d(TAG, "onCreate: instance = " + instance);
@@ -30,4 +42,8 @@ public class AnyApplication extends Application {
         Log.d(TAG, "getInstance: instance = " + instance);
         return instance;
     }
+
+//    public String getSecureID(){
+//        return secureID;
+//    }
 }

@@ -309,6 +309,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         editor.putInt("doyf", doy);
         editor.apply();
 
+//
+//        boolean alarmUp = (PendingIntent.getBroadcast(this, 91,
+//                new Intent(MyFirebaseMessagingService.this, FirebaseEMAReceiver.class),
+//                PendingIntent.FLAG_NO_CREATE) != null);
+//
+//        Log.d(TAG, "Ema alarm boolean alarm up is: " + alarmUp);
+//
+//        if(alarmUp){
+//            Log.d(TAG, "startEMAAlarm: alarm already up, skipping");
+//            //.return;
+//        }
+
+
 
 
         PendingIntent startEMAFirebaseIntent;
@@ -319,13 +332,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         cal.setTimeInMillis(System.currentTimeMillis());
         //cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
-        cal.set(Calendar.HOUR_OF_DAY, 9);
+        cal.set(Calendar.HOUR_OF_DAY, 8);
         cal.set(Calendar.MINUTE, 15);
+
+        int alarmID = 91;
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, FirebaseEMAReceiver.class);
         intent.putExtra("EMA", "EMA1");
-        startEMAFirebaseIntent = PendingIntent.getBroadcast(this, 91, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        intent.putExtra("alarmID", alarmID);
+
+        startEMAFirebaseIntent = PendingIntent.getBroadcast(this, alarmID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         //alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),alarmMgr.INTERVAL_DAY * 7 , startEMAIntent);
         alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000 * 60 * 120, startEMAFirebaseIntent);
         Log.d(TAG, "startFirebaseEMAAlarm: alarm shjould be set");

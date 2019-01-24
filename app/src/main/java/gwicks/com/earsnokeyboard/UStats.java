@@ -5,6 +5,10 @@ import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -27,7 +31,7 @@ public class UStats {
     public static final String TAG = UStats.class.getSimpleName();
 
     static String directoryName = "/videoDIARY/";
-    static String time;
+    static long time;
 
     public static List<UsageStats> getUsageStatsList(Context context){
         UsageStatsManager usm = getUsageStatsManager(context);
@@ -38,7 +42,15 @@ public class UStats {
 
         long endTime = calendar.getTimeInMillis();
         //calendar.add(Calendar.DAY_OF_YEAR, -1);
-        long startTime = calendar.getTimeInMillis() - 24*60*60*1000;
+//        long startTime = calendar.getTimeInMillis() - 24*60*60*1000;
+        long startTime = calendar.getTimeInMillis() - 24*60*60*1000*7;
+
+
+//        long endTime = calendar.getTimeInMillis() - 24*60*60*1000;
+//        //calendar.add(Calendar.DAY_OF_YEAR, -1);
+//        long startTime = calendar.getTimeInMillis() - 24*60*60*1000+1000000 ;
+
+
         Log.d(TAG, "getUsageStatsList: endtime: " + endTime + "starttime: " + startTime);
 
         Date one = new Date(startTime);
@@ -46,19 +58,25 @@ public class UStats {
 
         Log.d(TAG, "getUsageStatsList: data start time: " + one);
         Log.d(TAG, "getUsageStatsList: date endtime:  " + two);
-        time = two.toString();
+        //time = two.toString();
+        time = endTime;
 
         List<UsageStats> usageStatsList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY,  startTime,endTime);     // calendar.getTimeInMillis(), System.currentTimeMillis()); //(UsageStatsManager.INTERVAL_DAILY,startTime,endTime);
 
         Map<String, UsageStats> stats = usm.queryAndAggregateUsageStats(startTime, endTime);
+        Log.d(TAG, "getUsageStatsList: 1");
 
         for(String key : stats.keySet()){
             Log.d(TAG, "getUsageStatsList: KEYS: " + stats.get(key));
         }
 
+        Log.d(TAG, "getUsageStatsList: 2");
+
         for(Map.Entry<String, UsageStats> entry : stats.entrySet()){
             Log.d(TAG, "getUsageStatsList: " + entry.getKey() + " " + entry.getValue().getTotalTimeInForeground());
         }
+
+        Log.d(TAG, "getUsageStatsList: 3");
 
         String aggregateApps = (context.getExternalFilesDir(null) + directoryName + "AppUsageAggeagate" + time + ".txt");
         File agFile = new File(aggregateApps);
@@ -72,6 +90,11 @@ public class UStats {
         return usageStatsList;
     }
 
+
+    // attempt to find out what the fuck is going on with usage stats manager
+
+
+
     public static String printUsageStats(List<UsageStats> usageStatsList, Context context){
 
         Log.d(TAG, "printUsageStats: in print");
@@ -84,42 +107,76 @@ public class UStats {
 
 
         File file = new File(uri);
+        JSONArray jsonArray = new JSONArray();
+        JSONObject object = null;
         for (UsageStats u : usageStatsList){
 
             if(u.getTotalTimeInForeground() > 0){
 
                 int minutes = (int)u.getTotalTimeInForeground()/60000;
                 int seconds = (int)(u.getTotalTimeInForeground() % 60000) / 1000;
+                object = new JSONObject();
+                try {
+                    object.put("Package", u.getPackageName());
+                    object.put("Time in foreground", u.getTotalTimeInForeground());
+                    object.put("First Time stamp", u.getFirstTimeStamp());
+                    object.put("Last time stamp", u.getLastTimeStamp());
+                    object.put("Time last used",u.getLastTimeUsed());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                jsonArray.put(object);
+
+
+                //writeToFile(file, object.toString());
+
+
                // u.
 
-                Log.d(TAG, "printUsageStats: minutes: " + minutes + " seconds: " + seconds);
-                //writeToFile(file, "UsageStats: minutes: " + minutes + " seconds: " + seconds +"\n");
-                Log.d(TAG, "Pkg: " + u.getPackageName()  + "\n\tForegroundTime: "
-                        + u.getTotalTimeInForeground()/1000 + " seconds " );// mDateFormat.format(u.getLastTimeUsed()) + " time last used") ;
-                writeToFile(file, "Pkg: " + u.getPackageName() +   "\nForegroundTime: "
-                        + u.getTotalTimeInForeground()/1000 + " seconds \n" );
-                Date data = new Date(u.getLastTimeUsed());
-
-                Log.d(TAG, "printUsageStats: DATE = " + data);
-                //writeToFile(file, "printUsageStats: DATE = " + data + "\n");
-
-
-                Log.d(TAG, "printUsageStats: Time last used: " +data);
-                writeToFile(file, "Time last used: " +data +"\n");
-                Log.d(TAG, "printUsageStats: ______________________________________________________");
-                writeToFile(file, " ______________________________________________________\n\n");
+//                Log.d(TAG, "printUsageStats: minutes: " + minutes + " seconds: " + seconds);
+//                //writeToFile(file, "UsageStats: minutes: " + minutes + " seconds: " + seconds +"\n");
+//                Log.d(TAG, "Pkg: " + u.getPackageName()  + "\n\tForegroundTime: "
+//                        + u.getTotalTimeInForeground()/1000 + " seconds " );// mDateFormat.format(u.getLastTimeUsed()) + " time last used") ;
+//                writeToFile(file, "Pkg: " + u.getPackageName() +   "\nForegroundTime: "
+//                        + u.getTotalTimeInForeground()/1000 + " seconds \n" );
+//                Date data = new Date(u.getLastTimeUsed());
+//
+//                Date one = new Date(u.getFirstTimeStamp());
+//                Date two = new Date(u.getLastTimeStamp());
+//                Date three = new Date(u.getLastTimeUsed());
+//
+//                Log.d(TAG, "printUsageStats: DATE = " + data);
+//                Log.d(TAG, "printUsageStats: first time stamp: " + one);
+//                Log.d(TAG, "printUsageStats: last time stamp: " + two);
+//                Log.d(TAG, "printUsageStats: time last used: " + three);
+//
+//                writeToFile(file, "Time last used: " +data +"\n");
+//                Log.d(TAG, "printUsageStats: ______________________________________________________\n\n");
+//                writeToFile(file, " ______________________________________________________\n\n");
+//                Log.d(TAG, "printUsageStats: \n\n\n");
             }
+
+
+
         }
+
+        JSONObject finalObject = new JSONObject();
+        try {
+            finalObject.put("AppUsage", jsonArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        writeToFile(file, finalObject.toString());
         return uri;
     }
-
-//    public static String printAggregatedList(Map<String, UsageStats> entry){
-//        for()
-//    }
 
     public static String printCurrentUsageStatus(Context context){
         return printUsageStats(getUsageStatsList(context), context);
     }
+
+
     @SuppressWarnings("ResourceType")
     private static UsageStatsManager getUsageStatsManager(Context context){
         UsageStatsManager usm = (UsageStatsManager) context.getSystemService("usagestats");
@@ -137,25 +194,15 @@ public class UStats {
     private static void writeToFile(File file, String data) {
 
         FileOutputStream stream = null;
-        //System.out.println("The state of the media is: " + Environment.getExternalStorageState());
-
-        //OutputStreamWriter stream = new OutputStreamWriter(openFileOutput(file), Context.MODE_APPEND);
         try {
-            //Log.e("History", "In try");
-            //Log.d(TAG, "writeToFile: ");
             stream = new FileOutputStream(file, true);
-            //Log.d(TAG, "writeToFile: 2");
             stream.write(data.getBytes());
-            //Log.d(TAG, "writeToFile: 3");
         } catch (FileNotFoundException e) {
             Log.e("History", "In catch");
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-
         }
-
-
         try {
 
             stream.close();

@@ -44,6 +44,9 @@ public class StatsAlarmReceiver extends BroadcastReceiver {
 
         Uri = UStats.printCurrentUsageStatus(mContext);
         System.out.println("The uri is: " + Uri);
+
+//        String Uri2 = UStats.printCurrentUsageStatus2(mContext);
+//        Log.d(TAG, "onReceive: uri2 = " + Uri2);
         String theName = Uri.substring(Uri.lastIndexOf('/') + 1);
         Log.d(TAG, "onReceive: the name is: " + theName);
         encryptedUri = Encrypt(theName, Uri);

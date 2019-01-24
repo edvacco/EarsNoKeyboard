@@ -143,13 +143,13 @@ public class SecondEMA extends Activity {
 
 
                     // Randy SMS below
-//                    sendSMS("9179814866", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
-//                    sendSMS("3868820636", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
+                    sendSMS("9179814866", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
+                    sendSMS("3868820636", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
 
                     // University of Pittsburgh Medical Center below
 
-                    //sendSMS("4125232034", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
-                    //sendSMS("7245136376", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
+//                    sendSMS("4125232034", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
+//                    sendSMS("7245136376", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
 
 
 

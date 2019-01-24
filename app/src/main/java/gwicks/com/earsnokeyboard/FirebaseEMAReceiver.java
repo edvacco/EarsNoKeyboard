@@ -64,6 +64,27 @@ public class FirebaseEMAReceiver extends BroadcastReceiver {
 
         if(dayOfYear > finishDay){
             Log.d(TAG, "onReceive: skip 1");
+
+            // Attempt to cancel the alarm:
+
+//            AlarmManager alarmManager = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
+//            Intent intentNew;
+//            intentNew = new Intent(this, FirebaseEMAReceiver.class);
+//
+//            int alarmID = intent.getExtras().getInt("alarmID");
+//            PendingIntent alarmIntent;
+//            alarmIntent = PendingIntent.getBroadcast(this, alarmID,
+//                    new Intent(this, FirebaseEMAReceiver.class), PendingIntent.FLAG_CANCEL_CURRENT);
+//            cancelAlarm(alarmIntent);
+
+//            AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//            Intent intent = new Intent(this, FirebaseEMAReceiver.class);
+//            intent.putExtra("EMA", "EMA1");
+//            startEMAFirebaseIntent = PendingIntent.getBroadcast(this, 91, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//            //alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),alarmMgr.INTERVAL_DAY * 7 , startEMAIntent);
+//            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000 * 60 * 120, startEMAFirebaseIntent);
+//            Log.d(TAG, "startFirebaseEMAAlarm: alarm shjould be set");
+
             return;
         }
 //        if(dayOfYear - installDay > 8){
@@ -78,7 +99,7 @@ public class FirebaseEMAReceiver extends BroadcastReceiver {
             }
 
         }else{
-            if((hour < 8) || (hour > 23)){
+            if((hour < 10) || (hour > 23)){
                 Log.d(TAG, "onReceive:  wrong hour skipping weekend");
                 return;
             }
@@ -126,7 +147,7 @@ public class FirebaseEMAReceiver extends BroadcastReceiver {
         int nxt = random.nextInt(99);
 
 
-        Intent resultIntent = new Intent(context, FirebaseEMAStart.class);
+        Intent resultIntent = new Intent(context, FireBaseEMA.class);
 
         //5th October 2018, prevent not firing properly
 

@@ -1,6 +1,7 @@
 package gwicks.com.earsnokeyboard.Setup;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.AppOpsManager;
@@ -41,6 +42,8 @@ import java.util.concurrent.TimeUnit;
 
 import gwicks.com.earsnokeyboard.AccGryLgt;
 import gwicks.com.earsnokeyboard.AnyApplication;
+import gwicks.com.earsnokeyboard.DailyEMAAlarmReceiver;
+import gwicks.com.earsnokeyboard.DailyEMAUploadReceiver;
 import gwicks.com.earsnokeyboard.EMAAlarmReceiver;
 import gwicks.com.earsnokeyboard.EMAUploadReceiver;
 import gwicks.com.earsnokeyboard.KeyloggerUploadAlarm;
@@ -83,10 +86,12 @@ public class FinishInstallScreen extends AppCompatActivity {
     private PendingIntent photoIntent;
     private PendingIntent startEMAIntent;
     private PendingIntent EMAIntent;
+    private PendingIntent DailyEMAIntent;
     private PendingIntent sensorIntent;
     private PendingIntent garminIntent;
     private PendingIntent keyloggerIntent;
     private PendingIntent FirebaseEMAIntent;
+    private PendingIntent startDailyEMAIntent;
     public static boolean alarmIsSet = false;
     public static boolean statsAlarmIsSet = false;
     public static final String secureID = Settings.Secure.getString(
@@ -115,7 +120,7 @@ public class FinishInstallScreen extends AppCompatActivity {
 
         updateStatusBarColor("#1281e8");
 
-        FirebaseMessaging.getInstance().subscribeToTopic("TEST");
+        FirebaseMessaging.getInstance().subscribeToTopic("PITTS");
         FirebaseMessaging.getInstance().subscribeToTopic(secureID);
 
 
@@ -289,6 +294,15 @@ public class FinishInstallScreen extends AppCompatActivity {
         destroyEvents = new File(directory2,  "DestroyEvents.txt");
 
 
+        // MEMORY CHECK
+
+        ActivityManager.MemoryInfo memoryInfo = getAvailableMemory();
+        Log.d(TAG, "onCreate: avaiblable memory: "+ memoryInfo.availMem + " threshold when we start killing processes: " + memoryInfo.threshold  + " total mem: " + memoryInfo.totalMem);
+
+        Runtime runtime = Runtime.getRuntime();
+        Log.d(TAG, "onCreate: Runtime: max memory: " + runtime.maxMemory() + " Runtime total memory: " + runtime.totalMemory() + " runtime free memory: " + runtime.freeMemory());
+
+
 
         //accelGyroLight = new AccelGyroLight(this);
 
@@ -303,6 +317,8 @@ public class FinishInstallScreen extends AppCompatActivity {
         startSensorUploadAlarm();
         //startGarminUploadAlarm();
         startKeyloggerUploadAlarm();
+        startDailyEMAAlarm();
+        startDailyEMAIntent();
         Log.d(TAG, "onCreate: alarmstarted = " + alarmStarted);
 
         // Comment this out to remove the EMA component
@@ -352,6 +368,13 @@ public class FinishInstallScreen extends AppCompatActivity {
         setSettingsDone(this);
 
 
+    }
+
+    private ActivityManager.MemoryInfo getAvailableMemory() {
+        ActivityManager activityManager = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
+        ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+        activityManager.getMemoryInfo(memoryInfo);
+        return memoryInfo;
     }
 
     @Override
@@ -445,11 +468,11 @@ public class FinishInstallScreen extends AppCompatActivity {
         Log.d("the time is: ", when + " ");
 
         cal.setTimeInMillis(System.currentTimeMillis());
-        //cal.set(Calendar.HOUR_OF_DAY, 23);
-        //cal.set(Calendar.MINUTE, 55);
+        cal.set(Calendar.HOUR_OF_DAY, 15);
+        cal.set(Calendar.MINUTE, 53);
 
-        cal.set(Calendar.HOUR_OF_DAY, 16);
-        cal.set(Calendar.MINUTE, 00);
+//        cal.set(Calendar.HOUR_OF_DAY, 16);
+//        cal.set(Calendar.MINUTE, 00);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, StatsAlarmReceiver.class);
@@ -500,7 +523,7 @@ public class FinishInstallScreen extends AppCompatActivity {
 
         cal.setTimeInMillis(System.currentTimeMillis());
         cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 56);
+        cal.set(Calendar.MINUTE, 48);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, KeyloggerUploadAlarm.class);
@@ -573,7 +596,7 @@ public class FinishInstallScreen extends AppCompatActivity {
 
         cal.setTimeInMillis(System.currentTimeMillis());
         cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 53);
+        cal.set(Calendar.MINUTE, 54);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, SensorUploadReceiver.class);
@@ -606,6 +629,31 @@ public class FinishInstallScreen extends AppCompatActivity {
 
 
     }
+
+    public void startDailyEMAIntent() {
+        Log.d(TAG, "Daily EMA upload in start alarm");
+
+        Calendar cal = Calendar.getInstance();
+        long when = cal.getTimeInMillis();
+        String timey = Long.toString(when);
+
+        //System.out.println("The time changed into nice format is: " + theTime);
+
+        Log.d("the time is: ", when + " ");
+
+        cal.setTimeInMillis(System.currentTimeMillis());
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 50);
+
+        AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, DailyEMAUploadReceiver.class);
+        //statsIntent = PendingIntent.getBroadcast(this, 3, intent, 0);
+        DailyEMAIntent = PendingIntent.getBroadcast(this, 27, intent, 0);
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, DailyEMAIntent);
+
+
+    }
+
 
 //    public void startGarminUploadAlarm() {
 //        Log.d(TAG, "EMA upload in start alarm");
@@ -644,8 +692,8 @@ public class FinishInstallScreen extends AppCompatActivity {
         Log.d("the time is: ", when + " ");
 
         cal.setTimeInMillis(System.currentTimeMillis());
-        cal.set(Calendar.HOUR_OF_DAY, 12);
-        cal.set(Calendar.MINUTE, 30);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 52);
 //        cal.set(Calendar.HOUR_OF_DAY, 12);
 //        cal.set(Calendar.MINUTE, 56);
 
@@ -670,6 +718,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         Log.d(TAG, "Suicide alarm is up : " + alarmUp);
 
         if(alarmUp){
+            Log.d(TAG, "startSuicideEMAAlarm: alarm already up, skipping");
             return;
         }
 
@@ -677,11 +726,12 @@ public class FinishInstallScreen extends AppCompatActivity {
         long when = cal.getTimeInMillis();
 
         cal.setTimeInMillis(System.currentTimeMillis());
-       // cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+//        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        //cal.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
 
-        cal.set(Calendar.HOUR_OF_DAY, 13);
-        cal.set(Calendar.MINUTE, 44);
+        cal.set(Calendar.HOUR_OF_DAY, 9);
+        cal.set(Calendar.MINUTE, 15);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, SuicideAlarmReceiver.class);
@@ -707,6 +757,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         Log.d(TAG, "Ema alarm boolean alarm up is: " + alarmUp);
 
         if(alarmUp){
+            Log.d(TAG, "startEMAAlarm: alarm already up, skipping");
             return;
         }
 
@@ -726,6 +777,41 @@ public class FinishInstallScreen extends AppCompatActivity {
         //alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),alarmMgr.INTERVAL_DAY * 7 , startEMAIntent);
         alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000 * 60 * 120, startEMAIntent);
         Log.d(TAG, "startEMAAlarm first 7 days: alarm should be set");
+        //alarmStarted = true;
+
+
+    }
+
+    public void startDailyEMAAlarm(){
+        Log.d(TAG, "startDailyEMAAlarm: in start ema alarm");
+
+        boolean alarmUp = (PendingIntent.getBroadcast(this, 22,
+                new Intent(FinishInstallScreen.this, DailyEMAAlarmReceiver.class),
+                PendingIntent.FLAG_NO_CREATE) != null);
+
+        Log.d(TAG, "Daily Ema alarm boolean alarm up is: " + alarmUp);
+
+        if(alarmUp){
+            Log.d(TAG, "startDailyEMAAlarm: alarm already up, skipping");
+            return;
+        }
+
+
+        Calendar cal = Calendar.getInstance();
+        long when = cal.getTimeInMillis();
+
+        cal.setTimeInMillis(System.currentTimeMillis());
+        //cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+        cal.set(Calendar.HOUR_OF_DAY, 8);
+        cal.set(Calendar.MINUTE, 00);
+
+        AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, DailyEMAAlarmReceiver.class);
+        intent.putExtra("EMA", "EMA1");
+        startDailyEMAIntent = PendingIntent.getBroadcast(this, 22, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),alarmMgr.INTERVAL_DAY * 7 , startEMAIntent);
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000 * 60 * 30, startDailyEMAIntent);
+        Log.d(TAG, "Daily");
         //alarmStarted = true;
 
 

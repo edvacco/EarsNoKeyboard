@@ -54,7 +54,7 @@ public class Intro extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.setup_step_one_abcd);
+        setContentView(R.layout.setup_step_one);
         updateStatusBarColor("#07dddd");
         mContext = this;
 
@@ -219,7 +219,7 @@ public class Intro extends AppCompatActivity {
         }
         try {
             stream.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
