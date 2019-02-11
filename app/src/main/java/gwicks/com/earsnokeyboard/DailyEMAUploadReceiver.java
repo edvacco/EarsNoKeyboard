@@ -84,7 +84,7 @@ public class DailyEMAUploadReceiver extends BroadcastReceiver {
         String path2 = null;
         try {
             //com.anysoftkeyboard.utils.Log.d(TAG, "We are starting encrytopn 1 - in doInBackgound AsyncTask ENCRYTPTION!");
-            path2 = mEncryption.encrypt(mFileName, mFilePath, "/EMA/");
+            path2 = mEncryption.encrypt(mFileName, mFilePath, "/DailyEMA/");
             Log.d(TAG, "Encrypt: the path me get is: " + path2);
         } catch (IOException e) {
             e.printStackTrace();

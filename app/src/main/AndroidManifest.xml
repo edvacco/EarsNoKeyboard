@@ -140,6 +140,12 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".DailyEMAUploadReceiver">
+            <intent-filter>
+                <action android:name="com.codepath.CUSTOM_INTENT"></action>
+            </intent-filter>
+        </receiver>
+
         <receiver android:name=".SensorUploadReceiver"/>
         <receiver android:name=".EMAUploadReceiver"/>
 

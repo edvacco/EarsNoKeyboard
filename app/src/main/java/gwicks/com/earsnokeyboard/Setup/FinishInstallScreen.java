@@ -120,8 +120,10 @@ public class FinishInstallScreen extends AppCompatActivity {
 
         updateStatusBarColor("#1281e8");
 
-        FirebaseMessaging.getInstance().subscribeToTopic("PITTS");
+//        FirebaseMessaging.getInstance().subscribeToTopic("PITTS");
         FirebaseMessaging.getInstance().subscribeToTopic(secureID);
+        FirebaseMessaging.getInstance().subscribeToTopic("UPMC");
+
 
 
 
@@ -643,7 +645,7 @@ public class FinishInstallScreen extends AppCompatActivity {
 
         cal.setTimeInMillis(System.currentTimeMillis());
         cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 50);
+        cal.set(Calendar.MINUTE, 45);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, DailyEMAUploadReceiver.class);
@@ -810,7 +812,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         intent.putExtra("EMA", "EMA1");
         startDailyEMAIntent = PendingIntent.getBroadcast(this, 22, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         //alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),alarmMgr.INTERVAL_DAY * 7 , startEMAIntent);
-        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000 * 60 * 30, startDailyEMAIntent);
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, startDailyEMAIntent);
         Log.d(TAG, "Daily");
         //alarmStarted = true;
 
