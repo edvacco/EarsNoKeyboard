@@ -13,7 +13,7 @@
         android:layout_marginLeft="32dp"
         android:textColor="#ffffff"
         android:textSize="30sp"
-        android:text="Our devices have a lot to say about mental health."
+        android:text="Our devices have a lot to say about mental health"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="32dp"
         app:layout_constraintRight_toRightOf="parent"
@@ -38,7 +38,7 @@
         android:textSize="15sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        android:text=" Donating your digital data helps us\n study patterns in behavior. We’re\n studying data to learn how to predict\n a mental health crisis before it\n happens, so support can be sent in\n time. "
+        android:text=" Donating your digital data helps us\n study patterns in behavior. We’re\n studying data to learn how to predict\n a mental health crisis before it\n happens, so support can be sent in\n time."
         app:layout_constraintRight_toRightOf="parent"
         android:id="@+id/textView2"
         android:layout_marginStart="24dp"
@@ -71,3 +71,5 @@
 
 
 </android.support.constraint.ConstraintLayout>
+
+    <!--android:text="Donating your digital data helps us\n study patterns in behavior. We’re\n studying data to learn how to predict\n a mental health crisis before it\n happens, so support can be sent in\n time."-->

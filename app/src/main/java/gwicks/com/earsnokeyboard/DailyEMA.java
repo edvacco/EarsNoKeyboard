@@ -3,7 +3,6 @@ package gwicks.com.earsnokeyboard;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -100,7 +99,7 @@ public class DailyEMA extends Activity implements SeekBar.OnSeekBarChangeListene
     private static void writeToFile(File file, String data) {
 
         FileOutputStream stream = null;
-        System.out.println("The state of the media is: " + Environment.getExternalStorageState());
+        //System.out.println("The state of the media is: " + Environment.getExternalStorageState());
 
         //OutputStreamWriter stream = new OutputStreamWriter(openFileOutput(file), Context.MODE_APPEND);
         try {

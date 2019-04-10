@@ -96,7 +96,7 @@ public class StatsAlarmReceiver extends BroadcastReceiver {
 
         File file = new File(filePath);
         //TransferObserver observer = transferUtility.upload(Constants.BUCKET_NAME, name,
-        transferUtility.upload(Constants.BUCKET_NAME,  userID + "/UsageStats/" + name,
+        transferUtility.upload(Constants.awsBucket,  userID + "/UsageStats/" + name,
                 file);
         Log.d(TAG, "beginUpload2: end");
     }

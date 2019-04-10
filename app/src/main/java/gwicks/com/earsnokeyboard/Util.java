@@ -35,6 +35,8 @@ public class Util {
 
     private static final String TAG = "Util";
     private static String AWSPoolId = BuildConfig.MyAWSPoolId;
+    private static String BUCKET_NAME;
+
 
     public interface FileTransferCallback {
         void onStart(final int id, final TransferState state);
@@ -216,6 +218,11 @@ public class Util {
             sTransferUtility = new TransferUtility(getS3Client(context.getApplicationContext()),
                     context.getApplicationContext());
         }
+//        if(BUCKET_NAME == null){
+//            getApp
+////            prefs = PreferenceManager.getDefaultSharedPreferences(context);
+////            BUCKET_NAME
+//        }
 
 
 
@@ -231,7 +238,7 @@ public class Util {
         final String filePath = String.format("%s/%s", userId, filename);
         final TransferObserver observer =
                 //transferUtility.upload(BuildConfig.AWS_BUCKET_NAME, filePath, file);
-                sTransferUtility.upload(Constants.BUCKET_NAME, filePath, file);
+                sTransferUtility.upload(Constants.awsBucket, filePath, file);
         observer.setTransferListener(new TransferListener() {
             @SuppressLint("DefaultLocale")
             @Override
@@ -298,7 +305,7 @@ public class Util {
         final String filePath = String.format("%s%s", userId + folder, filename);
         final TransferObserver observer =
                 //transferUtility.upload(BuildConfig.AWS_BUCKET_NAME, filePath, file);
-                sTransferUtility.upload(Constants.BUCKET_NAME, filePath, file);
+                sTransferUtility.upload(Constants.awsBucket, filePath, file);
         observer.setTransferListener(new TransferListener() {
             @SuppressLint("DefaultLocale")
             @Override

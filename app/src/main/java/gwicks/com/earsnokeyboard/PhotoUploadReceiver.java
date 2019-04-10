@@ -72,8 +72,11 @@ public class PhotoUploadReceiver extends BroadcastReceiver {
             Log.d(TAG, "getPhotos: directory!! ");
         }
 
+        // added return on 20th feb 2019 because of crash, not sure if just no photos or if a permissions problem?
+
         if(files == null){
             Log.d(TAG, "getPhotos: NULLLLLLL");
+            return;
         }
 
         Log.d(TAG, "getPhotos: size of array is: " + files.length);

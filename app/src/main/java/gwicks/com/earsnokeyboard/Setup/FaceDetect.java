@@ -2,9 +2,11 @@ package gwicks.com.earsnokeyboard.Setup;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -13,9 +15,11 @@ import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +27,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
@@ -338,6 +343,7 @@ public class FaceDetect extends AppCompatActivity {
     Bitmap editedBitmap;
     public Uri imageUri;
     private static final int REQUEST_WRITE_PERMISSION = 200;
+    private static final int REQUEST_CAMERA_PERMISSION = 201;
     private static final int CAMERA_REQUEST = 101;
 
     private static final String SAVED_INSTANCE_URI = "uri";
@@ -354,6 +360,21 @@ public class FaceDetect extends AppCompatActivity {
 
         if(!directory.exists()){
             directory.mkdirs();
+        }
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)
+                    this, Manifest.permission.CAMERA)) {
+
+
+            } else {
+                ActivityCompat.requestPermissions((Activity) this,
+                        new String[]{Manifest.permission.CAMERA},
+                        REQUEST_CAMERA_PERMISSION);
+            }
+
         }
 
         Log.d(TAG, "onCreate: directory = " +directory);
@@ -406,10 +427,11 @@ public class FaceDetect extends AppCompatActivity {
 
                 if(secondScreen == false){
                     Log.d(TAG, "onClick: in false");
+                    startCamera();
 
 
-                    ActivityCompat.requestPermissions(FaceDetect.this, new
-                            String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_PERMISSION);
+//                    ActivityCompat.requestPermissions(FaceDetect.this, new
+//                            String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_PERMISSION);
 
                 }
                 Log.d(TAG, "onClick: second screen = " + secondScreen);
@@ -432,9 +454,10 @@ public class FaceDetect extends AppCompatActivity {
             @Override
             public void onClick(View view){
                 Log.d(TAG, "onClick: Clicked");
+                Log.d(TAG, "onClick: 1.1");
 
-                ActivityCompat.requestPermissions(FaceDetect.this, new
-                        String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_PERMISSION);
+//                ActivityCompat.requestPermissions(FaceDetect.this, new
+//                        String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_PERMISSION);
 
 
             }
@@ -532,6 +555,13 @@ public class FaceDetect extends AppCompatActivity {
 //                } else {
 //                    Toast.makeText(getApplicationContext(), "Permission Denied!", Toast.LENGTH_SHORT).show();
 //                }
+            case REQUEST_CAMERA_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
+
+                    // main logic
+                } else {
+                    Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_SHORT).show();}
         }
     }
 
@@ -687,6 +717,8 @@ public class FaceDetect extends AppCompatActivity {
         //intent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
         //intent.putExtra("android.intent.extras.CAMERA_FACING",1);
         Log.d(TAG, "startCamera: 5");
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
         startActivityForResult(intent, CAMERA_REQUEST);
         Log.d(TAG, "startCamera: 6");
     }

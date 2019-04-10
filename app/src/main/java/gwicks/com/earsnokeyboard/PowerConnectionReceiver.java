@@ -3,7 +3,6 @@ package gwicks.com.earsnokeyboard;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Environment;
 import android.text.format.DateFormat;
 import android.util.Log;
 
@@ -62,7 +61,7 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
     private static void writeToFile(File file, String data) {
 
         FileOutputStream stream = null;
-        System.out.println("The state of the media is: " + Environment.getExternalStorageState());
+        //System.out.println("The state of the media is: " + Environment.getExternalStorageState());
         Log.d(TAG, "writeToFile: file location is:" + file.getAbsolutePath());
 
         //OutputStreamWriter stream = new OutputStreamWriter(openFileOutput(file), Context.MODE_APPEND);

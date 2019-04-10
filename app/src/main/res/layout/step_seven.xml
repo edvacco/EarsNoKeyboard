@@ -13,7 +13,7 @@
         android:text="Thank you for helping us learn about wellness!"
         android:textSize="25sp"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="50dp"
@@ -65,3 +65,7 @@
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="@+id/imageView37"/>
 </android.support.constraint.ConstraintLayout>
+
+    <!--Your data will help us learn more about mental health through the use of digital devices.-->
+
+    <!--android:text="Your data will help us learn to identify when people need extra help"-->

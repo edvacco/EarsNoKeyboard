@@ -1,5 +1,6 @@
 package gwicks.com.earsnokeyboard;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +8,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Environment;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
@@ -36,7 +36,7 @@ public class AccGryLgt extends Service implements SensorEventListener {
     private Sensor mAccelerometer;
     private Sensor mGyroscope;
     private Sensor mLight;
-    String path;
+    //String path;
     String path2;
 
     private static long LAST_TS_ACC = 0;
@@ -100,6 +100,7 @@ public class AccGryLgt extends Service implements SensorEventListener {
         return null;
     }
 
+    @SuppressLint("InvalidWakeLockTag")
     @Override
     public void onCreate() {
         super.onCreate();
@@ -109,17 +110,17 @@ public class AccGryLgt extends Service implements SensorEventListener {
         PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
         wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AccGryLgt - Service");
 
-        path = Environment.getExternalStorageDirectory() +"/VIDEODIARY";
+        //path = Environment.getExternalStorageDirectory() +"/VIDEODIARY";
         path2 = (getExternalFilesDir(null) + "/Sensors");
         Log.d(TAG, "AccGryLgt:  the path to externalfilesdir is: " + path2);
 
-        File directory = new File(path);
+        //File directory = new File(path);
         File directory2 = new File(path2);
-
-        if(!directory.exists()){
-            Log.d(TAG, "onCreate: making directory");
-            directory.mkdirs();
-        }
+//
+//        if(!directory.exists()){
+//            Log.d(TAG, "onCreate: making directory");
+//            directory.mkdirs();
+//        }
 
         if(!directory2.exists()){
             Log.d(TAG, "onCreate: making directory");
@@ -130,7 +131,11 @@ public class AccGryLgt extends Service implements SensorEventListener {
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy: the sensor service has been destroyed");
-        sensorManager.unregisterListener(this);
+        Log.d(TAG, "onDestroy: sensor manager = null " + sensorManager);
+        if(sensorManager != null){
+            sensorManager.unregisterListener(this);
+        }
+       // sensorManager.unregisterListener(this);
         wakeLock.release();
         DestroyFile = new File(path2 +"/Acc/Destroy_Service.txt");
         writeToFile(DestroyFile, "the file was destroyed at: ");
@@ -320,7 +325,7 @@ public class AccGryLgt extends Service implements SensorEventListener {
     private static void writeToFile(File file, String data) {
 
         FileOutputStream stream = null;
-        System.out.println("The state of the media is: " + Environment.getExternalStorageState());
+        //System.out.println("The state of the media is: " + Environment.getExternalStorageState());
         Log.d(TAG, "writeToFile: file location is:" + file.getAbsolutePath());
 
         //OutputStreamWriter stream = new OutputStreamWriter(openFileOutput(file), Context.MODE_APPEND);

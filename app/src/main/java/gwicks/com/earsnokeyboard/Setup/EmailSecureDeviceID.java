@@ -88,23 +88,34 @@ public class EmailSecureDeviceID extends DialogFragment {
 
         // Pitsburg medical center:
 
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                "mailto","lubbertcl@upmc.edu", null));
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"zelaznyjh@upmc.edu"});
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"goodk4@upmc.edu"});
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, secureDeviceID);
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "No Need to put anything here, just press send :)");
-        startActivity(Intent.createChooser(emailIntent, "Select your most used email provider"));
+//        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+//                "mailto","lubbertcl@upmc.edu", null));
+//        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"zelaznyjh@upmc.edu"});
+//        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"goodk4@upmc.edu"});
+//        emailIntent.putExtra(Intent.EXTRA_SUBJECT, secureDeviceID);
+//        emailIntent.putExtra(Intent.EXTRA_TEXT, "No Need to put anything here, just press send :)");
+//        startActivity(Intent.createChooser(emailIntent, "Select your most used email provider"));
+
+
+        //KKI
+//        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+//                "mailto","KochC@kennedykrieger.org", null));
+//        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"crocetti@kennedykrieger.org"});
+//        //emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"goodk4@upmc.edu"});
+//        emailIntent.putExtra(Intent.EXTRA_SUBJECT, secureDeviceID);
+//        emailIntent.putExtra(Intent.EXTRA_TEXT, "No Need to put anything here, just press send :)");
+//        startActivity(Intent.createChooser(emailIntent, "Select your most used email provider"));
+
 
 
         // Randy at Columbia
 
-//        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-//                "mailto","Randy.Auerbach@nyspi.columbia.edu", null));
-//        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"kira.alqueza@nyspi.columbia.edu"});
-//        emailIntent.putExtra(Intent.EXTRA_SUBJECT, secureDeviceID);
-//        emailIntent.putExtra(Intent.EXTRA_TEXT, "No Need to put anything here, just press send :)");
-//        startActivity(Intent.createChooser(emailIntent, "Select your most used email provider"));
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                "mailto","Randy.Auerbach@nyspi.columbia.edu", null));
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"kira.alqueza@nyspi.columbia.edu"});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, secureDeviceID);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "No Need to put anything here, just press send :)");
+        startActivity(Intent.createChooser(emailIntent, "Select your most used email provider"));
 
 
 

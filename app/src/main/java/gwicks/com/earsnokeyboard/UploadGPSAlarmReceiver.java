@@ -34,6 +34,7 @@ public class UploadGPSAlarmReceiver extends BroadcastReceiver {
     Encryption mEncryption;
     Context mContext;
     static String folder = "/GPS/";
+//    private SharedPreferences prefs;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -69,6 +70,13 @@ public class UploadGPSAlarmReceiver extends BroadcastReceiver {
             }
         }
         ArrayList<File> encryptedFiles = new ArrayList<>(Arrays.asList(directory.listFiles()));
+        
+//        if(Constants.awsBucket == null){
+//            Log.d(TAG, "onReceive: setting bucket!");
+//            prefs =PreferenceManager.getDefaultSharedPreferences(mContext);
+//            String s = prefs.getString("bucket", "default");
+//            Constants.awsBucket = s;
+//        }
 
         Util.uploadFilesToBucket(encryptedFiles, true,logUploadCallback, mContext, folder);
     }

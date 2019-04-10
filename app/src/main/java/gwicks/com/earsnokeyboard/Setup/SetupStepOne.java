@@ -1,7 +1,5 @@
 package gwicks.com.earsnokeyboard.Setup;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -12,7 +10,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -94,25 +91,38 @@ public class SetupStepOne extends AppCompatActivity {
 
                 if(mImageViewPager.getCurrentItem() == 2){
 
-                    AlertDialog alertDialog = new AlertDialog.Builder(SetupStepOne.this).create();
-                    //alertDialog.setTitle("7 Cups EARS: Informed Consent & Terms of Service Agreement");
-                    alertDialog.setTitle("EARS: Informed Consent & Terms of Service Agreement");
-                    alertDialog.setMessage(Html.fromHtml(informedConsent));
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "I Disagree",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    alertDialog.setButton("I Agree",new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            startInstall();
-                        }
-                    });
-                    alertDialog.show();
+                    // Old version move to the informed consent being replaced by study code screen 12th Feb 2019
 
-                    //startInstall(view);
+//                    AlertDialog alertDialog = new AlertDialog.Builder(SetupStepOne.this).create();
+//                    //alertDialog.setTitle("7 Cups EARS: Informed Consent & Terms of Service Agreement");
+//                    alertDialog.setTitle("EARS: Informed Consent & Terms of Service Agreement");
+//                    alertDialog.setMessage(Html.fromHtml(informedConsent));
+//                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "I Disagree",
+//                            new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.dismiss();
+//                                }
+//                            });
+//                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,"I Agree",new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//                            startInstall();
+//                        }
+//                    });
+//                    alertDialog.show();
+
+
+                    // New verision with study codes
+
+                    Intent intent = new Intent(SetupStepOne.this, StudyCodeVerification.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+
+                    // KK Version
+
+//                    Intent intent = new Intent(SetupStepOne.this, KKStudyCode.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    startActivity(intent);
                 }
                 else{
                     mImageViewPager.setCurrentItem(getItem(+1), true);

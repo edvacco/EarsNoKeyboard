@@ -216,6 +216,8 @@ public class Intro extends AppCompatActivity {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
         }
         try {
             stream.close();

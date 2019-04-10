@@ -20,8 +20,8 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -42,6 +42,7 @@ import java.util.concurrent.TimeUnit;
 
 import gwicks.com.earsnokeyboard.AccGryLgt;
 import gwicks.com.earsnokeyboard.AnyApplication;
+import gwicks.com.earsnokeyboard.Constants;
 import gwicks.com.earsnokeyboard.DailyEMAAlarmReceiver;
 import gwicks.com.earsnokeyboard.DailyEMAUploadReceiver;
 import gwicks.com.earsnokeyboard.EMAAlarmReceiver;
@@ -120,9 +121,22 @@ public class FinishInstallScreen extends AppCompatActivity {
 
         updateStatusBarColor("#1281e8");
 
-//        FirebaseMessaging.getInstance().subscribeToTopic("PITTS");
+        FirebaseMessaging.getInstance().subscribeToTopic(Constants.awsBucket);
         FirebaseMessaging.getInstance().subscribeToTopic(secureID);
-        FirebaseMessaging.getInstance().subscribeToTopic("UPMC");
+//        FirebaseMessaging.getInstance().subscribeToTopic("UPMC");
+        //FirebaseMessaging.getInstance().subscribeToTopic("KKI");
+
+
+        Log.d(TAG, "onCreate: The study name is: " + Constants.studyName);
+        Log.d(TAG, "onCreate: the stud is: " + Constants.study);
+        Log.d(TAG, "onCreate: bucket constants: " + Constants.awsBucket);
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String s = prefs.getString("bucket", "Defualkty");
+
+        Log.d(TAG, "onCreate: the bucket is from prefs: " + s );
+
 
 
 
@@ -152,10 +166,12 @@ public class FinishInstallScreen extends AppCompatActivity {
         // https://www.okcupid.com/profile/3266230839404444105?cf=quickmatch
         //Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
 
-        if(isAlreadySet(this) == false){
-            Log.d(TAG, "onCreate: already done email upload skipping");
-            launchSendEmailDialog();
-        }
+        // The email dialog, not used anymore with study codes
+
+//        if(isAlreadySet(this) == false){
+//            Log.d(TAG, "onCreate: already done email upload skipping");
+//            launchSendEmailDialog();
+//        }
 
         numberOfInstances++;
 
@@ -298,12 +314,12 @@ public class FinishInstallScreen extends AppCompatActivity {
 
         // MEMORY CHECK
 
-        ActivityManager.MemoryInfo memoryInfo = getAvailableMemory();
-        Log.d(TAG, "onCreate: avaiblable memory: "+ memoryInfo.availMem + " threshold when we start killing processes: " + memoryInfo.threshold  + " total mem: " + memoryInfo.totalMem);
-
-        Runtime runtime = Runtime.getRuntime();
-        Log.d(TAG, "onCreate: Runtime: max memory: " + runtime.maxMemory() + " Runtime total memory: " + runtime.totalMemory() + " runtime free memory: " + runtime.freeMemory());
-
+//        ActivityManager.MemoryInfo memoryInfo = getAvailableMemory();
+//        Log.d(TAG, "onCreate: avaiblable memory: "+ memoryInfo.availMem + " threshold when we start killing processes: " + memoryInfo.threshold  + " total mem: " + memoryInfo.totalMem);
+//
+//        Runtime runtime = Runtime.getRuntime();
+//        Log.d(TAG, "onCreate: Runtime: max memory: " + runtime.maxMemory() + " Runtime total memory: " + runtime.totalMemory() + " runtime free memory: " + runtime.freeMemory());
+//
 
 
         //accelGyroLight = new AccelGyroLight(this);
@@ -337,7 +353,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         }
         //startEMAAlarm();
 
-        startSuicideEMAAlarm();
+        //startSuicideEMAAlarm();
 
         startEMAUploadAlarm();
         //sendNotification();
@@ -383,57 +399,6 @@ public class FinishInstallScreen extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume: in on Resume, number of instances  = " + numberOfInstances);
-
-//        if(notificationManager == null){
-//            Log.d(TAG, "onResume: EMA loading the notificataion manager");
-//            notificationManager = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
-//            Log.d(TAG, "onResume: noti manager should be loaded");
-//        }
-
-        // This is all added from MainActivity
-        // 8th Feb 2018
-
-//        if (!isAccessGranted()) {
-//            //Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-//            //startActivity(intent);
-//            showDialog();
-//        }
-//
-//        if(!checkNotificationEnabled()){
-//            showMusicDialog();
-//        }
-//
-//        startStatsAlarm();
-//        startMicUploadAlarm();
-//        startGPSUploadAlarm();
-//        startMusicUploadAlarm();
-//        startPhotoUploadAlarm();
-//
-//        AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-//        String rate = audioManager.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE);
-//        String size = audioManager.getProperty(AudioManager.PROPERTY_OUTPUT_FRAMES_PER_BUFFER);
-//        Log.d("Buffer Size and  rate", "Size :" + size + " & Rate: " + rate);
-        // pretending to work, pretending to work, pretending to work, mothafuckka
-        // yess yes, still pretending to work!
-        //
-//
-//
-//        final JobInfo job = new JobInfo.Builder(1, new ComponentName(this, StatsJobService.class))
-//                //.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-//                //.setRequiresCharging(true)
-//                //.setMinimumLatency(10000)
-//                .setPeriodic(TimeUnit.MINUTES.toMillis(15))
-//                //.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
-//                .build();
-//        final JobScheduler jobScheduler =
-//                (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
-////
-//        jobScheduler.schedule(job);
-//        Log.d(TAG, "onCreate: Job Scehduled");
-//
-//        // remove this intent 30th october 2017
-//        //startActivity(new Intent(this, VideoActivity.class));
-
 
     }
 
@@ -524,7 +489,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         Log.d("the time is: ", when + " ");
 
         cal.setTimeInMillis(System.currentTimeMillis());
-        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.HOUR_OF_DAY, 22);
         cal.set(Calendar.MINUTE, 48);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -550,7 +515,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         Log.d("the time is: ", when + " ");
 
         cal.setTimeInMillis(System.currentTimeMillis());
-        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.HOUR_OF_DAY, 22);
         cal.set(Calendar.MINUTE,57);
 //        cal.set(Calendar.HOUR_OF_DAY, 12);
 //        cal.set(Calendar.MINUTE,54);
@@ -574,7 +539,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         Log.d("the time is: ", when + " ");
 
         cal.setTimeInMillis(System.currentTimeMillis());
-        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.HOUR_OF_DAY, 22);
         cal.set(Calendar.MINUTE, 55);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -597,7 +562,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         Log.d("the time is: ", when + " ");
 
         cal.setTimeInMillis(System.currentTimeMillis());
-        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.HOUR_OF_DAY, 22);
         cal.set(Calendar.MINUTE, 54);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -620,7 +585,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         Log.d("the time is: ", when + " ");
 
         cal.setTimeInMillis(System.currentTimeMillis());
-        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.HOUR_OF_DAY, 22);
         cal.set(Calendar.MINUTE, 50);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -644,7 +609,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         Log.d("the time is: ", when + " ");
 
         cal.setTimeInMillis(System.currentTimeMillis());
-        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.HOUR_OF_DAY, 22);
         cal.set(Calendar.MINUTE, 45);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -694,10 +659,10 @@ public class FinishInstallScreen extends AppCompatActivity {
         Log.d("the time is: ", when + " ");
 
         cal.setTimeInMillis(System.currentTimeMillis());
-        cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 52);
-//        cal.set(Calendar.HOUR_OF_DAY, 12);
-//        cal.set(Calendar.MINUTE, 56);
+//        cal.set(Calendar.HOUR_OF_DAY, 23);
+//        cal.set(Calendar.MINUTE, 52);
+        cal.set(Calendar.HOUR_OF_DAY, 13);
+        cal.set(Calendar.MINUTE, 47);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, PhotoUploadReceiver.class);
@@ -941,16 +906,6 @@ public class FinishInstallScreen extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy_HHmmssSSS");
 
         String theTime = df.format(cal.getTime());
-//        String path2 = (this.getExternalFilesDir(null) + "/DestroyFIS");
-//        File directory2 = new File(path2);
-//
-//        if(!directory2.exists()){
-//            Log.d(TAG, "onCreate: making directory");
-//            directory2.mkdir();
-//        }
-//
-//        File destroyEvents = new File(directory2,  "DestroyEvents.txt");
-
 
         writeToFile(destroyEvents, "The Activity was destroyed at: " + theTime );
 
@@ -964,7 +919,7 @@ public class FinishInstallScreen extends AppCompatActivity {
     private static void writeToFile(File file, String data) {
 
         FileOutputStream stream = null;
-        System.out.println("The state of the media is: " + Environment.getExternalStorageState());
+        //System.out.println("The state of the media is: " + Environment.getExternalStorageState());
         Log.d(TAG, "writeToFile: file location is:" + file.getAbsolutePath());
 
         //OutputStreamWriter stream = new OutputStreamWriter(openFileOutput(file), Context.MODE_APPEND);

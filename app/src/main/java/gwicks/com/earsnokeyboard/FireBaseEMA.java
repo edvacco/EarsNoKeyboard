@@ -2,7 +2,6 @@ package gwicks.com.earsnokeyboard;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -371,7 +370,7 @@ public class FireBaseEMA extends FragmentActivity {
     private static void writeToFile(File file, String data) {
 
         FileOutputStream stream = null;
-        System.out.println("The state of the media is: " + Environment.getExternalStorageState());
+        //System.out.println("The state of the media is: " + Environment.getExternalStorageState());
         try {
             stream = new FileOutputStream(file, true);
             stream.write(data.getBytes());
