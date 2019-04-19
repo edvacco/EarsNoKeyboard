@@ -2,10 +2,15 @@ package gwicks.com.earsnokeyboard;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 
+import static android.os.Build.MANUFACTURER;
+import static android.os.Build.MODEL;
+import static android.os.Build.VERSION.SDK_INT;
 /**
         * Created by gwicks on 6/10/2017.
         * This class provides a static context if need anywhere in the Application. Currently this Class is NOT used
@@ -48,6 +53,23 @@ public class AnyApplication extends Application {
         if(Constants.deviceID == null){
             setDeviceID();
         }
+        if(Constants.androidVersion == 0){
+            setAndroidVersion();
+        }
+        if(Constants.earsVersion == null){
+            setEarsVersion();
+        }
+        if(Constants.modelName == null){
+            setModelName();
+        }
+        if(Constants.modelNumber == null){
+            setModelNumber();
+        }
+
+        if(Constants.secureID == null){
+            Constants.secureID = Settings.Secure.getString(
+                    AnyApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID);
+        }
     }
 
     public static AnyApplication getInstance() {
@@ -68,6 +90,36 @@ public class AnyApplication extends Application {
                 AnyApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         Constants.deviceID = secureID;
+    }
+
+    public void setAndroidVersion(){
+        Constants.androidVersion = SDK_INT;
+        Log.d(TAG, "setAndroidVersion: " + Constants.androidVersion);
+    }
+
+    public void setEarsVersion(){
+
+        String s;
+
+        try {
+            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            Constants.earsVersion = pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "setEarsVersion: " + Constants.earsVersion);
+
+
+
+    }
+
+    public void setModelName(){
+       Constants.modelName = MANUFACTURER;
+        Log.d(TAG, "setModelName: " + Constants.modelName);
+    }
+    public void setModelNumber(){
+        Constants.modelNumber = MODEL;
+        Log.d(TAG, "setModelNumber:  " + Constants.modelNumber);
     }
 
 //    public String getSecureID(){

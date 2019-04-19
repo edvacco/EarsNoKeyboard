@@ -7,32 +7,37 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.StrictMode;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
@@ -40,8 +45,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -53,6 +56,8 @@ import javax.net.ssl.HttpsURLConnection;
 import gwicks.com.earsnokeyboard.Constants;
 import gwicks.com.earsnokeyboard.R;
 
+import static android.view.View.GONE;
+
 
 public class StudyCodeVerification extends AppCompatActivity implements GetRawData.OnDownloadComplete, GetRawDataTwo.OnDownloadCompleteTwo {
 
@@ -61,19 +66,35 @@ public class StudyCodeVerification extends AppCompatActivity implements GetRawDa
     String finalCode;
     String creationDate = "";
 
+    ImageView qrCodeButton;
+
     String informedConsent;
     SharedPreferences mSharedPreferences;
 
     private static final String LOG_TAG = "Barcode Scanner API";
     private static final int PHOTO_REQUEST = 10;
 
-    private BarcodeDetector mBarcodeDetector;
+    //private BarcodeDetector mBarcodeDetector;
     private TextView scanResults;
     private Uri imageUri;
 
     private static final int REQUEST_WRITE_PERMISSION = 20;
+    private static final int REQUEST_CAMERA_PERMISSION = 31;
     private static final String SAVED_INSTANCE_URI = "uri";
     private static final String SAVED_INSTANCE_RESULT = "result";
+    private Boolean skip = false;
+
+    int count = 0;
+
+    SurfaceView sv;
+    CameraSource mCameraSource;
+    TextView mTextView;
+
+    BarcodeDetector mBarcodeDetector;
+
+    int height;
+    int width;
+    String result = "";
 
 
     @Override
@@ -82,10 +103,115 @@ public class StudyCodeVerification extends AppCompatActivity implements GetRawDa
         setContentView(R.layout.study_code);
         updateStatusBarColor("#1281e8");
         studyCode = (EditText)findViewById(R.id.studyCode);
+        mTextView = findViewById(R.id.imageView10);
+
+        qrCodeButton = findViewById(R.id.imageView6);
+
+
+
+
+        studyCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (count <= studyCode.getText().toString().length()
+                        &&(studyCode.getText().toString().length()==4
+                        ||studyCode.getText().toString().length()==9
+                        ||studyCode.getText().toString().length()==14)){
+                    studyCode.setText(studyCode.getText().toString()+" ");
+                    int pos = studyCode.getText().length();
+                    studyCode.setSelection(pos);
+                }else if (count >= studyCode.getText().toString().length()
+                        &&(studyCode.getText().toString().length()==4
+                        ||studyCode.getText().toString().length()==9
+                        ||studyCode.getText().toString().length()==14)){
+                    studyCode.setText(studyCode.getText().toString().substring(0,studyCode.getText().toString().length()-1));
+                    int pos = studyCode.getText().length();
+                    studyCode.setSelection(pos);
+                }
+                count = studyCode.getText().toString().length();
+
+            }
+        });
+
+
+
+
         informedConsent = getString(R.string.informed_consent);
 
 
+        if(skip){
+            Intent installIntent = new Intent(StudyCodeVerification.this, SetupStepTwo.class);
+            StudyCodeVerification.this.startActivity(installIntent);
+            finish();
+        }
+
+        if(!checkPermissionForWriteExtertalStorage()){
+            ActivityCompat.requestPermissions(StudyCodeVerification.this, new
+                    String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_PERMISSION);
+        }
+
+
         // Check for camera permissions to use Camera
+//        Log.d(TAG, "onCreate: camera permissions");
+//        if (ContextCompat.checkSelfPermission(this,
+//                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+//
+//            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)
+//                    this, Manifest.permission.CAMERA)) {
+//
+//
+//            } else {
+//                ActivityCompat.requestPermissions((Activity) this,
+//                        new String[]{Manifest.permission.CAMERA},
+//                        11);
+//            }
+//        }
+    }
+
+    public void updateStatusBarColor(String color){// Color must be in hexadecimal fromat
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Log.d(TAG, "updateStatusBarColor: color change being called!");
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.parseColor(color));
+        }
+    }
+
+    public void requestCameraPermission(View v){
+        try {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                qrcode();
+                Log.d(TAG, "requestCameraPermission: camera permission OK");
+            } else {
+                Log.d(TAG, "requestCameraPermission: rewquesting permission camera");
+
+                ActivityCompat.requestPermissions(StudyCodeVerification.this, new
+                        String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+
+    }
+
+    public void qrcode() {
+
+        Log.d(TAG, "qrcode: qrcode clicked");
+        Log.d(TAG, "onCreate: camera permissions");
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
 
@@ -99,43 +225,214 @@ public class StudyCodeVerification extends AppCompatActivity implements GetRawDa
                         11);
             }
         }
-    }
+//        mBarcodeDetector = new BarcodeDetector.Builder(getApplicationContext())
+//                .setBarcodeFormats(Barcode.DATA_MATRIX | Barcode.QR_CODE)
+//                .build();
+//        if (!mBarcodeDetector.isOperational()) {
+//            Log.d(TAG, "onCreate: not working");
+//            return;
+//        }
 
-    public void updateStatusBarColor(String color){// Color must be in hexadecimal fromat
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Log.d(TAG, "updateStatusBarColor: color change being called!");
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.parseColor(color));
+        // NEW
+
+        height = mTextView.getHeight();
+        Log.d(TAG, "on: height: " + height);
+        width = mTextView.getWidth();
+        Log.d(TAG, "on: width: " + width + " next" );
+
+        mTextView.setVisibility(GONE);
+        studyCode.setVisibility(GONE);
+        qrCodeButton.setVisibility(GONE);
+
+
+        sv = (SurfaceView) findViewById(R.id.cameraView);
+
+        sv.setVisibility(View.VISIBLE);
+
+        final View bar = findViewById(R.id.bar);
+        final Animation animation = AnimationUtils.loadAnimation(StudyCodeVerification.this, R.anim.anim);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                bar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+
+        bar.setVisibility(View.VISIBLE);
+        bar.startAnimation(animation);
+
+//        DisplayMetrics displayMetrics = new DisplayMetrics();
+//        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+//        int widthy = displayMetrics.widthPixels;
+//        int heighty = displayMetrics.heightPixels;
+//
+//        Log.d(TAG, "scanForCode: widthy, heighty: " + widthy + " " + heighty);
+//
+//
+//         sv.setLayoutParams(new ConstraintLayout.LayoutParams(widthy, widthy/9*16));
+        //qrSquare.setVisibility(View.VISIBLE);
+
+
+//        mTextView = findViewById(R.id.cameraViewText);
+        // mTextView.setText("hello");
+
+        mBarcodeDetector = new BarcodeDetector.Builder(this)
+                .setBarcodeFormats(Barcode.QR_CODE).build();
+//
+        mCameraSource = new CameraSource.Builder(this, mBarcodeDetector)
+                .setRequestedPreviewSize(1280, 720).build();
+//                .setRequestedPreviewSize(width, height).build();
+
+        Log.d(TAG, "preview size " + mCameraSource.getPreviewSize());
+
+        // mCameraSource = new CameraSource.Builder(this, mBarcodeDetector).build();
+
+        Log.d(TAG, "onCreate: " + mCameraSource.getPreviewSize());
+        Log.d(TAG, "surfaceChanged: surface view : " + sv.getWidth() + " height: " + sv.getHeight() );
+
+
+
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)
+                    this, Manifest.permission.CAMERA)) {
+
+
+            } else {
+                ActivityCompat.requestPermissions((Activity) this,
+                        new String[]{Manifest.permission.CAMERA},
+                        11);
+            }
         }
+        Log.d(TAG, "preview size " + mCameraSource.getPreviewSize());
+
+
+        sv.getHolder().addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+                    Log.d(TAG, "surfaceCreated: in check");
+                    Log.d(TAG, "preview size " + mCameraSource.getPreviewSize());
+                    Log.d(TAG, "surfaceChanged: surface view : " + sv.getWidth() + " height: " + sv.getHeight() );
+
+
+
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                try{
+                    mCameraSource.start(holder);
+                }catch(IOException e){
+                    Log.d(TAG, "surfaceCreated: error");
+                }
+
+            }
+
+
+
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                Log.d(TAG, "surfaceChanged: ");
+                Log.d(TAG, "preview size " + mCameraSource.getPreviewSize());
+                Log.d(TAG, "surfaceChanged: surface view : " + sv.getWidth() + " height: " + sv.getHeight() );
+
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                Log.d(TAG, "surfaceDestroyed: ");
+                mCameraSource.stop();
+
+            }
+        });
+
+        mBarcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
+            @Override
+            public void release() {
+
+            }
+
+            @Override
+            public void receiveDetections(Detector.Detections<Barcode> detections) {
+
+                //Log.d(TAG, "receiveDetections: detected");
+                final SparseArray<Barcode> qrCodes = detections.getDetectedItems();
+
+                if(qrCodes.size() == 1){
+
+
+                    mTextView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Vibrator vibrator = (Vibrator)getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(1000);
+                            //mTextView.setText(qrCodes.valueAt(0).displayValue);
+                            result = qrCodes.valueAt(0).displayValue;
+                            bar.setVisibility(GONE);
+                            bar.clearAnimation();
+                            studyCode.setVisibility(View.VISIBLE);
+                            qrCodeButton.setVisibility(View.VISIBLE);
+                            setString(result);
+                        }
+                    });
+                }
+            }
+        });
     }
 
-    public void qrcode(View v) {
 
-        Log.d(TAG, "qrcode: qrcode clicked");
-        ActivityCompat.requestPermissions(StudyCodeVerification.this, new
-                String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_PERMISSION);
+    public void setString(String string){
 
-        mBarcodeDetector = new BarcodeDetector.Builder(getApplicationContext())
-                .setBarcodeFormats(Barcode.DATA_MATRIX | Barcode.QR_CODE)
-                .build();
-        if (!mBarcodeDetector.isOperational()) {
-            Log.d(TAG, "onCreate: not working");
-            return;
+        String s = string;
+
+
+
+
+        try {
+            String s1 = s.substring(0,4);
+            String s2 = s.substring(4,8);
+            String s3 = s.substring(8,12);
+            String s4 = s.substring(12,16);
+
+            String finalString = s1.toUpperCase() + " " + s2.toUpperCase() + " " + s3.toUpperCase() + " " + s4.toUpperCase();
+            studyCode.setText(finalString);
+        }catch(Exception e){
+            Log.d(TAG, "setString: error " + e);
+            Toast.makeText(this, "Incorrect study code, please try again", Toast.LENGTH_LONG).show();
         }
 
-
+        sv.setVisibility(View.GONE);
+        //qrSquare.setVisibility(View.GONE);
+        mTextView.setVisibility(View.VISIBLE);
     }
+
 
     public void informedConsent(View v) {
 //
-//        //Toast.makeText(this, "Hello", Toast.LENGTH_LONG).show();
-//        //code = studyCode.getText().toString();
-//        code = code2;
+        String finalText = studyCode.getText().toString().trim();
+        finalText = finalText.replace(" ", "");
+        finalCode = finalText.toLowerCase();
 
-        finalCode = studyCode.getText().toString().trim();
+
+        //finalCode = studyCode.getText().toString().trim();
         Log.d(TAG, "informedConsent: finalCode: " + finalCode);
-        validateStudyCode(studyCode.getText().toString());
+        //validateStudyCode(studyCode.getText().toString());
+        validateStudyCode(finalCode);
 
 
     }
@@ -356,145 +653,187 @@ public class StudyCodeVerification extends AppCompatActivity implements GetRawDa
         switch (requestCode) {
             case REQUEST_WRITE_PERMISSION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    takePicture();
+                    Log.d(TAG, "onRequestPermissionsResult: why am i here?");
+                    //takePicture();
                 } else {
                     Toast.makeText(StudyCodeVerification.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
                 }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult: 1");
-        if (requestCode == PHOTO_REQUEST && resultCode == RESULT_OK) {
-            launchMediaScanIntent();
-            try {
-                Bitmap bitmap = decodeBitmapUri(this, imageUri);
-                Log.d(TAG, "onActivityResult: 2");
-                if (mBarcodeDetector.isOperational() && bitmap != null) {
-                    Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-                    SparseArray<Barcode> barcodes = mBarcodeDetector.detect(frame);
-                    for (int index = 0; index < barcodes.size(); index++) {
-                        Barcode code = barcodes.valueAt(index);
-                        studyCode.setText(code.displayValue);
-
-                        //Required only if you need to extract the type of barcode
-                        int type = barcodes.valueAt(index).valueFormat;
-                        switch (type) {
-                            case Barcode.CONTACT_INFO:
-                                Log.i(LOG_TAG, code.contactInfo.title);
-                                break;
-                            case Barcode.EMAIL:
-                                Log.i(LOG_TAG, code.email.address);
-                                break;
-                            case Barcode.ISBN:
-                                Log.i(LOG_TAG, code.rawValue);
-                                break;
-                            case Barcode.PHONE:
-                                Log.i(LOG_TAG, code.phone.number);
-                                break;
-                            case Barcode.PRODUCT:
-                                Log.i(LOG_TAG, code.rawValue);
-                                break;
-                            case Barcode.SMS:
-                                Log.i(LOG_TAG, code.sms.message);
-                                break;
-                            case Barcode.TEXT:
-                                Log.i(LOG_TAG, code.rawValue);
-                                break;
-                            case Barcode.URL:
-                                Log.i(LOG_TAG, "url: " + code.url.url);
-                                break;
-                            case Barcode.WIFI:
-                                Log.i(LOG_TAG, code.wifi.ssid);
-                                break;
-                            case Barcode.GEO:
-                                Log.i(LOG_TAG, code.geoPoint.lat + ":" + code.geoPoint.lng);
-                                break;
-                            case Barcode.CALENDAR_EVENT:
-                                Log.i(LOG_TAG, code.calendarEvent.description);
-                                break;
-                            case Barcode.DRIVER_LICENSE:
-                                Log.i(LOG_TAG, code.driverLicense.licenseNumber);
-                                break;
-                            default:
-                                Log.i(LOG_TAG, code.rawValue);
-                                break;
+            case REQUEST_CAMERA_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG, "onRequestPermissionsResult: camera permission granted");
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                        try {
+                            qrcode();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
-                    if (barcodes.size() == 0) {
-                        scanResults.setText("Scan Failed: Found nothing to scan");
-                    }
-                } else {
-                    scanResults.setText("Could not set up the detector!");
                 }
-            } catch (Exception e) {
-                Toast.makeText(this, "Failed to load Image", Toast.LENGTH_SHORT)
-                        .show();
-                Log.e(LOG_TAG, e.toString());
-            }
-        }
-    }
-
-    private void takePicture() {
-        Log.d(TAG, "takePicture: 4");
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File photo = new File(getExternalFilesDir(null), "/photo.jpg");
-
-        try
-        {
-            if(photo.exists() == false)
-                Log.d(TAG, "startCamera:2 ");
-            {
-                photo.getParentFile().mkdirs();
-                Log.d(TAG, "startCamera: 1");
-                photo.createNewFile();
-            }
-        }
-        catch (IOException e)
-        {
-            Log.e(TAG, "Could not create file.", e);
-        }
-
-        imageUri = Uri.fromFile(photo);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
-        startActivityForResult(intent,PHOTO_REQUEST);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        if (imageUri != null) {
-            Log.d(TAG, "onSaveInstanceState: RESULTS: " + imageUri.toString() + " " + SAVED_INSTANCE_RESULT.toString());
 
         }
-        super.onSaveInstanceState(outState);
     }
 
-    private void launchMediaScanIntent() {
-        Log.d(TAG, "launchMediaScanIntent: 5");
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        mediaScanIntent.setData(imageUri);
-        this.sendBroadcast(mediaScanIntent);
-    }
 
-    private Bitmap decodeBitmapUri(Context ctx, Uri uri) throws FileNotFoundException {
-        Log.d(TAG, "decodeBitmapUri: 6");
-        int targetW = 600;
-        int targetH = 600;
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(uri), null, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        Log.d(TAG, "onRequestPermissionsResult: calling");
+//        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                Log.d(TAG, "onRequestPermissionsResult: camera permission granted");
+//                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+//                    try {
+//                        qrcode();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        Log.d(TAG, "onActivityResult: 1");
+//        if (requestCode == PHOTO_REQUEST && resultCode == RESULT_OK) {
+//            launchMediaScanIntent();
+//            try {
+//                Bitmap bitmap = decodeBitmapUri(this, imageUri);
+//                Log.d(TAG, "onActivityResult: 2");
+//                if (mBarcodeDetector.isOperational() && bitmap != null) {
+//                    Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+//                    SparseArray<Barcode> barcodes = mBarcodeDetector.detect(frame);
+//                    for (int index = 0; index < barcodes.size(); index++) {
+//                        Barcode code = barcodes.valueAt(index);
+//
+//
+//                        // Make the code display as blocks of 4 upperCase letters/numbers
+//                        String s = code.displayValue;
+//                        String s1 = s.substring(0,4);
+//                        String s2 = s.substring(4,8);
+//                        String s3 = s.substring(8,12);
+//                        String s4 = s.substring(12,16);
+//
+//                        String finalString = s1.toUpperCase() + " " + s2.toUpperCase() + " " + s3.toUpperCase() + " " + s4.toUpperCase();
+//                        studyCode.setText(finalString);
 
-        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
+                        //Required only if you need to extract the type of barcode
+//                        int type = barcodes.valueAt(index).valueFormat;
+//                        switch (type) {
+//                            case Barcode.CONTACT_INFO:
+//                                Log.i(LOG_TAG, code.contactInfo.title);
+//                                break;
+//                            case Barcode.EMAIL:
+//                                Log.i(LOG_TAG, code.email.address);
+//                                break;
+//                            case Barcode.ISBN:
+//                                Log.i(LOG_TAG, code.rawValue);
+//                                break;
+//                            case Barcode.PHONE:
+//                                Log.i(LOG_TAG, code.phone.number);
+//                                break;
+//                            case Barcode.PRODUCT:
+//                                Log.i(LOG_TAG, code.rawValue);
+//                                break;
+//                            case Barcode.SMS:
+//                                Log.i(LOG_TAG, code.sms.message);
+//                                break;
+//                            case Barcode.TEXT:
+//                                Log.i(LOG_TAG, code.rawValue);
+//                                break;
+//                            case Barcode.URL:
+//                                Log.i(LOG_TAG, "url: " + code.url.url);
+//                                break;
+//                            case Barcode.WIFI:
+//                                Log.i(LOG_TAG, code.wifi.ssid);
+//                                break;
+//                            case Barcode.GEO:
+//                                Log.i(LOG_TAG, code.geoPoint.lat + ":" + code.geoPoint.lng);
+//                                break;
+//                            case Barcode.CALENDAR_EVENT:
+//                                Log.i(LOG_TAG, code.calendarEvent.description);
+//                                break;
+//                            case Barcode.DRIVER_LICENSE:
+//                                Log.i(LOG_TAG, code.driverLicense.licenseNumber);
+//                                break;
+//                            default:
+//                                Log.i(LOG_TAG, code.rawValue);
+//                                break;
+//                        }
+//                    }
+//                    if (barcodes.size() == 0) {
+//                        scanResults.setText("Scan Failed: Found nothing to scan");
+//                    }
+//                } else {
+//                    scanResults.setText("Could not set up the detector!");
+//                }
+//            } catch (Exception e) {
+//                Toast.makeText(this, "Failed to load Image", Toast.LENGTH_SHORT)
+//                        .show();
+//                Log.e(LOG_TAG, e.toString());
+//            }
+//        }
+//    }
 
-        return BitmapFactory.decodeStream(ctx.getContentResolver()
-                .openInputStream(uri), null, bmOptions);
-    }
+//    private void takePicture() {
+//        Log.d(TAG, "takePicture: 4");
+//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        File photo = new File(getExternalFilesDir(null), "/photo.jpg");
+//
+//        try
+//        {
+//            if(photo.exists() == false)
+//                Log.d(TAG, "startCamera:2 ");
+//            {
+//                photo.getParentFile().mkdirs();
+//                Log.d(TAG, "startCamera: 1");
+//                photo.createNewFile();
+//            }
+//        }
+//        catch (IOException e)
+//        {
+//            Log.e(TAG, "Could not create file.", e);
+//        }
+//
+//        imageUri = Uri.fromFile(photo);
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+//        StrictMode.setVmPolicy(builder.build());
+//        startActivityForResult(intent,PHOTO_REQUEST);
+//    }
+
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        if (imageUri != null) {
+//            Log.d(TAG, "onSaveInstanceState: RESULTS: " + imageUri.toString() + " " + SAVED_INSTANCE_RESULT.toString());
+//
+//        }
+//        super.onSaveInstanceState(outState);
+//    }
+
+//    private void launchMediaScanIntent() {
+//        Log.d(TAG, "launchMediaScanIntent: 5");
+//        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//        mediaScanIntent.setData(imageUri);
+//        this.sendBroadcast(mediaScanIntent);
+//    }
+
+//    private Bitmap decodeBitmapUri(Context ctx, Uri uri) throws FileNotFoundException {
+//        Log.d(TAG, "decodeBitmapUri: 6");
+//        int targetW = 600;
+//        int targetH = 600;
+//        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+//        bmOptions.inJustDecodeBounds = true;
+//        BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(uri), null, bmOptions);
+//        int photoW = bmOptions.outWidth;
+//        int photoH = bmOptions.outHeight;
+//
+//        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+//        bmOptions.inJustDecodeBounds = false;
+//        bmOptions.inSampleSize = scaleFactor;
+//
+//        return BitmapFactory.decodeStream(ctx.getContentResolver()
+//                .openInputStream(uri), null, bmOptions);
+//    }
 
     public void updateStudyCode(){
 
@@ -621,4 +960,14 @@ public class StudyCodeVerification extends AppCompatActivity implements GetRawDa
         Log.d(TAG, "createUri: string is: " + myUri);
         return myUri;
     }
+
+    public boolean checkPermissionForWriteExtertalStorage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int result = this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            return result == PackageManager.PERMISSION_GRANTED;
+        }
+        return false;
+    }
+
+
 }

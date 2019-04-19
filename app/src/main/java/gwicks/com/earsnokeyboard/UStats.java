@@ -168,6 +168,8 @@ public class UStats {
             e.printStackTrace();
         }
 
+        Constants.writeHeaderToFile(file, Constants.secureID + "," + Constants.modelName + "," + Constants.modelNumber + "," + Constants.androidVersion + "," + Constants.earsVersion +"\n");
+
         writeToFile(file, finalObject.toString());
         return uri;
     }

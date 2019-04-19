@@ -115,6 +115,8 @@ public class EMA extends Activity implements SeekBar.OnSeekBarChangeListener, Ti
         s3 = (SeekBar)findViewById(R.id.seekBar3);
         s3.setOnSeekBarChangeListener(this);
 
+
+
         t4 = (TextView)findViewById(R.id.question4);
         t4.setText(questions.get(3));
 

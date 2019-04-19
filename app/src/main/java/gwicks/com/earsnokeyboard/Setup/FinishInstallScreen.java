@@ -50,6 +50,7 @@ import gwicks.com.earsnokeyboard.EMAUploadReceiver;
 import gwicks.com.earsnokeyboard.KeyloggerUploadAlarm;
 import gwicks.com.earsnokeyboard.MicRecordUploadAlarm;
 import gwicks.com.earsnokeyboard.MusicUploadReceiver;
+import gwicks.com.earsnokeyboard.PhotoCropBroadcastReceiver;
 import gwicks.com.earsnokeyboard.PhotoUploadReceiver;
 import gwicks.com.earsnokeyboard.R;
 import gwicks.com.earsnokeyboard.SensorUploadReceiver;
@@ -93,6 +94,7 @@ public class FinishInstallScreen extends AppCompatActivity {
     private PendingIntent keyloggerIntent;
     private PendingIntent FirebaseEMAIntent;
     private PendingIntent startDailyEMAIntent;
+    private PendingIntent startPhotoCropIntent;
     public static boolean alarmIsSet = false;
     public static boolean statsAlarmIsSet = false;
     public static final String secureID = Settings.Secure.getString(
@@ -337,6 +339,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         startKeyloggerUploadAlarm();
         startDailyEMAAlarm();
         startDailyEMAIntent();
+        startPhotoCrop();
         Log.d(TAG, "onCreate: alarmstarted = " + alarmStarted);
 
         // Comment this out to remove the EMA component
@@ -661,8 +664,8 @@ public class FinishInstallScreen extends AppCompatActivity {
         cal.setTimeInMillis(System.currentTimeMillis());
 //        cal.set(Calendar.HOUR_OF_DAY, 23);
 //        cal.set(Calendar.MINUTE, 52);
-        cal.set(Calendar.HOUR_OF_DAY, 13);
-        cal.set(Calendar.MINUTE, 47);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 45);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, PhotoUploadReceiver.class);
@@ -746,6 +749,28 @@ public class FinishInstallScreen extends AppCompatActivity {
         Log.d(TAG, "startEMAAlarm first 7 days: alarm should be set");
         //alarmStarted = true;
 
+
+    }
+
+    public void startPhotoCrop(){
+
+        Log.d(TAG, "startPhotoCrop: ");
+
+        Calendar cal = Calendar.getInstance();
+        long when = cal.getTimeInMillis();
+
+        cal.setTimeInMillis(System.currentTimeMillis());
+        //cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+        cal.set(Calendar.HOUR_OF_DAY, 11);
+        cal.set(Calendar.MINUTE, 45);
+
+        AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, PhotoCropBroadcastReceiver.class);
+        intent.putExtra("EMA", "EMA1");
+        startPhotoCropIntent = PendingIntent.getBroadcast(this, 27, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),alarmMgr.INTERVAL_DAY * 7 , startEMAIntent);
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, startPhotoCropIntent);
+        Log.d(TAG, "Daily");
 
     }
 

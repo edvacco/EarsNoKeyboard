@@ -90,22 +90,66 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView8"/>
 
+
+    <SurfaceView
+        android:id="@+id/cameraView"
+        android:layout_width="240dp"
+        android:layout_height="320dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="30dp"
+        android:visibility="gone"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView8"
+
+        />
+
+    <LinearLayout
+        android:id="@+id/image"
+        android:layout_width="240dp"
+        android:layout_height="320dp"
+
+        app:layout_constraintBottom_toBottomOf="@+id/cameraView"
+        app:layout_constraintEnd_toEndOf="@+id/cameraView"
+        app:layout_constraintStart_toStartOf="@+id/cameraView"
+        app:layout_constraintTop_toTopOf="@+id/cameraView">
+
+        <View
+            android:id="@+id/bar"
+            android:layout_width="240dp"
+            android:layout_height="4dp"
+            android:background="@color/colorAccent"
+            android:src="@mipmap/ic_launcher"
+            android:visibility="gone"/>
+    </LinearLayout>
+
     <!--</ScrollView>-->
 
     <EditText
         android:id="@+id/studyCode"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 "
+        android:inputType="textCapCharacters"
+        android:maxLength="19"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:imeActionLabel="Done"
+        android:imeOptions="actionDone"
+        android:singleLine="true"
 
 
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:hint="enter study code"
-        android:inputType="text"
+       
         app:layout_constraintBottom_toTopOf="@+id/startButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -171,7 +215,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
         android:clickable="true"
-        android:onClick="qrcode"
+        android:onClick="requestCameraPermission"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView10"
         app:srcCompat="@drawable/qr_scan"/>

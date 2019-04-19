@@ -37,6 +37,11 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
     Context mContext;
     String stringExtra = null;
 
+    private int timeStartHour = 8;
+    private int timeEndHour = 23;
+    private int timeStartHourWeekEnd = 8;
+    private int timeEndHourWeekend = 23;
+
     //public String myString;
 
     @Override
@@ -79,7 +84,7 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
 
         if(isWeekday(dow)){
 
-            if((hour < 16) || (hour > 23)){
+            if((hour < timeStartHour) || (hour > timeEndHour)){
                 Log.d(TAG, "onReceive: wrong time weekday");
                 return;
             }
@@ -87,7 +92,7 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
 
         if(!isWeekday(dow)){
             //int hour = cal.get(Calendar.HOUR_OF_DAY);
-            if((hour < 10) || (hour > 22)){
+            if((hour < timeStartHourWeekEnd) || (hour > timeEndHourWeekend)){
                 Log.d(TAG, "onReceive: wrong time weekend");
                 return;
             }
@@ -229,10 +234,10 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
         mNotificationManager.cancel("first", 1);
         mNotificationManager.cancel("second", 2);
         mNotificationManager.cancel("third", 3);
-
-        if(mNotificationManager != null){
-            mNotificationManager.cancelAll();
-        }
+//
+//        if(mNotificationManager != null){
+//            mNotificationManager.cancelAll();
+//        }
     }
 
     public int finishDay(int doy){

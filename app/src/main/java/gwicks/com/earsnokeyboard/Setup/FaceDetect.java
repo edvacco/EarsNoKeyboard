@@ -594,6 +594,7 @@ public class FaceDetect extends AppCompatActivity {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+            Log.d(TAG, "onActivityResult: decpded bitmap");
             editedBitmap = bitmap;
             abovePic.setText("Great! Are you good with your picture?");
             belowPic.setImageResource(R.drawable.take_a_different_pic);
@@ -634,6 +635,7 @@ public class FaceDetect extends AppCompatActivity {
         bmOptions.inPreferredConfig=Bitmap.Config.RGB_565;
         BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(uri), null, bmOptions);
         android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
+        Log.d(TAG, "decodeBitmapUri: info facing = " + info.facing);
         android.hardware.Camera.getCameraInfo(Camera.CameraInfo.CAMERA_FACING_FRONT, info);
         int rotation = this.getWindowManager().getDefaultDisplay().getRotation();
         int orientation = this.getResources().getConfiguration().orientation;
@@ -641,6 +643,16 @@ public class FaceDetect extends AppCompatActivity {
 
         Log.d(TAG, "decodeBitmapUri: CAMERA ROTATION ========================= " + rotation);
         //Camera.Size size = android.hardware.Camera.get
+
+
+        Log.d(TAG, "decodeBitmapUri: camera front = " + Camera.CameraInfo.CAMERA_FACING_FRONT);
+        Log.d(TAG, "decodeBitmapUri: camera back = " + Camera.CameraInfo.CAMERA_FACING_BACK);
+        //Log.d(TAG, "decodeBitmapUri: camera info: " + Camera.CameraInfo.);
+
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+
+        Log.d(TAG, "decodeBitmapUri: camerInfo" + cameraInfo.facing);
+
 
 
         int photoW = bmOptions.outWidth;
@@ -669,6 +681,8 @@ public class FaceDetect extends AppCompatActivity {
     }
 
     public static Bitmap rotate(Bitmap bitmap){
+
+        Log.d(TAG, "rotate: rotating");
         int w = bitmap.getWidth();
         int h = bitmap.getHeight();
 

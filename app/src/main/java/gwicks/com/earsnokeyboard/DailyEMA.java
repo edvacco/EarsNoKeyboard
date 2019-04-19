@@ -61,6 +61,8 @@ public class DailyEMA extends Activity implements SeekBar.OnSeekBarChangeListene
                 long TS = System.currentTimeMillis();
                 String timeStampString = String.valueOf(TS);
 
+                Constants.writeHeaderToFile(file, Constants.secureID + "," + Constants.modelName + "," + Constants.modelNumber + ","+ Constants.androidVersion + "," + Constants.earsVersion + "\n");
+
                 writeToFile(file, timeStampString + "\n");
 
                 writeToFile(file, Integer.toString(seekBarValue) + "\n");

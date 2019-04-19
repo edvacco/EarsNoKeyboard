@@ -1,6 +1,12 @@
 package gwicks.com.earsnokeyboard;
 
 import android.content.SharedPreferences;
+import android.util.Log;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Created by gwicks on 7/08/2016.
@@ -19,6 +25,10 @@ public class Constants {
     public static final String COGNITO_POOL_ID = "us-west-2:41d228a6-292a-4ebb-9f37-cf96c33063a2";
 
     public static String deviceID;
+    public static String modelName;
+    public static String modelNumber;
+    public static int androidVersion;
+    public static String earsVersion;
 
     public static String studyName = "default";
     public static String study;
@@ -34,6 +44,8 @@ public class Constants {
     public static String[] emaWeekDay;
     public static String[] emaWeekDays;
     public static String[] includedSensors;
+
+    public static String secureID;
 
     static String getCognitoPoolId() {
         return COGNITO_POOL_ID;
@@ -75,14 +87,37 @@ public class Constants {
         return phaseAutoScheduled;
     }
 
-    static String getAwsBucket() {
+//    static String getAwsBucket() {
 //        if(awsBucket == null){
 //            Log.d(TAG, "getAwsBucket: null, getting from shared prefers ");
 //
 //           // getPref("bucket");
 //
 //        }
-        return awsBucket;
+//        return awsBucket;
+//    }
+
+
+    public static void writeHeaderToFile(File file, String data){
+
+        FileOutputStream stream = null;
+
+        try {
+            stream = new FileOutputStream(file, true);
+            stream.write(data.getBytes());
+
+        } catch (FileNotFoundException e) {
+            Log.e("History", "In catch");
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            stream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     static String[] getEmaMoodIdentifiers() {

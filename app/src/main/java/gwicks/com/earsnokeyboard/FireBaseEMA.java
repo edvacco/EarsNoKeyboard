@@ -80,10 +80,10 @@ public class FireBaseEMA extends FragmentActivity {
         questions.add("How stressed do you feel right now?");
         questions.add("How sad do you feel right now?");
         questions.add("How angry do you feel right now?");
-        questions.add("How supported do you feel right now?");
-        questions.add("How included do you feel right now?");
-        questions.add("How rejected do you feel right now?");
-        questions.add("How lonely do you feel right now?");
+//        questions.add("How supported do you feel right now?");
+//        questions.add("How included do you feel right now?");
+//        questions.add("How rejected do you feel right now?");
+//        questions.add("How lonely do you feel right now?");
 
         Collections.shuffle(questions);
 
@@ -109,7 +109,7 @@ public class FireBaseEMA extends FragmentActivity {
         final NonSwipeableViewPager pager = (NonSwipeableViewPager)findViewById(R.id.viewPager);
 
         pager.setAdapter(pageAdapter);
-        pager.setOffscreenPageLimit(11);
+        pager.setOffscreenPageLimit(numOfQuestions);
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -303,6 +303,7 @@ public class FireBaseEMA extends FragmentActivity {
             }
         }
         Log.d(TAG, "recordResults: " + object);
+        Constants.writeHeaderToFile(file, Constants.secureID + "," + Constants.modelName + "," + Constants.modelNumber + ","+ Constants.androidVersion + "," + Constants.earsVersion + "\n");
         writeToFile(file, object.toString());
     }
 

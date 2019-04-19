@@ -17,6 +17,7 @@ public class SeekBarFragment extends Fragment implements SeekBar.OnSeekBarChange
 
     public int seekBarValue;
     public String messageString;
+    TextView value;
 
 
     public static SeekBarFragment newInstance(String message)
@@ -38,6 +39,8 @@ public class SeekBarFragment extends Fragment implements SeekBar.OnSeekBarChange
         messageString = message;
         View v = inflater.inflate(R.layout.seekbar_one, container, false);
 
+
+
         return v;
 
     }
@@ -46,6 +49,7 @@ public class SeekBarFragment extends Fragment implements SeekBar.OnSeekBarChange
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         TextView messageTextView = (TextView)view.findViewById(R.id.question1);
+        value = (TextView)view.findViewById(R.id.textValue);
         SeekBar seekBar = (SeekBar) view.findViewById(R.id.seekBar);
         seekBar.setOnSeekBarChangeListener(this);
         messageTextView.setText(messageString);
@@ -55,6 +59,8 @@ public class SeekBarFragment extends Fragment implements SeekBar.OnSeekBarChange
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         Log.d(TAG, "onProgressChanged: " + progress);
+        String valueNew = String.valueOf(progress);
+        value.setText(valueNew);
 
     }
 

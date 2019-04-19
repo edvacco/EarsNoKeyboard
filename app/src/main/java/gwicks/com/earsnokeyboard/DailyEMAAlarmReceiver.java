@@ -86,7 +86,7 @@ public class DailyEMAAlarmReceiver extends BroadcastReceiver {
                         .build();
 
 
-        mNotificationManager.notify("first",2, mBuilder);
+        mNotificationManager.notify("first",4, mBuilder);
         Log.d(TAG, "onReceive OREO: should be notification built now");
 
 

@@ -29,6 +29,7 @@
             android:paddingRight="20dp"
             android:paddingTop="5dp"
 
+
             android:thumbTint="@color/seekBar"
             android:progressBackgroundTint="@color/seekBarBackground"
             android:progressTint="@color/seekBarProgress"
