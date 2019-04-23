@@ -80,7 +80,7 @@ public class SecondEMA extends Activity {
         radio1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if(i == R.id.never){
+                if(i == R.id.Never){
                     firstQuestion = 1;
                 } else if(i == R.id.Rarely){
                     firstQuestion = 2;

@@ -6,8 +6,8 @@ android {
         applicationId "gwicks.com.earsnokeyboard"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 20
-        versionName "2.0"
+        versionCode 201
+        versionName "2.01"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

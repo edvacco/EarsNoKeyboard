@@ -75,7 +75,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"
 
 
@@ -85,7 +85,7 @@
         android:paddingRight="10dp"
         android:text="Study codes are issued to individuals participating in studies that have partnered with EARS.\n\nUnless you are currently participating in a research study that has instructed you to download EARS, this app is not recommended for you"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/imageView5"
+
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView8"/>
