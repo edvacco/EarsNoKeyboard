@@ -129,9 +129,9 @@ public class FinishInstallScreen extends AppCompatActivity {
         //FirebaseMessaging.getInstance().subscribeToTopic("KKI");
 
 
-        Log.d(TAG, "onCreate: The study name is: " + Constants.studyName);
-        Log.d(TAG, "onCreate: the stud is: " + Constants.study);
-        Log.d(TAG, "onCreate: bucket constants: " + Constants.awsBucket);
+//        Log.d(TAG, "onCreate: The study name is: " + Constants.studyName);
+//        Log.d(TAG, "onCreate: the stud is: " + Constants.study);
+//        Log.d(TAG, "onCreate: bucket constants: " + Constants.awsBucket);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -170,10 +170,10 @@ public class FinishInstallScreen extends AppCompatActivity {
 
         // The email dialog, not used anymore with study codes
 
-//        if(isAlreadySet(this) == false){
-//            Log.d(TAG, "onCreate: already done email upload skipping");
-//            launchSendEmailDialog();
-//        }
+        if(isAlreadySet(this) == false){
+            Log.d(TAG, "onCreate: already done email upload skipping");
+            launchSendEmailDialog();
+        }
 
         numberOfInstances++;
 
@@ -356,7 +356,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         }
         //startEMAAlarm();
 
-        //startSuicideEMAAlarm();
+        startSuicideEMAAlarm();
 
         startEMAUploadAlarm();
         //sendNotification();
@@ -569,6 +569,7 @@ public class FinishInstallScreen extends AppCompatActivity {
         cal.set(Calendar.MINUTE, 54);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+       // alarmMgr.setTimeZone();
         Intent intent = new Intent(this, SensorUploadReceiver.class);
         //statsIntent = PendingIntent.getBroadcast(this, 3, intent, 0);
         sensorIntent = PendingIntent.getBroadcast(this, 6, intent, 0);
@@ -1017,7 +1018,10 @@ public class FinishInstallScreen extends AppCompatActivity {
 
 
 
-
+//    public void crashApp(View v){
+//        Log.d(TAG, "crashApp: crashing aoo");
+//        throw new RuntimeException("This is a crash");
+//    }
 
 
 }

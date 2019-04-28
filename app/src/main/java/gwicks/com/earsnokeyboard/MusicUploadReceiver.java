@@ -35,7 +35,7 @@ public class MusicUploadReceiver extends BroadcastReceiver {
     Encryption mEncryption;
     Context mContext;
     String encryptedPath;
-    static String folder = "/Music/";
+    static String folder = "/MUS/";
 
     @Override
     public void onReceive(Context context, Intent intent) {

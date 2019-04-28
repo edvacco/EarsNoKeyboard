@@ -61,10 +61,12 @@ public class Intro extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
         int doy = cal.get(Calendar.DAY_OF_YEAR);
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt("doy", doy);
-        editor.apply();
+        checkPrefs(doy);
+
+//        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+//        SharedPreferences.Editor editor = prefs.edit();
+//        editor.putInt("doy", doy);
+//        editor.apply();
 
 
 
@@ -114,6 +116,8 @@ public class Intro extends AppCompatActivity {
         // If we have access to usage stats, move to final step as app has previously been installed
         else if(isAccessGranted()) {
             moveToFinalStep();
+        }else if(passedStudyCodeCheck()){
+            movetoStepTwo();
         }
         // Otherwise, install from the beginning
         else {
@@ -136,6 +140,19 @@ public class Intro extends AppCompatActivity {
 
     }
 
+    public void movetoStepTwo(){
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                Intent intent = new Intent(Intro.this, SetupStepTwo.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                Intro.this.startActivity(intent);
+                finish();
+            }
+        }, 6000);
+
+    }
+
     public void moveToFinalStep(){
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -144,6 +161,15 @@ public class Intro extends AppCompatActivity {
                 Intro.this.startActivity(intent);
             }
         }, 6000);
+
+    }
+
+    public boolean passedStudyCodeCheck(){
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Boolean bool = prefs.getBoolean("StudyCodeOK", false);
+        Log.d(TAG, "passedStudyCodeCheck: in passed Study Code check, the value is: " + bool);
+        return bool;
 
     }
 
@@ -224,6 +250,23 @@ public class Intro extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void checkPrefs(int doy){
+        Log.d(TAG, "checkPrefs: checking prefs");
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = prefs.edit();
+        
+        if(prefs.contains("doy")){
+            Log.d(TAG, "checkPrefs: contains doy already, skipping");
+            return;
+        }else{
+            Log.d(TAG, "checkPrefs: does not contain doy, adding!");
+            editor.putInt("doy", doy);
+            editor.apply();
+        }
+       
     }
 }
 

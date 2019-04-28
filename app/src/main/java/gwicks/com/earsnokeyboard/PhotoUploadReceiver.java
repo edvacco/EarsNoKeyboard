@@ -35,7 +35,7 @@ public class PhotoUploadReceiver extends BroadcastReceiver {
     TransferUtility mTransferUtility;
     Encryption mEncryption;
     Context mContext;
-    static String folder = "/CroppedImages/";
+    static String folder = "/SELFIE/";
 
     String path;
 

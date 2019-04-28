@@ -50,6 +50,9 @@
     <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"/>
     <uses-permission android:name="com.garmin.android.apps.connectmobile.permission.READ_DEVICE_RECORDS"/>
 
+    <uses-permission
+        android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
     <!--<uses-permission android:name="android.permission.SEND_SMS"/>-->
@@ -78,7 +81,7 @@
 
     <application
         android:name=".AnyApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/icon_round"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/icon_round"
@@ -94,6 +97,11 @@
 
 
         <activity android:name=".EMA"
+                  android:launchMode="singleTask"
+                  android:taskAffinity=""
+                  android:excludeFromRecents="true"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".Setup.LocationPermission"
                   android:launchMode="singleTask"
                   android:taskAffinity=""
                   android:excludeFromRecents="true"
@@ -333,6 +341,14 @@
 
         <activity
             android:name=".Setup.FinishInstallScreen"
+
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity
+            android:name=".Setup.BatteryOptimization"
 
             android:launchMode="singleTask"
             android:screenOrientation="portrait">

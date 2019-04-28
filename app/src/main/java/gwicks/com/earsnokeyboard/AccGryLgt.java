@@ -111,7 +111,7 @@ public class AccGryLgt extends Service implements SensorEventListener {
         wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AccGryLgt - Service");
 
         //path = Environment.getExternalStorageDirectory() +"/VIDEODIARY";
-        path2 = (getExternalFilesDir(null) + "/Sensors");
+        path2 = (getExternalFilesDir(null) + "/");
         Log.d(TAG, "AccGryLgt:  the path to externalfilesdir is: " + path2);
 
         //File directory = new File(path);
@@ -137,7 +137,7 @@ public class AccGryLgt extends Service implements SensorEventListener {
         }
        // sensorManager.unregisterListener(this);
         wakeLock.release();
-        DestroyFile = new File(path2 +"/Acc/Destroy_Service.txt");
+        DestroyFile = new File(path2 +"ACCEL/Destroy_Service.txt");
         writeToFile(DestroyFile, "the file was destroyed at: ");
         super.onDestroy();
     }
@@ -171,7 +171,7 @@ public class AccGryLgt extends Service implements SensorEventListener {
             if((accelBuffer.length() > 500000) && (writingAccelToFile == false) ){
                 writingAccelToFile = true;
 
-                AccelFile = new File(path2 +"/Acc/"  + LAST_TS_ACC +"_Service.txt");
+                AccelFile = new File(path2 +"ACCEL/"  + LAST_TS_ACC +"_Service.txt");
                 Log.d(TAG, "onSensorChanged: accelfile created at : " + AccelFile.getPath());
 
                 File parent = AccelFile.getParentFile();
@@ -225,7 +225,7 @@ public class AccGryLgt extends Service implements SensorEventListener {
             if((gryoBuffer.length() > 500000) && (writingGyroToFile == false) ){
                 writingGyroToFile = true;
 
-                GyroFile = new File(path2 +"/Gyro/"  + LAST_TS_GYRO +"_Service.txt");
+                GyroFile = new File(path2 +"GYRO/"  + LAST_TS_GYRO +"_Service.txt");
                 Log.d(TAG, "onSensorChanged: file created at: "+ GyroFile.getPath());
 
                 File parent = GyroFile.getParentFile();
@@ -272,7 +272,7 @@ public class AccGryLgt extends Service implements SensorEventListener {
             if((lightBuffer.length() > 50000) && (writingLightToFile == false) ){
 
                 timeStampLight = System.currentTimeMillis();
-                LightFile = new File(path2 +"/Light/"  + timeStampLight +"_Service.txt");
+                LightFile = new File(path2 +"LIGHT/"  + timeStampLight +"_Service.txt");
                 Log.d(TAG, "onSensorChanged: ligtfile created at: " + LightFile.getPath());
                 File parent = LightFile.getParentFile();
                 if(!parent.exists() && !parent.mkdirs()){

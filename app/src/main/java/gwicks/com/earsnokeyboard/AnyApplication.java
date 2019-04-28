@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -45,11 +44,14 @@ public class AnyApplication extends Application {
 //        LeakCanary.install(this);
         //context = this ;
         instance = this;
+
+
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
         Log.d(TAG, "onCreate: instance = " + instance);
 
-        if(Constants.awsBucket == null){
-            setBucketName();
-        }
+//        if(Constants.awsBucket == null){
+//            setBucketName();
+//        }
         if(Constants.deviceID == null){
             setDeviceID();
         }
@@ -78,12 +80,12 @@ public class AnyApplication extends Application {
         return instance;
     }
 
-    public void setBucketName(){
-        mSharedPreferences =PreferenceManager.getDefaultSharedPreferences(this);
-        String s = mSharedPreferences.getString("bucket", "default");
-        Constants.awsBucket = s;
-
-    }
+//    public void setBucketName(){
+//        mSharedPreferences =PreferenceManager.getDefaultSharedPreferences(this);
+//        String s = mSharedPreferences.getString("bucket", "default");
+//        Constants.awsBucket = s;
+//
+//    }
 
     public void setDeviceID(){
         String secureID = Settings.Secure.getString(
@@ -121,6 +123,9 @@ public class AnyApplication extends Application {
         Constants.modelNumber = MODEL;
         Log.d(TAG, "setModelNumber:  " + Constants.modelNumber);
     }
+
+
+
 
 //    public String getSecureID(){
 //        return secureID;

@@ -33,7 +33,7 @@ public class SensorUploadReceiver extends BroadcastReceiver {
     Encryption mEncryption;
     Context mContext;
     String encryptedPath;
-    static String folder = "/Sensors/";
+    //static String folder = "/Sensors/";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -42,22 +42,22 @@ public class SensorUploadReceiver extends BroadcastReceiver {
         mEncryption = new Encryption();
         mTransferUtility = Util.getTransferUtility(mContext);
 
-        SensorUpload("Acc/");
-        SensorUpload("Gyro/");
-        SensorUpload("Light/");
-        SensorUpload("CHARGING/");
+        SensorUpload("/ACCEL/");
+        SensorUpload("/GYRO/");
+        SensorUpload("/LIGHT/");
+        SensorUpload("/CHARGING/");
 
     }
 
     public void SensorUpload(String sensor){
 
-        String finalPath = folder + sensor;
+        String finalPath = sensor;
 
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy_HHmmssSSS");
         String formattedDate = df.format(c.getTime());
 
-        String path = mContext.getExternalFilesDir(null) + finalPath;
+        String path = mContext.getExternalFilesDir(null)  + finalPath;
 
         File directory = new File(path);
 
@@ -98,7 +98,7 @@ public class SensorUploadReceiver extends BroadcastReceiver {
         String path2 = null;
         try {
             //com.anysoftkeyboard.utils.Log.d(TAG, "We are starting encrytopn 1 - in doInBackgound AsyncTask ENCRYTPTION!");
-            path2 = mEncryption.encrypt(mFileName, mFilePath, "/Sensors/"+ sensor);
+            path2 = mEncryption.encrypt(mFileName, mFilePath,  sensor);
             Log.d(TAG, "Encrypt: the path me get is: " + path2);
         } catch (IOException e) {
             e.printStackTrace();

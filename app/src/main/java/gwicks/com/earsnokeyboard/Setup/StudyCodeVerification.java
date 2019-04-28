@@ -82,7 +82,7 @@ public class StudyCodeVerification extends AppCompatActivity implements GetRawDa
     private static final int REQUEST_CAMERA_PERMISSION = 31;
     private static final String SAVED_INSTANCE_URI = "uri";
     private static final String SAVED_INSTANCE_RESULT = "result";
-    private Boolean skip = false;
+    private Boolean skip = true;
 
     int count = 0;
 
@@ -150,15 +150,21 @@ public class StudyCodeVerification extends AppCompatActivity implements GetRawDa
         informedConsent = getString(R.string.informed_consent);
 
 
-        if(skip){
-            Intent installIntent = new Intent(StudyCodeVerification.this, SetupStepTwo.class);
-            StudyCodeVerification.this.startActivity(installIntent);
-            finish();
-        }
+//        if(skip){
+//            Intent installIntent = new Intent(StudyCodeVerification.this, SetupStepTwo.class);
+//            StudyCodeVerification.this.startActivity(installIntent);
+//            finish();
+//        }
 
         if(!checkPermissionForWriteExtertalStorage()){
             ActivityCompat.requestPermissions(StudyCodeVerification.this, new
                     String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_PERMISSION);
+        }
+
+        if(skip){
+            Intent installIntent = new Intent(StudyCodeVerification.this, SetupStepTwo.class);
+            StudyCodeVerification.this.startActivity(installIntent);
+            finish();
         }
 
 
@@ -573,7 +579,7 @@ public class StudyCodeVerification extends AppCompatActivity implements GetRawDa
                 Constants.emaPhaseFrequency = emaPhaseFrequency;
                 Constants.emaVariesDuringWeek = emaVariesDuringWeek;
                 Constants.phaseAutoScheduled = phaseAutoScheduled;
-                Constants.awsBucket = awsBucket;
+                //Constants.awsBucket = awsBucket;
                 Constants.emaMoodIdentifiers = emaMoodIdentifiers;
                 Constants.emaWeekDay = emaWeekDay;
                 Constants.emaWeekDays = emaWeekDays;
@@ -589,6 +595,7 @@ public class StudyCodeVerification extends AppCompatActivity implements GetRawDa
                 editor.putInt("emaHoursBetween", emHoursBetween);
                 editor.putInt("emaPhaseBreak", emaPhaseBreak);
                 editor.putInt("emaPhaseFrequency", emaPhaseFrequency);
+                editor.putBoolean("StudyCodeOK", true);
 
                 editor.apply();
 

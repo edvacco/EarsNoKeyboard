@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
-    <string name="ime_name">EARS Tool</string>
+    <string name="ime_name">EARS</string>
     <string name="spell_checker_settings">AnySoftKeyboard Speller Settings</string>
     <string name="copyright_text">Copyright\u0020©\u0020<xliff:g id="year">%d</xliff:g>\u0020<xliff:g id="owner">%s</xliff:g></string>
     <string name="version_text"><xliff:g id="version_name">%s</xliff:g>\u0020(v<xliff:g id="version_number">%s</xliff:g>)</string>
@@ -13,7 +13,7 @@
     <string name="menu_about_item">About</string>
 
 
-    <string name="app_name" translatable="false">EARS TOOL</string>
+    <string name="app_name" translatable="false">EARS</string>
     <string name="hello_world" translatable="false">Hello world!</string>
     <string name="action_settings" translatable="false">Settings</string>
     <string name="title_activity_audio" translatable="false">AudioActivity</string>
@@ -698,7 +698,7 @@
     <string name="real_time_stress">Stress\nScore: %s</string>
     <string name="real_time_accel">Accelerometer\n%1$s</string>
 
-    <string name="accessibility_service_label">EARS TOOL</string>
+    <string name="accessibility_service_label">EARS</string>
 
 
 

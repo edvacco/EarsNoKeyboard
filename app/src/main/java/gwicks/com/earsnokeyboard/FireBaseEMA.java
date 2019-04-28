@@ -80,10 +80,10 @@ public class FireBaseEMA extends FragmentActivity {
         questions.add("How stressed do you feel right now?");
         questions.add("How sad do you feel right now?");
         questions.add("How angry do you feel right now?");
-//        questions.add("How supported do you feel right now?");
-//        questions.add("How included do you feel right now?");
-//        questions.add("How rejected do you feel right now?");
-//        questions.add("How lonely do you feel right now?");
+        questions.add("How supported do you feel right now?");
+        questions.add("How included do you feel right now?");
+        questions.add("How rejected do you feel right now?");
+        questions.add("How lonely do you feel right now?");
 
         Collections.shuffle(questions);
 

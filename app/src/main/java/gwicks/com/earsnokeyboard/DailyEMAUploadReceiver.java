@@ -28,7 +28,7 @@ public class DailyEMAUploadReceiver extends BroadcastReceiver {
     Encryption mEncryption;
     Context mContext;
     String encryptedPath;
-    static String folder = "/DailyEMA/";
+    static String folder = "/DAILY/";
 
     @Override
     public void onReceive(Context context, Intent intent) {

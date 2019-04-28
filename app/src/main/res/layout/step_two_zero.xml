@@ -95,7 +95,7 @@
         android:scaleType="fitXY"
 
         android:contextClickable="true"
-        android:onClick="startInstallTwo"
+        android:onClick="startLocationInstall"
         app:layout_constraintHorizontal_bias="0.0"/>
 
 

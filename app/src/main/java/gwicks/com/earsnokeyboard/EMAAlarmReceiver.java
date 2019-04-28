@@ -37,9 +37,9 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
     Context mContext;
     String stringExtra = null;
 
-    private int timeStartHour = 8;
+    private int timeStartHour = 16;
     private int timeEndHour = 23;
-    private int timeStartHourWeekEnd = 8;
+    private int timeStartHourWeekEnd = 10;
     private int timeEndHourWeekend = 23;
 
     //public String myString;
@@ -62,6 +62,16 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
         int doy2 = cal.get(Calendar.DAY_OF_YEAR);
         int finishDay = finishDay(doy);
         if(doy2 > finishDay){
+
+
+            //TODO untested code below to cancel the alarms, leave commented out for now
+//
+//            PendingIntent startEMAIntent = PendingIntent.getBroadcast(mContext, 21, new Intent(mContext, EMAAlarmReceiver.class),
+//                    PendingIntent.FLAG_CANCEL_CURRENT);
+//            AlarmManager alarmMgr = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+//            alarmMgr.cancel(startEMAIntent);
+
+
             return;
         }
 

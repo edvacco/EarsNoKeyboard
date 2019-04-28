@@ -30,12 +30,17 @@ public class SetupStepTwo extends AppCompatActivity {
         updateStatusBarColor("#1281e8");
     }
 
-    public void startInstallTwo(View v)
+    public void startLocationInstall(View v)
     {
-        Intent installIntent = new Intent(SetupStepTwo.this, SetupStepThree.class);
-        installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        SetupStepTwo.this.startActivity(installIntent);
+//        Intent installIntent = new Intent(SetupStepTwo.this, SetupStepThree.class);
+//        installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        SetupStepTwo.this.startActivity(installIntent);
+//        finish();
+        Intent locationIntent = new Intent(SetupStepTwo.this, LocationPermission.class);
+        locationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        SetupStepTwo.this.startActivity(locationIntent);
         finish();
+
     }
 
     public void updateStatusBarColor(String color){// Color must be in hexadecimal fromat

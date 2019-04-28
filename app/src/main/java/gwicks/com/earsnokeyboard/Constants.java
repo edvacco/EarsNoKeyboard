@@ -39,7 +39,7 @@ public class Constants {
     public static int emaPhaseFrequency;
     public static Boolean emaVariesDuringWeek = null;
     public static Boolean phaseAutoScheduled = null;
-    public static String awsBucket;
+    public static final String awsBucket = "columbia-study";
     public static String[] emaMoodIdentifiers;
     public static String[] emaWeekDay;
     public static String[] emaWeekDays;

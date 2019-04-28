@@ -1,10 +1,15 @@
 package gwicks.com.earsnokeyboard;
 
+import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Activity;
+import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -16,8 +21,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import gwicks.com.earsnokeyboard.Setup.FinishInstallScreen;
+import gwicks.com.earsnokeyboard.Setup.LaunchKeyboardDialog;
 
 public class DailyEMA extends Activity implements SeekBar.OnSeekBarChangeListener {
 
@@ -33,6 +40,12 @@ public class DailyEMA extends Activity implements SeekBar.OnSeekBarChangeListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.daily_ema);
+
+        if(!isAccessibilityEnabled(this, "gwicks.com.earsnokeyboard/.KeyLogger")){
+            // do the keyboard thing again.
+            launchKeyboardDialog();
+
+        }
 
         String path = getExternalFilesDir(null) + "/DailyEMA/";
 
@@ -127,5 +140,27 @@ public class DailyEMA extends Activity implements SeekBar.OnSeekBarChangeListene
             e.printStackTrace();
         }
 
+    }
+
+    public static boolean isAccessibilityEnabled(Context context, String id) {
+
+        AccessibilityManager am = (AccessibilityManager) context
+                .getSystemService(Context.ACCESSIBILITY_SERVICE);
+
+        List<AccessibilityServiceInfo> runningServices = am
+                .getEnabledAccessibilityServiceList(AccessibilityEvent.TYPES_ALL_MASK);
+        for (AccessibilityServiceInfo service : runningServices) {
+            if (id.equals(service.getId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void launchKeyboardDialog(){
+
+        DialogFragment newFragment = new LaunchKeyboardDialog();
+        newFragment.setCancelable(false);
+        newFragment.show(getFragmentManager(), "keyboard");
     }
 }
