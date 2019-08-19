@@ -5,9 +5,7 @@ import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,6 +18,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import research.ResearchEncoding;
 
 /**
  * Created by gwicks on 11/05/2018.
@@ -107,70 +107,110 @@ public class UStats {
 
 
         File file = new File(uri);
-        JSONArray jsonArray = new JSONArray();
-        JSONObject object = null;
+
+
+        if(file.length() == 0){
+            WriteToFileHelper.writeHeader(file);
+        }
+
+//        JSONArray jsonArray = new JSONArray();
+//        JSONObject object = null;
+
+        FileOutputStream fos = null;
+        //Constants.writeHeaderToFile(file, Constants.secureID + "," + Constants.modelName + "," + Constants.modelNumber + "," + Constants.androidVersion + "," + Constants.earsVersion +"\n");
         for (UsageStats u : usageStatsList){
 
             if(u.getTotalTimeInForeground() > 0){
 
                 int minutes = (int)u.getTotalTimeInForeground()/60000;
                 int seconds = (int)(u.getTotalTimeInForeground() % 60000) / 1000;
-                object = new JSONObject();
-                try {
-                    object.put("Package", u.getPackageName());
-                    object.put("Time in foreground", u.getTotalTimeInForeground());
-                    object.put("First Time stamp", u.getFirstTimeStamp());
-                    object.put("Last time stamp", u.getLastTimeStamp());
-                    object.put("Time last used",u.getLastTimeUsed());
-                } catch (JSONException e) {
+
+
+                // Begin the protobuf
+
+                ResearchEncoding.AppUsageEvent event = null;
+
+                try{
+                    event = ResearchEncoding.AppUsageEvent.parseFrom(ResearchEncoding.AppUsageEvent.newBuilder()
+                            .setFirstTimeStamp(u.getFirstTimeStamp())
+                            .setLastTimeStamp(u.getLastTimeStamp())
+                            .setTimeLastUsed(u.getLastTimeUsed())
+                            .setTimeInForeground(u.getTotalTimeInForeground())
+                            .setApp( u.getPackageName())
+                            .build().toByteArray());
+                }catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
                 }
 
-                jsonArray.put(object);
+                try {
+                    fos = new FileOutputStream(file,true);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    event.writeDelimitedTo(fos);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }finally {
+                    if(fos!=null){
+                        try {
+                            fos.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
 
 
-                //writeToFile(file, object.toString());
 
 
-               // u.
 
-//                Log.d(TAG, "printUsageStats: minutes: " + minutes + " seconds: " + seconds);
-//                //writeToFile(file, "UsageStats: minutes: " + minutes + " seconds: " + seconds +"\n");
-//                Log.d(TAG, "Pkg: " + u.getPackageName()  + "\n\tForegroundTime: "
-//                        + u.getTotalTimeInForeground()/1000 + " seconds " );// mDateFormat.format(u.getLastTimeUsed()) + " time last used") ;
-//                writeToFile(file, "Pkg: " + u.getPackageName() +   "\nForegroundTime: "
-//                        + u.getTotalTimeInForeground()/1000 + " seconds \n" );
-//                Date data = new Date(u.getLastTimeUsed());
+                // end the protobuf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//                object = new JSONObject();
+//                try {
+//                    object.put("Package", u.getPackageName());
+//                    object.put("Time in foreground", u.getTotalTimeInForeground());
+//                    object.put("First Time stamp", u.getFirstTimeStamp());
+//                    object.put("Last time stamp", u.getLastTimeStamp());
+//                    object.put("Time last used",u.getLastTimeUsed());
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
 //
-//                Date one = new Date(u.getFirstTimeStamp());
-//                Date two = new Date(u.getLastTimeStamp());
-//                Date three = new Date(u.getLastTimeUsed());
-//
-//                Log.d(TAG, "printUsageStats: DATE = " + data);
-//                Log.d(TAG, "printUsageStats: first time stamp: " + one);
-//                Log.d(TAG, "printUsageStats: last time stamp: " + two);
-//                Log.d(TAG, "printUsageStats: time last used: " + three);
-//
-//                writeToFile(file, "Time last used: " +data +"\n");
-//                Log.d(TAG, "printUsageStats: ______________________________________________________\n\n");
-//                writeToFile(file, " ______________________________________________________\n\n");
-//                Log.d(TAG, "printUsageStats: \n\n\n");
+//                jsonArray.put(object);
+
+
             }
 
 
 
         }
 
-        JSONObject finalObject = new JSONObject();
-        try {
-            finalObject.put("AppUsage", jsonArray);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Constants.writeHeaderToFile(file, Constants.secureID + "," + Constants.modelName + "," + Constants.modelNumber + "," + Constants.androidVersion + "," + Constants.earsVersion +"\n");
-
-        writeToFile(file, finalObject.toString());
+//        JSONObject finalObject = new JSONObject();
+//        try {
+//            finalObject.put("AppUsage", jsonArray);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        Constants.writeHeaderToFile(file, Constants.secureID + "," + Constants.modelName + "," + Constants.modelNumber + "," + Constants.androidVersion + "," + Constants.earsVersion +"\n");
+//
+//        writeToFile(file, finalObject.toString());
         return uri;
     }
 

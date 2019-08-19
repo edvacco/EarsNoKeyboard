@@ -274,10 +274,14 @@ public class FaceDetectAndCrop extends AsyncTask<String, Void, String> {
             Frame frameScaled = new Frame.Builder().setBitmap(scaledBitmap).build();
             SparseArray<Face> faces = faceDetector.detect(frameScaled);
 
+            Log.d(TAG, "doInBackground: faces sie: " + faces.size());
+
             Log.d(TAG, "onClick: 5");
             for (int i = 0; i < faces.size(); i++) {
                 Log.d(TAG, "doInBackground: NEW FACE _____________________________________");
                 File newImageFile = new File(path, j +"_"+filename);
+
+                Log.d(TAG, "doInBackground: newImageFile: " + newImageFile.toString() + "    " + newImageFile.getAbsolutePath());
 
                 Face thisFace = faces.valueAt(i);
                 x1 = Math.max(0, thisFace.getPosition().x);

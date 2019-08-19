@@ -1,4 +1,10 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.protobuf'
+
+sourceSets {
+    main.java.srcDirs += "${protobuf.generatedFilesBaseDir}/main/javalite"
+}
+
 
 android {
     compileSdkVersion 27
@@ -69,6 +75,8 @@ dependencies {
 
     implementation 'com.amazonaws:aws-android-sdk-ddb-document:2.7.3'
 
+    implementation 'com.google.protobuf:protobuf-lite:3.0.0'
+
 
 
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
@@ -87,3 +95,25 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.0.0'
+    }
+    plugins {
+        javalite {
+            artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                remove java
+            }
+            task.plugins {
+                javalite { }
+            }
+        }
+    }
+}
+

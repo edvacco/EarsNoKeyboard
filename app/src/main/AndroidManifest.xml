@@ -86,7 +86,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/icon_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <!--<activity android:name=".MainActivity">-->
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN"/>-->
@@ -186,7 +187,7 @@
 
         <receiver android:name=".SuicideAlarmReceiver">
             <intent-filter>
-                <action android:name="com.codepath.CUSTOM_INTENT"></action>
+                <action android:name="com.codepath.CUSTOM_INTENT"/>
             </intent-filter>
         </receiver>
 
@@ -388,6 +389,8 @@
         <service android:name=".StatsJobService"
                  android:permission="android.permission.BIND_JOB_SERVICE"
                  android:exported="true"/>
+
+
 
         <service android:name=".MusicNotificationListener"
 

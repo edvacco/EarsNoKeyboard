@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -49,9 +50,9 @@ public class AnyApplication extends Application {
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
         Log.d(TAG, "onCreate: instance = " + instance);
 
-//        if(Constants.awsBucket == null){
-//            setBucketName();
-//        }
+        if(Constants.awsBucket == null){
+            setBucketName();
+        }
         if(Constants.deviceID == null){
             setDeviceID();
         }
@@ -67,6 +68,9 @@ public class AnyApplication extends Application {
         if(Constants.modelNumber == null){
             setModelNumber();
         }
+        if(Constants.site == null){
+            setSite();
+        }
 
         if(Constants.secureID == null){
             Constants.secureID = Settings.Secure.getString(
@@ -80,12 +84,12 @@ public class AnyApplication extends Application {
         return instance;
     }
 
-//    public void setBucketName(){
-//        mSharedPreferences =PreferenceManager.getDefaultSharedPreferences(this);
-//        String s = mSharedPreferences.getString("bucket", "default");
-//        Constants.awsBucket = s;
-//
-//    }
+    public void setBucketName(){
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String s = mSharedPreferences.getString("bucket", "default");
+        Constants.awsBucket = s;
+
+    }
 
     public void setDeviceID(){
         String secureID = Settings.Secure.getString(
@@ -122,6 +126,13 @@ public class AnyApplication extends Application {
     public void setModelNumber(){
         Constants.modelNumber = MODEL;
         Log.d(TAG, "setModelNumber:  " + Constants.modelNumber);
+    }
+
+    public void setSite(){
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String s = mSharedPreferences.getString("studySite", "New York");
+
+        Constants.site = s;
     }
 
 

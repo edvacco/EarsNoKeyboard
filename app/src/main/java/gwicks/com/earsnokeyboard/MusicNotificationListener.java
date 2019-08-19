@@ -6,12 +6,16 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import research.ResearchEncoding;
 
 /**
  * Created by gwicks on 11/05/2018.
@@ -54,23 +58,15 @@ public class MusicNotificationListener extends NotificationListenerService {
 
         String text = ""; // Needed to avoid null errors
 
-
         Calendar c = Calendar.getInstance();
-        //System.out.println("Current time => " + c.getTime());
 
         long time  = System.currentTimeMillis();
 
-//        SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");
-//        String formattedTime = df.format(c.getTime());
-
         SimpleDateFormat df2 = new SimpleDateFormat("ddMMyyyy");
         String currentDate = df2.format(c.getTime());
-        //Log.d(TAG, "onNotificationPosted: current date is: " + currentDate);
 
         String path = mContext.getExternalFilesDir(null) + "/videoDIARY/Music/";
 
-
-        //Log.d(TAG, "onStartJob: path is: " + path);
 
         File directory = new File(path);
         if(!directory.exists()){
@@ -80,9 +76,9 @@ public class MusicNotificationListener extends NotificationListenerService {
 
         File location = new File(directory, currentDate +".txt");
 
-
-
-
+        if(location.length() == 0){
+            WriteToFileHelper.writeHeader(location);
+        }
 
         try {
             text = extras.getCharSequence("android.text").toString();
@@ -90,33 +86,61 @@ public class MusicNotificationListener extends NotificationListenerService {
         catch(NullPointerException e){
            // e.printStackTrace();
         }
-
-        //int id1 = extras.getInt(Notification.EXTRA_SMALL_ICON);
-        //Bitmap id = sbn.getNotification().largeIcon;
-
-        //Log.d(TAG, "onNotificationPosted: Package: " + pack);
-        //Log.d(TAG, "onNotificationPosted: Ticker" + ticker  );
-        //Log.d(TAG, "onNotificationPosted: Title " + title);
-        //Log.d(TAG, "onNotificationPosted: text: " + text);
+        FileOutputStream fos = null;
 
         currentTitle = title;
 
-       // Log.d(TAG, "onNotificationPosted: Previous = " + prevTitle + "current title = " + currentTitle);
 
         if(pack.contains("music") && (!currentTitle.equals(prevTitle))){
 
-            //Log.d(TAG, "onNotificationPosted: PREV = " + prevTitle);
-            //Log.d(TAG, "onNotificationPosted:  CURRENT = " + currentTitle);
+            // Start of Protobuf
+
+            ResearchEncoding.MusicEvent event = null;
+            try{
+                event = ResearchEncoding.MusicEvent.parseFrom(ResearchEncoding.MusicEvent.newBuilder()
+                        .setTimestamp(time)
+                        .setApp(pack)
+                        .setTitle(title)
+                        .setText(text)
+                        .build().toByteArray());
+            }catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
 
 
-            //Log.d(TAG, "onNotificationPosted: " + pack + " is a music package!!!!!!!!");
-            //File location = new File(directory, currentDate +".txt");
-            writeToFile(location, " { Time: " + time + ",\nPackage: " + pack + ",\nTitle: " + title + ",\nText: " + text + "\n}\n");
+//            ResearchEncoding.MusicEvent event = ResearchEncoding.MusicEvent.newBuilder()
+//                    .setTimestamp(time)
+//                    .setApp(pack)
+//                    .setTitle(title)
+//                    .setText(text)
+//                    .build();
+
+            try {
+                fos = new FileOutputStream(location, true);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
+                event.writeDelimitedTo(fos);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }finally {
+                if(fos!=null){
+                    try {
+                        fos.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+
+
+
+            // End of protobuf
+
+//            writeToFile(location, " { Time: " + time + ",\nPackage: " + pack + ",\nTitle: " + title + ",\nText: " + text + "\n}\n");
             prevTitle = currentTitle;
-
-            //Log.d(TAG, "onNotificationPosted: the name of the file toString is: " + location.toString());
-            //Log.d(TAG, "onNotificationPosted: the name of the file getName is: " + location.getName());
-
         }
     }
 
@@ -129,16 +153,10 @@ public class MusicNotificationListener extends NotificationListenerService {
     private static void writeToFile(File file, String data) {
 
         FileOutputStream stream = null;
-        //System.out.println("The state of the media is: " + Environment.getExternalStorageState());
-        //Log.d(TAG, "writeToFile: file location is:" + file.getAbsolutePath());
 
-        //OutputStreamWriter stream = new OutputStreamWriter(openFileOutput(file), Context.MODE_APPEND);
         try {
-            //Log.e("History", "In try");
-            //Log.d(TAG, "writeToFile: ");
-            stream = new FileOutputStream(file, true);
-            //Log.d(TAG, "writeToFile: 2");
-            stream.write(data.getBytes());
+             stream = new FileOutputStream(file, true);
+             stream.write(data.getBytes());
             //Log.d(TAG, "writeToFile: 3");
         } catch (FileNotFoundException e) {
             //Log.e("History", "In catch");

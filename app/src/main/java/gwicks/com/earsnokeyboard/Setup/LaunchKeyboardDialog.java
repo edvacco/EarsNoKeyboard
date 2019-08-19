@@ -19,8 +19,6 @@ import android.view.accessibility.AccessibilityManager;
 
 import java.util.List;
 
-import gwicks.com.earsnokeyboard.MainActivity;
-
 public class LaunchKeyboardDialog extends DialogFragment {
 
     private static final String TAG = "LaunchKeyboardDialog";
@@ -95,7 +93,7 @@ public class LaunchKeyboardDialog extends DialogFragment {
                     dismiss();
 
                     Log.d(TAG, "run: have the permission, move on now");
-                    Intent i = new Intent(mContext, MainActivity.class);
+                    Intent i = new Intent(mContext, FinishInstallScreen.class);
                     Log.d(TAG, "run: 4");
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     mContext.startActivity(i);

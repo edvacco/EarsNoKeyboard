@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 import gwicks.com.earsnokeyboard.Setup.FinishInstallScreen;
+import research.ResearchEncoding;
 
 public class FireBaseEMA extends FragmentActivity {
 
@@ -49,6 +52,9 @@ public class FireBaseEMA extends FragmentActivity {
 
     long timeStarted;
     long timeFinished;
+
+    String startString = "How ";
+    String endString = " do you feel right now?";
 
     @Override
 
@@ -73,17 +79,27 @@ public class FireBaseEMA extends FragmentActivity {
         Log.d(TAG, "onCreate: formated date  = " + formattedDate);
 
         questions = new ArrayList<String>();
-        questions.add("How confident do you feel right now?");
-        questions.add("How happy do you feel right now?");
-        questions.add("How calm do you feel right now?");
-        questions.add("How anxious do you feel right now?");
-        questions.add("How stressed do you feel right now?");
-        questions.add("How sad do you feel right now?");
-        questions.add("How angry do you feel right now?");
-        questions.add("How supported do you feel right now?");
-        questions.add("How included do you feel right now?");
-        questions.add("How rejected do you feel right now?");
-        questions.add("How lonely do you feel right now?");
+//        questions.add("How confident do you feel right now?");
+//        questions.add("How happy do you feel right now?");
+//        questions.add("How calm do you feel right now?");
+//        questions.add("How anxious do you feel right now?");
+//        questions.add("How stressed do you feel right now?");
+//        questions.add("How sad do you feel right now?");
+//        questions.add("How angry do you feel right now?");
+//        questions.add("How supported do you feel right now?");
+//        questions.add("How included do you feel right now?");
+//        questions.add("How rejected do you feel right now?");
+//        questions.add("How lonely do you feel right now?");
+
+
+        // Trying single word method for questions:
+        questions.add("confident");
+        questions.add("happy");
+        questions.add("calm");
+        questions.add("anxious");
+        questions.add("stressed");
+        questions.add("sad");
+        questions.add("angry");
 
         Collections.shuffle(questions);
 
@@ -134,6 +150,7 @@ public class FireBaseEMA extends FragmentActivity {
                             Fragment f = fList.get(numberOfPages);
                             if(((MultipleChoiceFragment) f).check()){
                                 recordResults();
+                                recordResultsProto();
                                 Toast.makeText(getBaseContext(), "Thank you for completing the questionnaire :)", Toast.LENGTH_LONG).show();
                                 Intent returnToFinish = new Intent(FireBaseEMA.this, FinishInstallScreen.class);
 
@@ -256,6 +273,160 @@ public class FireBaseEMA extends FragmentActivity {
 //        Log.d(TAG, "recordResults: " + object);
 //        writeToFile(file, object.toString());
 //    }
+
+
+    public void recordResultsProto(){
+
+
+        FileOutputStream fos = null;
+        FileOutputStream fos1 = null;
+
+
+        timeFinished = System.currentTimeMillis();
+        String uri = (getExternalFilesDir(null) + "/EMA/"+ formattedDate +"_1" + ".txt");
+        File file = new File(uri);
+        timeFinished = System.currentTimeMillis();
+        String uri2 = (getExternalFilesDir(null) + "/EMA/"+ formattedDate +"_2" + ".txt");
+        File file2 = new File(uri2);
+        Log.d(TAG, "onClick: the file url is : " + uri);
+        long TS = System.currentTimeMillis();
+
+
+        if(file.length() == 0){
+
+            WriteToFileHelper.writeHeader(file);
+        }
+
+
+        ResearchEncoding.EMAEvent event = null;
+
+        ResearchEncoding.EMAEvent.Builder b = ResearchEncoding.EMAEvent.newBuilder();
+
+        b.setTimeInitiated(timeStarted);
+        b.setTimeCompleted(timeFinished);
+        int i = 0;
+        for(Fragment fragment : fList) {
+            if (fragment instanceof SeekBarFragment) {
+                String s = ((SeekBarFragment) fragment).getSeekBarString();
+                String s2 = questions.get(i);
+                Log.d(TAG, "recordResultsProto: strings : " + s + " and String s2: " + s2);
+                int v = ((SeekBarFragment) fragment).getSeekBarValue();
+                try {
+                    b.addQuestion(ResearchEncoding.EMAEvent.Question.parseFrom(ResearchEncoding.EMAEvent.Question.newBuilder().setQuestionID(s2).setIntAnswer(v).build().toByteArray()));
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
+                i++;
+            } else if (fragment instanceof MultipleChoiceFragment) {
+                Log.d(TAG, "recordResults: multi choice frag");
+                Log.d(TAG, "recordResults: get selected: " + ((MultipleChoiceFragment) fragment).getSelection());
+                String s = ((MultipleChoiceFragment) fragment).getSelection();
+                try {
+                    b.addQuestion(ResearchEncoding.EMAEvent.Question.parseFrom(ResearchEncoding.EMAEvent.Question.newBuilder().setQuestionID("TimeWith").setStringAnswer(s).build().toByteArray()));
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        try {
+            fos = new FileOutputStream(file, true);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try{
+            b.build().writeDelimitedTo(fos);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(fos!=null){
+                try {
+                    fos.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+//        ResearchEncoding.EMAEvent myEvent = b.build().writeTo(fos);
+
+
+
+//        try {
+//            fos = new FileOutputStream(file);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        try {
+//            myEvent.writeTo(fos);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+
+//
+//        byte[] bytes = myEvent.toByteArray();
+//        Log.d(TAG, "recordResultsProto: bytes = " + bytes);
+//
+//        try {
+//
+//            fos1 = new FileOutputStream(file2);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        try {
+//           fos1.write(bytes);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+
+
+
+
+
+
+//        ResearchEncoding.EMAEvent bob = ResearchEncoding.EMAEvent.newBuilder()
+//                .setTimeInitiated(timeStarted)
+//                .setTimeCompleted(timeFinished)
+//
+//        bob.Question.a
+//
+//
+//        bob.Question.newBuilder()
+//                .setQuestionID(s)
+//                .setIntAnswer(v)
+////                        .build();
+//
+//
+//
+//        for(Fragment fragment : fList){
+//            if(fragment instanceof SeekBarFragment){
+//                String s = ((SeekBarFragment)fragment).getSeekBarString();
+//                int v = ((SeekBarFragment)fragment).getSeekBarValue();
+//
+//
+//
+//                bob.Question.newBuilder()
+//                        .setQuestionID(s)
+//                        .setIntAnswer(v)
+////                        .build();
+//            }else if(fragment instanceof MultipleChoiceFragment){
+//                Log.d(TAG, "recordResults: multi choice frag");
+//                Log.d(TAG, "recordResults: get selected: " + ((MultipleChoiceFragment) fragment).getSelection());
+//                String s = ((MultipleChoiceFragment) fragment).getSelection();
+//        }
+//
+////                .addQuestion(
+////                        ResearchEncoding.EMAEvent.Question.newBuilder()
+////                        .setQuestionID("helloworld")
+////                        .setStringAnswer("theAnser")
+////                        .setCompletionTime(9979879))
+////                .build();
+//
+
+
+
+    }
 
     public void recordResults(){
 

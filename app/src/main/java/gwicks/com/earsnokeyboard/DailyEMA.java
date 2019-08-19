@@ -13,7 +13,8 @@ import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,6 +26,7 @@ import java.util.List;
 
 import gwicks.com.earsnokeyboard.Setup.FinishInstallScreen;
 import gwicks.com.earsnokeyboard.Setup.LaunchKeyboardDialog;
+import research.ResearchEncoding;
 
 public class DailyEMA extends Activity implements SeekBar.OnSeekBarChangeListener {
 
@@ -41,13 +43,15 @@ public class DailyEMA extends Activity implements SeekBar.OnSeekBarChangeListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.daily_ema);
 
+
+
         if(!isAccessibilityEnabled(this, "gwicks.com.earsnokeyboard/.KeyLogger")){
             // do the keyboard thing again.
             launchKeyboardDialog();
 
         }
 
-        String path = getExternalFilesDir(null) + "/DailyEMA/";
+        String path = getExternalFilesDir(null) + "/DAILY/";
 
         File directory = new File(path);
 
@@ -68,21 +72,66 @@ public class DailyEMA extends Activity implements SeekBar.OnSeekBarChangeListene
             @Override
             public void onClick(View view) {
 
-                String uri = (getExternalFilesDir(null) + "/DailyEMA/"+ formattedDate + ".txt");
+                String uri = (getExternalFilesDir(null) + "/DAILY/"+ formattedDate + ".txt");
                 File file = new File(uri);
+                FileOutputStream fos = null;
+
+                if(file.length() == 0){
+
+                    WriteToFileHelper.writeHeader(file);
+
+                }
+
+
+
                 Log.d(TAG, "onClick: the file url is : " + uri);
                 long TS = System.currentTimeMillis();
                 String timeStampString = String.valueOf(TS);
 
-                Constants.writeHeaderToFile(file, Constants.secureID + "," + Constants.modelName + "," + Constants.modelNumber + ","+ Constants.androidVersion + "," + Constants.earsVersion + "\n");
+                ResearchEncoding.EMAEvent event = null;
 
-                writeToFile(file, timeStampString + "\n");
+                try{
+                    event = ResearchEncoding.EMAEvent.parseFrom(ResearchEncoding.EMAEvent.newBuilder()
+                            .setTimeInitiated(TS)
+                            .addQuestion(ResearchEncoding.EMAEvent.Question.newBuilder().setIntAnswer(seekBarValue)).build().toByteArray());
+                }catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
 
-                writeToFile(file, Integer.toString(seekBarValue) + "\n");
+//                ResearchEncoding.EMAEvent event = ResearchEncoding.EMAEvent.newBuilder()
+//                        .setTimeInitiated(TS)
+//                        .addQuestion(ResearchEncoding.EMAEvent.Question.newBuilder().setIntAnswer(seekBarValue)).build();
 
-                Log.d(TAG, "onClick: 2");
+                try {
+                    fos = new FileOutputStream(file, true);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                try{
+                    event.writeDelimitedTo(fos);
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }finally {
+                    if(fos!=null){
+                        try {
+                            fos.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
 
-                Toast.makeText(getBaseContext(), "Thank you for completing the Daily EMA  :)", Toast.LENGTH_LONG).show();
+
+
+//                Constants.writeHeaderToFile(file, Constants.secureID + "," + Constants.modelName + "," + Constants.modelNumber + ","+ Constants.androidVersion + "," + Constants.earsVersion + "\n");
+//
+//                writeToFile(file, timeStampString + "\n");
+//
+//                writeToFile(file, Integer.toString(seekBarValue) + "\n");
+//
+//                Log.d(TAG, "onClick: 2");
+//
+//                Toast.makeText(getBaseContext(), "Thank you for completing the Daily EMA  :)", Toast.LENGTH_LONG).show();
                 Intent returnToFinish = new Intent(DailyEMA.this, FinishInstallScreen.class);
 
                 startActivity(returnToFinish);

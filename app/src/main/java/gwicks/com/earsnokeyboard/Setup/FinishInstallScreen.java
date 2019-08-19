@@ -1,5 +1,6 @@
 package gwicks.com.earsnokeyboard.Setup;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
@@ -23,6 +24,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Window;
@@ -110,6 +112,7 @@ public class FinishInstallScreen extends AppCompatActivity {
     int numberOfInstances = 0;
 
     private SharedPreferences prefs;
+    private static final int REQUEST_WRITE_PERMISSION = 20;
 
 
     @Override
@@ -125,55 +128,20 @@ public class FinishInstallScreen extends AppCompatActivity {
 
         FirebaseMessaging.getInstance().subscribeToTopic(Constants.awsBucket);
         FirebaseMessaging.getInstance().subscribeToTopic(secureID);
-//        FirebaseMessaging.getInstance().subscribeToTopic("UPMC");
-        //FirebaseMessaging.getInstance().subscribeToTopic("KKI");
 
+        if((Constants.awsBucket.equals("columbia-study"))&& (!checkPermissionForWriteExtertalStorage())){
+            Log.d(TAG, "onCreate: requesting permissions for storage");
+            ActivityCompat.requestPermissions(FinishInstallScreen.this, new
+                    String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_PERMISSION);
 
-//        Log.d(TAG, "onCreate: The study name is: " + Constants.studyName);
-//        Log.d(TAG, "onCreate: the stud is: " + Constants.study);
-//        Log.d(TAG, "onCreate: bucket constants: " + Constants.awsBucket);
+        }
+
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         String s = prefs.getString("bucket", "Defualkty");
 
         Log.d(TAG, "onCreate: the bucket is from prefs: " + s );
-
-
-
-
-
-        //THIS IS THE ENTRY FOR THE ABCD STUDY:
-
-//
-//        Calendar cal = Calendar.getInstance();
-//        int doy = cal.get(Calendar.DAY_OF_YEAR);
-//        prefs = PreferenceManager.getDefaultSharedPreferences(this);
-//        SharedPreferences.Editor editor = prefs.edit();
-//        editor.putInt("doy", doy);
-//        editor.apply();
-
-        // END ABC STUDY - dont forget about prefs above!
-
-
-
-        //Toast.makeText(this,"the secure id of this phone is: " + secureID, Toast.LENGTH_LONG).show();
-
-
-
-
-        //needToTalkOpen = (ImageView)findViewById(R.id.gr)
-
-
-        // https://www.okcupid.com/profile/3266230839404444105?cf=quickmatch
-        //Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
-
-        // The email dialog, not used anymore with study codes
-
-        if(isAlreadySet(this) == false){
-            Log.d(TAG, "onCreate: already done email upload skipping");
-            launchSendEmailDialog();
-        }
 
         numberOfInstances++;
 
@@ -295,13 +263,6 @@ public class FinishInstallScreen extends AppCompatActivity {
             showMusicDialog();
         }
 
-//        if(notificationManager == null){
-//            Log.d(TAG, "onCreate: EMA loading the notificataion manager");
-//            notificationManager = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
-//            Log.d(TAG, "onCreate: noti manager should be loaded");
-//        }
-//        Log.d(TAG, "onCreate: just past noti manager");
-
 
         String path2 = (this.getExternalFilesDir(null) + "/DestroyFIS");
         File directory2 = new File(path2);
@@ -313,18 +274,6 @@ public class FinishInstallScreen extends AppCompatActivity {
 
         destroyEvents = new File(directory2,  "DestroyEvents.txt");
 
-
-        // MEMORY CHECK
-
-//        ActivityManager.MemoryInfo memoryInfo = getAvailableMemory();
-//        Log.d(TAG, "onCreate: avaiblable memory: "+ memoryInfo.availMem + " threshold when we start killing processes: " + memoryInfo.threshold  + " total mem: " + memoryInfo.totalMem);
-//
-//        Runtime runtime = Runtime.getRuntime();
-//        Log.d(TAG, "onCreate: Runtime: max memory: " + runtime.maxMemory() + " Runtime total memory: " + runtime.totalMemory() + " runtime free memory: " + runtime.freeMemory());
-//
-
-
-        //accelGyroLight = new AccelGyroLight(this);
 
         Intent sensors = new Intent(this, AccGryLgt.class);
         startService(sensors);
@@ -354,14 +303,14 @@ public class FinishInstallScreen extends AppCompatActivity {
             }, 1000*60*2);
 
         }
-        //startEMAAlarm();
 
-        startSuicideEMAAlarm();
+        if(Constants.awsBucket == "maps-study"){
+            startSuicideEMAAlarm();
+        }
+
+        //startSuicideEMAAlarm();
 
         startEMAUploadAlarm();
-        //sendNotification();
-
-        //Finish Comment out
 
         AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
         String rate = audioManager.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE);
@@ -438,8 +387,8 @@ public class FinishInstallScreen extends AppCompatActivity {
         Log.d("the time is: ", when + " ");
 
         cal.setTimeInMillis(System.currentTimeMillis());
-        cal.set(Calendar.HOUR_OF_DAY, 15);
-        cal.set(Calendar.MINUTE, 53);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 30);
 
 //        cal.set(Calendar.HOUR_OF_DAY, 16);
 //        cal.set(Calendar.MINUTE, 00);
@@ -614,7 +563,7 @@ public class FinishInstallScreen extends AppCompatActivity {
 
         cal.setTimeInMillis(System.currentTimeMillis());
         cal.set(Calendar.HOUR_OF_DAY, 22);
-        cal.set(Calendar.MINUTE, 45);
+        cal.set(Calendar.MINUTE, 16);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, DailyEMAUploadReceiver.class);
@@ -665,8 +614,8 @@ public class FinishInstallScreen extends AppCompatActivity {
         cal.setTimeInMillis(System.currentTimeMillis());
 //        cal.set(Calendar.HOUR_OF_DAY, 23);
 //        cal.set(Calendar.MINUTE, 52);
-        cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 45);
+        cal.set(Calendar.HOUR_OF_DAY, 22);
+        cal.set(Calendar.MINUTE, 40);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, PhotoUploadReceiver.class);
@@ -729,7 +678,7 @@ public class FinishInstallScreen extends AppCompatActivity {
 
         if(alarmUp){
             Log.d(TAG, "startEMAAlarm: alarm already up, skipping");
-            return;
+            //return;
         }
 
 
@@ -762,8 +711,8 @@ public class FinishInstallScreen extends AppCompatActivity {
 
         cal.setTimeInMillis(System.currentTimeMillis());
         //cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
-        cal.set(Calendar.HOUR_OF_DAY, 11);
-        cal.set(Calendar.MINUTE, 45);
+        cal.set(Calendar.HOUR_OF_DAY, 22);
+        cal.set(Calendar.MINUTE, 00);
 
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, PhotoCropBroadcastReceiver.class);
@@ -1023,5 +972,12 @@ public class FinishInstallScreen extends AppCompatActivity {
 //        throw new RuntimeException("This is a crash");
 //    }
 
+    public boolean checkPermissionForWriteExtertalStorage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int result = this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            return result == PackageManager.PERMISSION_GRANTED;
+        }
+        return false;
+    }
 
 }

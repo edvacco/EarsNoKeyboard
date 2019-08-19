@@ -39,13 +39,18 @@ public class Constants {
     public static int emaPhaseFrequency;
     public static Boolean emaVariesDuringWeek = null;
     public static Boolean phaseAutoScheduled = null;
-    public static final String awsBucket = "columbia-study";
+    //public static final String awsBucket = "columbia-study";
+    public static String awsBucket = "earsprototest";
+
     public static String[] emaMoodIdentifiers;
     public static String[] emaWeekDay;
     public static String[] emaWeekDays;
     public static String[] includedSensors;
 
     public static String secureID;
+    public static String site;
+    public static String phoneNumberOne;
+    public static String phoneNumberTwo;
 
     static String getCognitoPoolId() {
         return COGNITO_POOL_ID;

@@ -28,6 +28,7 @@ public class Study {
     private String[] includedSensors;
     private Boolean phaseAutoScheduled;
     private String awsBucket;
+    private String studySite;
 
 
 //    Study(String study, String emaDailyEnd, String emaDailyStart, String emaHoursBetween, int emaPhaseBreak, int emaPhaseFrequency, Boolean emaVariesDuringWeek, Boolean phaseAutoScheduled){
@@ -50,6 +51,7 @@ public class Study {
         this.includedSensors = includedSensors;
         this.phaseAutoScheduled = phaseAutoScheduled;
         this.awsBucket = awsBucket;
+        this.studySite = "null";
     }
 
     @Override
@@ -66,6 +68,7 @@ public class Study {
                 ", emaWeekDay=" + emaWeekDay +
                 ", emaWeekDays=" + emaWeekDays +
                 ", includedSensors=" + includedSensors +
+                ", studySite = " + studySite +
                 ", phaseAutoScheduled=" + phaseAutoScheduled +
                 '}';
     }
