@@ -93,6 +93,8 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
         int dow = cal.get(Calendar.DAY_OF_WEEK);
 
         if(isWeekday(dow)){
+            Log.d(TAG, "onReceive: weekday");
+            Log.d(TAG, "onReceive: " + timeStartHour + " , " + timeEndHour);
 
             if((hour < timeStartHour) || (hour > timeEndHour)){
                 Log.d(TAG, "onReceive: wrong time weekday");
@@ -101,6 +103,8 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
         }
 
         if(!isWeekday(dow)){
+            Log.d(TAG, "onReceive: weekednd");
+            Log.d(TAG, "onReceive: " + timeStartHourWeekEnd + " , " +timeEndHourWeekend);
             //int hour = cal.get(Calendar.HOUR_OF_DAY);
             if((hour < timeStartHourWeekEnd) || (hour > timeEndHourWeekend)){
                 Log.d(TAG, "onReceive: wrong time weekend");
@@ -258,7 +262,7 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
         }else{
             i = (doy - 365) + 7;
         }
-        Log.d(TAG, "calculateEduLinkDay: so calculated dow is: " + i);
+        Log.d(TAG, "calcualted finish day: : so calculated dow is: " + i);
 
         return i;
 

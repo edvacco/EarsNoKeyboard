@@ -112,25 +112,7 @@ public class UploadGPSAlarmReceiver extends BroadcastReceiver {
         return path2;
     }
 
-    private void beginUpload2(String name, String filePath) {
-        Log.d(TAG, "beginUpload2: start of beginupload2");
-        Log.d(TAG, "beginUpload2: the filepath is: " + filePath);
-        if (filePath == null) {
-            //Toast.makeText(this, "Could not find the filepath of the selected file", Toast.LENGTH_LONG).show();
-            Log.d(TAG, "beginUpload2: no file path found");
-            return;
-        }
 
-        Log.d(TAG, "beginUpload2: middle");
-
-        File file = new File(filePath);
-        Log.d(TAG, "beginUpload2: after new file");
-        //TransferObserver observer = transferUtility.upload(Constants.BUCKET_NAME, name,
-        mTransferUtility.upload(Constants.BUCKET_NAME, name,
-                file);
-        Log.d(TAG, "beginUpload2: end");
-
-    }
 
     final Util.FileTransferCallback logUploadCallback = new Util.FileTransferCallback() {
         @SuppressLint("DefaultLocale")

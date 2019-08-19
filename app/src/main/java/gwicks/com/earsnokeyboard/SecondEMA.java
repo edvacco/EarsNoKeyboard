@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,6 +28,7 @@ import java.util.Calendar;
 import javax.crypto.NoSuchPaddingException;
 
 import gwicks.com.earsnokeyboard.Setup.FinishInstallScreen;
+import research.ResearchEncoding;
 
 /**
  * Created by gwicks on 14/05/2018.
@@ -59,6 +61,7 @@ public class SecondEMA extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.second_ema);
+
 
         secureDeviceID = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         Calendar c = Calendar.getInstance();
@@ -128,10 +131,43 @@ public class SecondEMA extends Activity {
                 Log.d(TAG, "onClick: the file url is : " + Uri);
                 long TS = System.currentTimeMillis();
                 String timeStampString = String.valueOf(TS);
+                FileOutputStream fos = null;
 
-                writeToFile(mFile, timeStampString + "\n");
-                writeToFile(mFile, secureDeviceID + "\n");
-                writeToFile(mFile, firstQuestion + "," + secondQuestion + "," + thirdQuestion + "\n");
+                ResearchEncoding.EMAEvent.Builder b = ResearchEncoding.EMAEvent.newBuilder();
+                b.setTimeInitiated(TS);
+                try{
+                    b.addQuestion(ResearchEncoding.EMAEvent.Question.parseFrom(ResearchEncoding.EMAEvent.Question.newBuilder().setIntAnswer(firstQuestion).build().toByteArray()));
+                    b.addQuestion(ResearchEncoding.EMAEvent.Question.parseFrom(ResearchEncoding.EMAEvent.Question.newBuilder().setIntAnswer(secondQuestion).build().toByteArray()));
+                    b.addQuestion(ResearchEncoding.EMAEvent.Question.parseFrom(ResearchEncoding.EMAEvent.Question.newBuilder().setIntAnswer(thirdQuestion).build().toByteArray()));
+                }catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    fos = new FileOutputStream(mFile, true);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                try{
+                    b.build().writeDelimitedTo(fos);
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }finally {
+                    if(fos!=null){
+                        try {
+                            fos.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+
+
+//
+//                writeToFile(mFile, timeStampString + "\n");
+//                writeToFile(mFile, secureDeviceID + "\n");
+//                writeToFile(mFile, firstQuestion + "," + secondQuestion + "," + thirdQuestion + "\n");
 
                 encryptedUri = Encrypt(timeStampString, Uri);
 
@@ -140,6 +176,10 @@ public class SecondEMA extends Activity {
                 if(healthCheck()){
                     //TODO: send special upload to AWS
                     beginUpload2(timeStampString, encryptedUri, true);
+
+//                    sendSMS(Constants.phoneNumberOne, secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
+//                    sendSMS(Constants.phoneNumberTwo, secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
+//
 
 
                     // Randy SMS below
@@ -249,7 +289,7 @@ public class SecondEMA extends Activity {
         if(suicide){
             key = secureDeviceID + "/EMAALERT/" + name +"_" + firstQuestion + "_" + secondQuestion + "_" + thirdQuestion + ".alert";
         } else{
-            key = secureDeviceID + "/EMA/" + name;
+            key = secureDeviceID + "/RISK/" + name;
         }
 
 

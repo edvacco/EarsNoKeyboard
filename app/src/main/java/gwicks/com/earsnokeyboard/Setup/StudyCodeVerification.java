@@ -82,7 +82,7 @@ public class StudyCodeVerification extends AppCompatActivity implements GetRawDa
     private static final int REQUEST_CAMERA_PERMISSION = 31;
     private static final String SAVED_INSTANCE_URI = "uri";
     private static final String SAVED_INSTANCE_RESULT = "result";
-    private Boolean skip = true;
+    private Boolean skip = false;
 
     int count = 0;
 
@@ -527,6 +527,7 @@ public class StudyCodeVerification extends AppCompatActivity implements GetRawDa
 //            String[] includedSensors;
             Boolean phaseAutoScheduled = null;
             String awsBucket;
+            //String studySite;
 
             Log.d(TAG, "onDownloadComplete: in the step2 = true part");
             Log.d(TAG, "onDownloadComplete: the study complete data is : " + data);
@@ -564,6 +565,7 @@ public class StudyCodeVerification extends AppCompatActivity implements GetRawDa
                 }
                 phaseAutoScheduled = studyJsonObject.getBoolean("phaseAutoScheduled");
                 awsBucket = studyJsonObject.getString("s3BucketName");
+                //studySite = studyJsonObject.getString("studySites");
 
                 Log.d(TAG, "onDownloadComplete: study: " + study + " emaPhasa: " + emaPhaseFrequency);
 
@@ -579,11 +581,21 @@ public class StudyCodeVerification extends AppCompatActivity implements GetRawDa
                 Constants.emaPhaseFrequency = emaPhaseFrequency;
                 Constants.emaVariesDuringWeek = emaVariesDuringWeek;
                 Constants.phaseAutoScheduled = phaseAutoScheduled;
-                //Constants.awsBucket = awsBucket;
+                Constants.awsBucket = awsBucket;
                 Constants.emaMoodIdentifiers = emaMoodIdentifiers;
                 Constants.emaWeekDay = emaWeekDay;
                 Constants.emaWeekDays = emaWeekDays;
                 Constants.includedSensors = includedSensors;
+//                Constants.site = studySite;
+//
+//                if(studySite == "New York"){
+//                    Constants.phoneNumberOne = "9179814866";
+//                    Constants.phoneNumberTwo = "3868820636";
+//                }
+//                if(studySite == "Pittsburgh"){
+//                    Constants.phoneNumberOne = "4125232034";
+//                    Constants.phoneNumberTwo = "7245136376";
+//                }
 
 
                 mSharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
@@ -596,6 +608,7 @@ public class StudyCodeVerification extends AppCompatActivity implements GetRawDa
                 editor.putInt("emaPhaseBreak", emaPhaseBreak);
                 editor.putInt("emaPhaseFrequency", emaPhaseFrequency);
                 editor.putBoolean("StudyCodeOK", true);
+                //editor.putString("studySite", studySite);
 
                 editor.apply();
 

@@ -18,15 +18,19 @@ public class SeekBarFragment extends Fragment implements SeekBar.OnSeekBarChange
     public int seekBarValue;
     public String messageString;
     TextView value;
+    static String startString = "How ";
+    static String endString = " do you feel right now?";
+    public boolean moved = false;
 
 
     public static SeekBarFragment newInstance(String message)
 
     {
         Log.d(TAG, "newInstance: ");
+        Log.d(TAG, "the message is: " + message);
         SeekBarFragment f = new SeekBarFragment();
         Bundle bdl = new Bundle(1);
-        bdl.putString(EXTRA_MESSAGE, message);
+        bdl.putString(EXTRA_MESSAGE, startString + message + endString);
         f.setArguments(bdl);
         return f;
     }
@@ -59,6 +63,7 @@ public class SeekBarFragment extends Fragment implements SeekBar.OnSeekBarChange
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         Log.d(TAG, "onProgressChanged: " + progress);
+        moved = true;
         String valueNew = String.valueOf(progress);
         value.setText(valueNew);
 
@@ -77,7 +82,13 @@ public class SeekBarFragment extends Fragment implements SeekBar.OnSeekBarChange
 
     public int getSeekBarValue(){
 
-        return seekBarValue;
+        if(moved){
+            return seekBarValue;
+        }else{
+            return -1;
+        }
+
+
 
     }
     public String getSeekBarString(){

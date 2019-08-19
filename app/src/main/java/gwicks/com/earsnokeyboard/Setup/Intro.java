@@ -62,6 +62,7 @@ public class Intro extends AppCompatActivity {
         int doy = cal.get(Calendar.DAY_OF_YEAR);
 
         checkPrefs(doy);
+        setSpecialPrefs(doy);
 
 //        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 //        SharedPreferences.Editor editor = prefs.edit();
@@ -106,6 +107,7 @@ public class Intro extends AppCompatActivity {
         int versionCode = BuildConfig.VERSION_CODE;
         String versionName = BuildConfig.VERSION_NAME;
         String versionFlavor = BuildConfig.FLAVOR;
+
 
         writeToFile(installFile, deviceMan + "," + deviceModel +"," + versionCode +"," + versionName + "," + versionName + "," + versionName + "," + versionFlavor);
 
@@ -260,13 +262,29 @@ public class Intro extends AppCompatActivity {
         
         if(prefs.contains("doy")){
             Log.d(TAG, "checkPrefs: contains doy already, skipping");
-            return;
+
         }else{
             Log.d(TAG, "checkPrefs: does not contain doy, adding!");
             editor.putInt("doy", doy);
             editor.apply();
         }
        
+    }
+
+    public void setSpecialPrefs(int  doy){
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Log.d(TAG, "setSpecialPrefs: NotFirst Install = " + prefs.getBoolean("NotFirstInstall", false));
+        if(prefs.getBoolean("NotFirstInstall", false)== true){
+            Log.d(TAG, "setSpecialPrefs: firstinstall must be true");
+        }else{
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("NotFirstInstall", true);
+            editor.putInt("doy", doy);
+            editor.apply();
+            Log.d(TAG, "setSpecialPrefs: the doy is: " + doy);
+
+        }
+
     }
 }
 

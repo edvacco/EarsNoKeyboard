@@ -42,6 +42,8 @@ public class PhotoUploadReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        Log.d(TAG, "onReceive: starting");
+
         mContext = context;
         mEncryption = new Encryption();
         mTransferUtility = Util.getTransferUtility(mContext);
@@ -51,13 +53,18 @@ public class PhotoUploadReceiver extends BroadcastReceiver {
         SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy_HHmmssSSS");
         path = mContext.getExternalFilesDir(null) + "/videoDIARY/CroppedImages/";
 
+        Log.d(TAG, "onReceive: path = " + path);
+
         File directory = new File(path);
 
         if(!directory.exists()){
+            Log.d(TAG, "onReceive: making dir");
             directory.mkdirs();
         }
 
         ArrayList<File> files = new ArrayList<>(Arrays.asList(directory.listFiles()));
+
+        Log.d(TAG, "onReceive: files length = " + files.size());
 
         for(File each : files){
 
