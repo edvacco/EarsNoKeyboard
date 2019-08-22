@@ -60,6 +60,7 @@ public class EMAAlarmReceiver extends BroadcastReceiver {
         Log.d(TAG, "onReceive: doy = " + doy);
         Calendar cal = Calendar.getInstance();
         int doy2 = cal.get(Calendar.DAY_OF_YEAR);
+        Log.d(TAG, "onReceive: current day of year is: " + doy2);
         int finishDay = finishDay(doy);
         if(doy2 > finishDay){
 

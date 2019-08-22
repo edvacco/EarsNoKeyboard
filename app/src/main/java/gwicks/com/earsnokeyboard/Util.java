@@ -303,6 +303,9 @@ public class Util {
         initUserId();
         Log.d("Log", "This is in AWSUTIL upload file to bucket");
         final String filePath = String.format("%s%s", userId + folder, filename);
+        Log.d(TAG, "uploadFileToBucket: the file path is: " + filePath);
+        Log.d(TAG, "uploadFileToBucket: folder is: " + folder);
+        Log.d(TAG, "uploadFileToBucket: aws bucket is: " + Constants.awsBucket);
         final TransferObserver observer =
                 //transferUtility.upload(BuildConfig.AWS_BUCKET_NAME, filePath, file);
                 sTransferUtility.upload(Constants.awsBucket, filePath, file);

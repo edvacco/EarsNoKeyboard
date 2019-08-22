@@ -78,7 +78,7 @@ public class AccGryLgt extends Service implements SensorEventListener {
 
     ResearchEncoding.AccelGyroEvent AccelEvent[] = new ResearchEncoding.AccelGyroEvent[5010];
     ResearchEncoding.AccelGyroEvent GyroEvent[] = new ResearchEncoding.AccelGyroEvent[5010];
-    ResearchEncoding.LightEvent LightEvent[] = new ResearchEncoding.LightEvent[100];
+    ResearchEncoding.LightEvent LightEvent[] = new ResearchEncoding.LightEvent[1000];
 
 
     @Override
@@ -539,9 +539,19 @@ public class AccGryLgt extends Service implements SensorEventListener {
 //                        .setLevel(event.values[0])
 //                        .build();
 
-                if(lightCount < 100){
+                if(lightCount < 1000){
                     LightEvent[lightCount] = eventNew;
+                    gyroCount++;
                 }
+
+
+//                if(gyroCount < 5010){
+//                    GyroEvent[gyroCount] = eventNew;
+//                    gyroCount++;
+//                }
+//
+
+
 
 //                LightEvent[lightCount] = eventNew;
                 lightCount++;
@@ -549,7 +559,7 @@ public class AccGryLgt extends Service implements SensorEventListener {
                 previousLightReading = lightReading;
             }
 
-            if((lightCount >=100) && (writingLightToFile == false) ){
+            if((lightCount >=1000) && (writingLightToFile == false) ){
 
                 timeStampLight = System.currentTimeMillis();
                 LightFile = new File(path2 +"LIGHT/"  + timeStampLight +"_Service.txt");

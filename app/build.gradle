@@ -12,8 +12,8 @@ android {
         applicationId "gwicks.com.earsnokeyboard"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 202
-        versionName "2.02"
+        versionCode 205
+        versionName "2.05"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -29,6 +29,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    dexOptions {
+        incremental true
+        javaMaxHeapSize "4096M"
+        jumboMode true
+        maxProcessCount 8
+        preDexLibraries false
+        threadCount 8
+    }
+
 }
 
 dependencies {
