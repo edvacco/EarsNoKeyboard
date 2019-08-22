@@ -6,8 +6,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +23,8 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.NoSuchPaddingException;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import gwicks.com.earsnokeyboard.Setup.SetupStepTwo;
 
 import static gwicks.com.earsnokeyboard.Setup.Intro.writeToFile;

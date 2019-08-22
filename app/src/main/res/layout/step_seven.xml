@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -64,7 +64,7 @@
         app:layout_constraintLeft_toLeftOf="@+id/imageView37"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="@+id/imageView37"/>
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--Your data will help us learn more about mental health through the use of digital devices.-->
 

@@ -24,8 +24,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -42,6 +40,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import gwicks.com.earsnokeyboard.AccGryLgt;
 import gwicks.com.earsnokeyboard.AnyApplication;
 import gwicks.com.earsnokeyboard.Constants;

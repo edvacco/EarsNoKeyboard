@@ -14,11 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -53,6 +48,11 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import gwicks.com.earsnokeyboard.Constants;
 import gwicks.com.earsnokeyboard.R;
 

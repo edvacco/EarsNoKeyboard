@@ -10,7 +10,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -22,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import research.ResearchEncoding;
 
 /**

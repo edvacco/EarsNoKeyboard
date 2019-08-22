@@ -1,4 +1,4 @@
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
 
     xmlns:android="http://schemas.android.com/apk/res/android"
 
@@ -236,4 +236,4 @@
         <!--app:layout_constraintHorizontal_bias="0.0"/>-->
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

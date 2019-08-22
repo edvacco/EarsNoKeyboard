@@ -8,13 +8,13 @@
 
 
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
 
         android:layout_height="match_parent">
 
-    </android.support.v4.view.ViewPager>
+    </androidx.viewpager.widget.ViewPager>
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="13dp"
@@ -24,7 +24,7 @@
         android:layout_alignParentTop="true"
         app:srcCompat="@drawable/ears_icon"/>
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
 
         android:id="@+id/tabDots"
         android:layout_width="match_parent"
