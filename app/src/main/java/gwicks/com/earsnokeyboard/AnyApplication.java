@@ -71,6 +71,12 @@ public class AnyApplication extends Application {
         if(Constants.site == null){
             setSite();
         }
+        if(Constants.study == null){
+            setStudyName();
+        }
+        if(Constants.studyName == null){
+            setStudyName();
+        }
 
         if(Constants.secureID == null){
             Constants.secureID = Settings.Secure.getString(
@@ -89,6 +95,12 @@ public class AnyApplication extends Application {
         String s = mSharedPreferences.getString("bucket", "default");
         Constants.awsBucket = s;
 
+    }
+
+    public void setStudyName(){
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String s = mSharedPreferences.getString("studyName", "test");
+        Constants.study = s;
     }
 
     public void setDeviceID(){

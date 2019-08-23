@@ -28,7 +28,7 @@ public class WriteToFileHelper {
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"),
                 Locale.getDefault());
         Date currentLocalTime = calendar.getTime();
-        SimpleDateFormat date = new SimpleDateFormat("XXX");
+        SimpleDateFormat date = new SimpleDateFormat("ZZZZ");
         String localTime = date.format(currentLocalTime);
 
         ResearchEncoding.Header header = null;

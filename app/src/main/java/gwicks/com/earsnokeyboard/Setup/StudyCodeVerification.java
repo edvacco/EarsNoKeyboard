@@ -602,8 +602,9 @@ public class StudyCodeVerification extends AppCompatActivity implements GetRawDa
                 SharedPreferences.Editor editor = mSharedPreferences.edit();
                 editor.putString("bucket", awsBucket);
                 editor.putString("studyName", study);
-                editor.putString("emaDailyStart", awsBucket);
-                editor.putString("emaDailyEnd", study);
+                editor.putString("study", study);
+                editor.putString("emaDailyStart", emaDailyStart);
+                editor.putString("emaDailyEnd", emaDailyEnd);
                 editor.putInt("emaHoursBetween", emHoursBetween);
                 editor.putInt("emaPhaseBreak", emaPhaseBreak);
                 editor.putInt("emaPhaseFrequency", emaPhaseFrequency);
@@ -900,6 +901,7 @@ public class StudyCodeVerification extends AppCompatActivity implements GetRawDa
                 urlConnection.setDoOutput(true);
 
 
+
                 InputStream in = urlConnection.getInputStream();
                 InputStreamReader inputStreamReader = new InputStreamReader(in);
                 int inputStreamData = inputStreamReader.read();
@@ -949,6 +951,7 @@ public class StudyCodeVerification extends AppCompatActivity implements GetRawDa
             }
 
             if(success){
+
                 Intent installIntent = new Intent(StudyCodeVerification.this, SetupStepTwo.class);
                 StudyCodeVerification.this.startActivity(installIntent);
                 finish();

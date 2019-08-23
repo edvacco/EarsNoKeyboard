@@ -681,7 +681,7 @@ public class FinishInstallScreen extends AppCompatActivity {
 
         if(alarmUp){
             Log.d(TAG, "startEMAAlarm: alarm already up, skipping");
-            //return;
+            return;
         }
 
 

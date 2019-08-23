@@ -64,17 +64,6 @@ public class Intro extends AppCompatActivity {
         checkPrefs(doy);
         setSpecialPrefs(doy);
 
-//        prefs = PreferenceManager.getDefaultSharedPreferences(this);
-//        SharedPreferences.Editor editor = prefs.edit();
-//        editor.putInt("doy", doy);
-//        editor.apply();
-
-
-
-
-
-
-
     }
 
     @Override

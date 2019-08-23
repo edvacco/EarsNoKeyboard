@@ -3,6 +3,8 @@ package gwicks.com.earsnokeyboard;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.SmsManager;
@@ -19,6 +21,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -26,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import javax.crypto.NoSuchPaddingException;
+import javax.net.ssl.HttpsURLConnection;
 
 import gwicks.com.earsnokeyboard.Setup.FinishInstallScreen;
 import research.ResearchEncoding;
@@ -51,7 +58,7 @@ public class SecondEMA extends Activity {
 
     private String secureDeviceID;
     TransferUtility transferUtility;
-    String Uri;
+    String uri;
     String encryptedUri;
     Encryption mEncryption;
     File mFile;
@@ -126,9 +133,9 @@ public class SecondEMA extends Activity {
             @Override
             public void onClick(View view) {
 
-                Uri = (getExternalFilesDir(null) + "/EMA/"+ formattedDate + ".txt");
-                mFile = new File(Uri);
-                Log.d(TAG, "onClick: the file url is : " + Uri);
+                uri = (getExternalFilesDir(null) + "/EMA/"+ formattedDate + ".txt");
+                mFile = new File(uri);
+                Log.d(TAG, "onClick: the file url is : " + uri);
                 long TS = System.currentTimeMillis();
                 String timeStampString = String.valueOf(TS);
                 FileOutputStream fos = null;
@@ -169,13 +176,17 @@ public class SecondEMA extends Activity {
 //                writeToFile(mFile, secureDeviceID + "\n");
 //                writeToFile(mFile, firstQuestion + "," + secondQuestion + "," + thirdQuestion + "\n");
 
-                encryptedUri = Encrypt(timeStampString, Uri);
+                encryptedUri = Encrypt(timeStampString, uri);
 
                 // Check if any of the participants answers had trigger threshold
 
                 if(healthCheck()){
                     //TODO: send special upload to AWS
+                    Log.d(TAG, "onClick: in health check as postive");
+
+                    // OLD SMS VERSION
                     beginUpload2(timeStampString, encryptedUri, true);
+                    Log.d(TAG, "onClick: afer begin upload");
 
 //                    sendSMS(Constants.phoneNumberOne, secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
 //                    sendSMS(Constants.phoneNumberTwo, secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
@@ -183,8 +194,8 @@ public class SecondEMA extends Activity {
 
 
                     // Randy SMS below
-                    sendSMS("9179814866", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
-                    sendSMS("3868820636", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
+                   // sendSMS("9179814866", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
+                    //sendSMS("3868820636", secureDeviceID + ", q1: " + firstQuestion + ", q2: " + secondQuestion + ", q3: " + thirdQuestion);
 
                     // University of Pittsburgh Medical Center below
 //
@@ -196,6 +207,21 @@ public class SecondEMA extends Activity {
 
 
                     //Testing new Dialog Frag, commented out the above to avoid spamming randy
+
+                    // END OLD VERSION BELOW IS THE API GATEWAY SMS METHOD
+
+
+
+                    Log.d(TAG, "onClick: send AWS SMS");
+
+                    SecondEMA.PostAWS postAWS = new SecondEMA.PostAWS();
+                    postAWS.execute();
+                    Log.d(TAG, "onClick: After AWS send sms");
+
+
+
+
+
                     launchPhoneNumberDialog();
 
                 }else{
@@ -316,6 +342,109 @@ public class SecondEMA extends Activity {
             ex.printStackTrace();
         }
     }
+
+
+
+    private class PostAWS extends AsyncTask<String, String, String> {
+
+        private static final String TAG = "PostAWS";
+
+        @Override
+        protected void onPreExecute() {
+            Log.d(TAG, "onPreExecute: 3");
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            Log.d(TAG, "doInBackground: 4");
+            String postData = "";
+            HttpsURLConnection urlConnection = null;
+
+            try{
+
+                String stringUrl = createUri();
+                URL finalURL = new URL(stringUrl);
+                urlConnection = (HttpsURLConnection)finalURL.openConnection();
+                urlConnection.setReadTimeout(10000);
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+                urlConnection.setRequestProperty("Accept","application/json");
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
+
+
+
+                urlConnection.setRequestProperty("x-api-key","43b93m3VYH4odlxAoQuJq6e4hwV4EX1E9phmgsn8" );
+
+
+
+                InputStream in = urlConnection.getInputStream();
+                InputStreamReader inputStreamReader = new InputStreamReader(in);
+                int inputStreamData = inputStreamReader.read();
+                while(inputStreamData != -1){
+                    char currentData = (char) inputStreamData;
+                    inputStreamData = inputStreamReader.read();
+                    postData += currentData;
+                    Log.d(TAG, "doInBackground: postdata: " + postData + "\n");
+                }
+
+
+
+                Log.i("STATUS", String.valueOf(urlConnection.getResponseCode()));
+                Log.i("MSG" , urlConnection.getResponseMessage());
+                Log.d(TAG, "doInBackground: " + urlConnection.getContentEncoding());
+                Log.d(TAG, "doInBackground:  " + urlConnection.getContentType());
+                Log.d(TAG, "doInBackground: " + urlConnection.getHeaderFields());
+                Log.d(TAG, "doInBackground: " + urlConnection.getOutputStream());
+
+                urlConnection.disconnect();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                Log.d(TAG, "doInBackground: error");
+            }catch(Exception e){
+                Log.d(TAG, "doInBackground: error");
+            }finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                return postData;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+            Log.d(TAG, "onPostExecute: SMS sent with string return: " + s);
+
+            super.onPostExecute(s);
+        }
+    }
+
+    private String createUri(){
+
+        Log.d(TAG, "createUri: DeviceID: " + Constants.deviceID);
+        String baseURL = "https://pws4gvrjvb.execute-api.us-west-2.amazonaws.com/default/sendSMSAlert";
+        Log.d(TAG, "createUri: uri builder");
+
+        Log.d(TAG, "createUri: constants.study: " + Constants.study);
+
+        String myUri =  Uri.parse(baseURL).buildUpon()
+                .appendQueryParameter("deviceID", Constants.deviceID)
+//                .appendQueryParameter("study", Constants.study)
+                .appendQueryParameter("studyName", "maps")
+
+                .appendQueryParameter("riskOne",String.valueOf(firstQuestion))
+                .appendQueryParameter("riskTwo", String.valueOf(secondQuestion))
+                .appendQueryParameter("riskThree",String.valueOf(thirdQuestion))
+                .build().toString();
+
+        Log.d(TAG, "createUri: string is: " + myUri);
+        return myUri;
+    }
+
 
     public void launchPhoneNumberDialog(){
         DialogFragment phoneFragment = new HealthCheckDialog();
